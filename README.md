@@ -1,6 +1,6 @@
 # QtZpl
 
-Native C++23 / Qt 6.11 ZPL parser and raster renderer. The library has no Go runtime dependency.
+Нативная библиотека на C++23 и Qt 6.11 для разбора ZPL и растрового рендеринга этикеток. Библиотека не зависит от среды выполнения Go.
 
 ```cpp
 auto result = QtZpl::render(zpl);
@@ -9,24 +9,25 @@ if (result) {
 }
 ```
 
-The parser is tolerant by default: unsupported commands are preserved in the public document model and reported as diagnostics.
+По умолчанию парсер работает в отказоустойчивом режиме: неподдерживаемые команды сохраняются в публичной модели документа и добавляются в список диагностик.
 
-Compatibility target: every example published by the
-[go-zpl web demo](https://stirlingmarketinggroup.github.io/go-zpl/) must render
-locally with the same geometry and visible content as its reviewed
-[Labelary](https://labelary.com/) reference. This is an acceptance target; the
-currently implemented command list below does not yet cover the full demo
-corpus.
+Цель совместимости: каждый пример, опубликованный в
+[веб-демо go-zpl](https://stirlingmarketinggroup.github.io/go-zpl/), должен
+локально отрисовываться с той же геометрией и видимым содержимым, что и
+проверенный эталон [Labelary](https://labelary.com/). Это критерий приёмки;
+перечень реализованных команд пока не обеспечивает полную пиксельную
+совместимость со всем демонстрационным набором.
 
-Implemented barcode rendering currently includes Code 128 (`^BC`), Code 39
-(`^B3`), EAN-13 (`^BE`), and square DataMatrix ECC200 (`^BX`). Code 128 supports
-the default Subset B modes, automatic mode `A`, strict numeric-pair mode `C`,
-and Zebra invocation codes; modes `U`/`D` and the optional UCC Mod 10 check
-digit remain explicitly unsupported. GS1 DataMatrix is selected with format ID
-`1`; the configured escape character supports `x1` as FNC1 and `xdNNN` decimal
-byte escapes (for example `|d029` for a GS separator).
+Сейчас реализован рендеринг штрихкодов Code 128 (`^BC`), Code 39 (`^B3`),
+EAN-13 (`^BE`) и квадратного DataMatrix ECC200 (`^BX`). Для Code 128
+поддерживаются стандартные режимы Subset B, автоматический режим `A`, строгий
+режим числовых пар `C` и управляющие последовательности Zebra. Режимы `U`/`D`
+и необязательная контрольная цифра UCC Mod 10 явно не поддерживаются. GS1
+DataMatrix выбирается идентификатором формата `1`; настроенный символ
+экранирования поддерживает `x1` для FNC1 и десятичные последовательности байтов
+`xdNNN` (например, `|d029` для разделителя GS).
 
-## Build
+## Сборка
 
 ```text
 cmake -S . -B build -G Ninja -DCMAKE_PREFIX_PATH=C:/Qt/6.11.1/msvc2022_64
@@ -34,8 +35,8 @@ cmake --build build
 ctest --test-dir build --output-on-failure
 ```
 
-On Windows, use the build helper to initialize Qt and MSVC and build in an
-isolated `build_agent` directory:
+В Windows используйте вспомогательный скрипт, который настраивает окружение Qt
+и MSVC и выполняет сборку в изолированном каталоге `build_agent`:
 
 ```text
 py -3 tools/build_helper.py all --clean
@@ -43,8 +44,8 @@ py -3 tools/build_helper.py test --config Debug
 py -3 tools/build_helper.py build --target QtZpl
 ```
 
-Install the shared library for a consuming project by setting `QTZPL_ROOT` or
-passing the prefix explicitly:
+Чтобы установить динамическую библиотеку для использования в другом проекте,
+задайте переменную `QTZPL_ROOT` либо явно передайте префикс установки:
 
 ```text
 set QTZPL_ROOT=C:\QtZpl\RelWithDebInfo
@@ -52,15 +53,16 @@ py -3 tools/build_helper.py install --clean --config RelWithDebInfo
 py -3 tools/build_helper.py install --install-prefix C:\QtZpl\RelWithDebInfo
 ```
 
-It defaults to Qt 6.11.1 with `msvc2022_64`; use `--qt-version` and
-`--compiler` for another installed kit.
+По умолчанию используется Qt 6.11.1 с комплектом `msvc2022_64`. Для выбора
+другого установленного комплекта предназначены параметры `--qt-version` и
+`--compiler`.
 
-## Rendered examples
+## Примеры рендеринга
 
-The `qtzpl_gallery` example generates several PNG files from real ZPL strings:
+Пример `qtzpl_gallery` создаёт несколько PNG-файлов из реальных строк ZPL:
 
 ```text
 py -3 tools/build_helper.py gallery
 ```
 
-Generated samples are stored in `examples/rendered`.
+Сгенерированные примеры сохраняются в каталоге `examples/rendered`.
