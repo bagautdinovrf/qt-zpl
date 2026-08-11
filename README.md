@@ -36,7 +36,7 @@ ctest --test-dir build --output-on-failure
 ```
 
 В Windows используйте вспомогательный скрипт, который настраивает окружение Qt
-и MSVC и выполняет сборку в изолированном каталоге `build_agent`:
+и MSVC и выполняет Debug-сборку в изолированном каталоге `build_agent_debug`:
 
 ```text
 py -3 tools/build_helper.py all --clean

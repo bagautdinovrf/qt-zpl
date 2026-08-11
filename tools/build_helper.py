@@ -20,7 +20,7 @@ import tempfile
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_BUILD_DIR = PROJECT_ROOT / "build_agent"
+DEFAULT_BUILD_DIR = PROJECT_ROOT / "build_agent_debug"
 QT_ROOT = Path(os.environ.get("QT_ROOT", "C:/Qt"))
 QT_TOOLS = QT_ROOT / "Tools"
 
@@ -161,7 +161,7 @@ def main() -> int:
     run([cmake, "--build", str(args.build_dir), "--target", target, "--parallel", str(args.parallel)], environment)
     if args.action in ("test", "all") and args.tests:
         # The shared QtZpl DLL is emitted at the build root while the test
-        # executable lives in build_agent/tests. Make it discoverable without
+        # executable lives in the selected build directory's tests folder. Make it discoverable without
         # copying artifacts or modifying the user's global PATH.
         environment["PATH"] = str(args.build_dir) + os.pathsep + environment.get("PATH", "")
         ctest = str(QT_TOOLS / "CMake_64" / "bin" / "ctest.exe")

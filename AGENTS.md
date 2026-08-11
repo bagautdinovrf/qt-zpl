@@ -39,7 +39,7 @@ add a focused test, and document the remaining discrepancy.
   py -3 tools/build_helper.py build --target QtZpl
   ```
 
-- Use the isolated `build_agent` directory. Do not modify or depend on Qt
+- Use the isolated `build_agent_debug` directory for the default Debug build. Do not modify or depend on Qt
   Creator build directories.
 - Do not commit generated build trees, DLLs, executables, CMake caches, or test
   output images. Versioned reference images under `tests/golden` are test input,
