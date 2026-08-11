@@ -50,6 +50,14 @@ QString zebraFontFamily() {
   return family;
 }
 
+QString fontAFamily() {
+  static const QString family=[] {
+    initializeQtZplResources();
+    return embeddedFontFamily(u":/qtzpl/fonts/font_a.ttf");
+  }();
+  return family;
+}
+
 QString ocrBFontFamily() {
   static const QString family=[] {
     initializeQtZplResources();
@@ -69,6 +77,20 @@ QFont printerFont(const QString& family,int pixelHeight,int stretch=100) {
 
 QFont zebraFont(int pixelHeight, int stretch=75) {
   return printerFont(zebraFontFamily(),pixelHeight,stretch);
+}
+
+QFont builtInFont(QChar name,int pixelHeight,int requestedWidth=0) {
+  if(name.toUpper()==u'A') {
+    const int stretch=requestedWidth>0
+      ? std::clamp(qRound(100.0*requestedWidth/pixelHeight),1,400)
+      : 100;
+    return printerFont(fontAFamily(),pixelHeight,stretch);
+  }
+  constexpr int zebraFont0NaturalStretch=77;
+  const int stretch=requestedWidth>0
+    ? std::clamp(zebraFont0NaturalStretch*requestedWidth/pixelHeight,1,400)
+    : zebraFont0NaturalStretch;
+  return zebraFont(pixelHeight,stretch);
 }
 
 QFont eanInterpretationFont(int pixelHeight) {
@@ -101,16 +123,32 @@ QImage rotateImage(const QImage& source, Orientation orientation) {
   return source.transformed(transform, Qt::FastTransformation);
 }
 
+QRect alphaBounds(const QImage& image) {
+  QRect bounds;
+  for(int y=0;y<image.height();++y) {
+    const auto* pixels=reinterpret_cast<const QRgb*>(image.constScanLine(y));
+    for(int x=0;x<image.width();++x)
+      if(qAlpha(pixels[x])!=0)bounds|=QRect(x,y,1,1);
+  }
+  return bounds;
+}
+
 void drawText(QImage& image, State& state, const QString& text, const RenderOptions& options) {
   if (text.isEmpty()) { state.reverse=false; state.block.reset(); return; }
   const QSize defaults=builtInFontDefaults(state.font.font);
   const int height = state.font.height>0?state.font.height:defaults.height();
   const int width = state.font.width>0?state.font.width:defaults.width();
-  constexpr int zebraFont0NaturalStretch = 77;
+  const bool fontA=state.font.font.toUpper()==u'A';
+  // Zebra Font A is a small bitmap face. Labelary keeps its glyph cell near
+  // 20 dots even when ^CF requests a smaller height.
+  const int pixelHeight=fontA?std::max(height,20):std::max(1,height-1);
+  constexpr int zebraFont0NaturalStretch=77;
   const int requestedStretch=width>0
     ? zebraFont0NaturalStretch*width/height
     : zebraFont0NaturalStretch;
-  QFont font=zebraFont(std::max(1,height-1),requestedStretch);
+  QFont font=fontA
+    ? builtInFont(state.font.font,pixelHeight,state.font.width>0?width:0)
+    : zebraFont(pixelHeight,requestedStretch);
 
   QFontMetrics metrics(font);
   const auto bounds = metrics.boundingRect(text).adjusted(-1,-1,1,1);
@@ -123,11 +161,15 @@ void drawText(QImage& image, State& state, const QString& text, const RenderOpti
   fp.drawText(-bounds.left(), -bounds.top(), text);
   fp.end();
 
+  const QRect ink=alphaBounds(field);
+
   const int baselineX = -bounds.left();
   const int baselineY = -bounds.top();
   auto orientation = state.font.orientation == Orientation::Normal ? state.fieldDirection : state.font.orientation;
   field = rotateImage(field, orientation);
   QPoint pos = state.position;
+  if(fontA&&!state.baseline&&orientation==Orientation::Normal&&!ink.isEmpty())pos.ry()-=ink.top()+1;
+  else if(!state.baseline&&orientation==Orientation::Normal)pos.rx()+=bounds.left();
   if (state.baseline) {
     // ^FT names the baseline origin. Rotate that point with the glyph raster so
     // R/I/B fields remain anchored at ^FT instead of receiving the N-only
@@ -374,9 +416,25 @@ void drawCode128(QImage& image,State& state,const Barcode& barcode,const QString
   QPainter painter(&symbol);painter.setRenderHint(QPainter::Antialiasing,false);painter.setPen(Qt::NoPen);painter.setBrush(options.foreground);
   for(qsizetype i=0;i<modules->size();++i)if((*modules)[i])painter.drawRect(static_cast<int>(i)*module,barsTop,module,height);
   if(interpretation){
-    painter.setPen(options.foreground);painter.setFont(zebraFont(textHeight));
+    const QString interpretationText=code128Interpretation(text);
+    // Zebra's Code 128 interpretation uses Font A with a larger fixed cell
+    // than ordinary Font 0 text at the same bar height.
+    const int interpretationSize=std::max(textHeight,50);
+    const QFont font=builtInFont(u'A',interpretationSize,interpretationSize);
+    const QRect bounds=QFontMetrics(font).boundingRect(interpretationText).adjusted(-1,-1,1,1);
+    QImage field(std::max(1,bounds.width()),std::max(1,bounds.height()),QImage::Format_ARGB32_Premultiplied);
+    field.fill(Qt::transparent);
+    QPainter textPainter(&field);
+    textPainter.setRenderHint(QPainter::TextAntialiasing,false);
+    textPainter.setFont(font);textPainter.setPen(options.foreground);
+    textPainter.drawText(-bounds.left(),-bounds.top(),interpretationText);
+    textPainter.end();
+    const QRect ink=alphaBounds(field);
     const int textTop=interpretationAbove?0:height+gap;
-    painter.drawText(QRect(0,textTop,symbol.width(),textHeight),Qt::AlignHCenter|Qt::AlignTop,code128Interpretation(text));
+    if(!ink.isEmpty()) {
+      const QImage cropped=field.copy(ink);
+      painter.drawImage((symbol.width()-cropped.width())/2,textTop,cropped);
+    }
   }
   painter.end();symbol=rotateImage(symbol,barcode.orientation);
   QPoint position=state.position;

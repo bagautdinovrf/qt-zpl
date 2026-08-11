@@ -319,6 +319,19 @@ private slots:
       different+=(result->labels[0].pixelColor(x,y).value()<128)!=(golden.pixelColor(x,y).value()<128);
     QCOMPARE(different,0);
   }
+  void fontAAndCode128InterpretationTrackLabelary() {
+    const auto bytes=corpusFile(u"labelary.zpl");
+    const auto golden=corpusGolden(u"labelary.zpl",0);
+    QVERIFY(!bytes.isEmpty());QVERIFY(!golden.isNull());
+    const auto result=QtZpl::render(QString::fromLatin1(bytes),{},QtZpl::RenderOptions{
+      .dpi=203,.width=812,.height=1218,.ignoreLabelHome=true});
+    QVERIFY(result.has_value());
+    const auto& actual=result->labels.front();
+    const double addressSimilarity=inkJaccard(actual,golden,QRect(45,285,535,170));
+    const double barcodeSimilarity=inkJaccard(actual,golden,QRect(90,540,670,350));
+    QVERIFY2(addressSimilarity>=0.50,qPrintable(u"Font A similarity is %1"_s.arg(addressSimilarity,0,'f',6)));
+    QVERIFY2(barcodeSimilarity>=0.98,qPrintable(u"Code 128 interpretation similarity is %1"_s.arg(barcodeSimilarity,0,'f',6)));
+  }
   void rotatedTypesetTextUsesRotatedBaseline() {
     const auto result=QtZpl::render(
       u"^XA^PW240^LL240^FT100,100^A0R,30,30^FDTEST^FS^XZ");
