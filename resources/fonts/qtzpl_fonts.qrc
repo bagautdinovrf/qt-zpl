@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/qtzpl/fonts">
+    <file alias="font0.ttf">font0.ttf</file>
+    <file alias="ocr_b.ttf">ocr_b.ttf</file>
+  </qresource>
+</RCC>
