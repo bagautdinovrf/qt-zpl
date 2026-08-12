@@ -81,7 +81,7 @@ private:
     const auto first = input_[position_++].toUpper();
     if (first == u'A' && position_ < input_.size()) {
       const auto second = input_[position_];
-      if (second.isLetterOrNumber()) { ++position_; return QString{first} + second.toUpper(); }
+      if (second == u'@' || second.isLetterOrNumber()) { ++position_; return QString{first} + second.toUpper(); }
     }
     if (position_ < input_.size() && input_[position_].isLetterOrNumber()) {
       return QString{first} + input_[position_++].toUpper();
@@ -176,14 +176,18 @@ private:
     else if (op == u"FR") add(FieldReverse{}, offset,prefix,op,raw);
     else if (op == u"FW" || op == u"FP") add(FieldDirection{orientationValue(p)}, offset,prefix,op,raw);
     else if (op == u"FH") hexIndicator_ = raw.isEmpty() ? u'_' : raw.front();
+    else if (op == u"A@") parseDownloadedFont(p,offset,raw);
     else if (op.size() == 2 && op.front() == u'A') parseFont(op, p, offset, raw);
     else if (op == u"CF") add(ChangeFont{charValue(p,0,u'0'), intValue(p,1,30), intValue(p,2,0)}, offset,prefix,op,raw);
     else if (op == u"FB") add(FieldBlock{intValue(p,0), intValue(p,1,1), intValue(p,2), justificationValue(p,3), intValue(p,4)}, offset,prefix,op,raw);
+    else if (op == u"F8") add(FieldEncoding{raw},offset,prefix,op,raw);
     else if (op == u"CI") add(CharacterSet{intValue(p,0)}, offset,prefix,op,raw);
     else if (op == u"BY") add(BarcodeDefault{intValue(p,0,2), doubleValue(p,1,3.0), intValue(p,2,10)}, offset,prefix,op,raw);
     else if (op == u"PW") { current_->width_ = intValue(p,0); add(PrintWidth{current_->width_}, offset,prefix,op,raw); }
     else if (op == u"LL") { current_->height_ = intValue(p,0); add(LabelLength{current_->height_}, offset,prefix,op,raw); }
     else if (op == u"LH") { current_->homeX_=intValue(p,0); current_->homeY_=intValue(p,1); add(LabelHome{current_->homeX_,current_->homeY_},offset,prefix,op,raw); }
+    else if (op == u"LS") add(LabelShift{intValue(p,0)},offset,prefix,op,raw);
+    else if (op == u"MM") add(PrintMode{charValue(p,0,u'T'),charValue(p,1,u'N')==u'Y'},offset,prefix,op,raw);
     else if (op == u"PO") add(PrintOrientation{orientationValue(p)},offset,prefix,op,raw);
     else if (op == u"PR") add(PrintRate{raw},offset,prefix,op,raw);
     else if (op == u"MD") add(MediaDarkness{intValue(p,0)},offset,prefix,op,raw);
@@ -210,6 +214,12 @@ private:
     else if (font == u'G') { defaultHeight=60; defaultWidth=40; }
     else if (font == u'H') { defaultHeight=21; defaultWidth=13; }
     add(ScalableFont{font,orientationValue(p),intValue(p,1,defaultHeight),intValue(p,2,defaultWidth)},offset,caret_,op,raw);
+  }
+
+  void parseDownloadedFont(const QList<QString>& p,qsizetype offset,const QString& raw) {
+    // External printer fonts are not available to the local deterministic renderer.
+    // Preserve ^A@ as a known command and use the embedded scalable Font 0 metrics.
+    add(ScalableFont{u'0',orientationValue(p),intValue(p,1,30),intValue(p,2,0)},offset,caret_,u"A@"_s,raw);
   }
 
   void parseGraphicField(const QList<QString>& p, qsizetype offset, const QString& raw) {

@@ -34,6 +34,7 @@ struct FieldTypeset { int x = 0; int y = 0; Justification justification = Justif
 struct FieldData { QString data; };
 struct FieldDirection { Orientation orientation = Orientation::Normal; };
 struct FieldBlock { int width = 0; int maxLines = 1; int lineSpacing = 0; Justification justification = Justification::Left; int hangingIndent = 0; };
+struct FieldEncoding { QString parameters; };
 struct ScalableFont { QChar font = u'0'; Orientation orientation = Orientation::Normal; int height = 30; int width = 0; };
 struct ChangeFont { QChar font = u'0'; int height = 30; int width = 0; };
 struct CharacterSet { int id = 0; };
@@ -41,6 +42,8 @@ struct BarcodeDefault { int moduleWidth = 2; double wideToNarrowRatio = 3.0; int
 struct PrintWidth { int dots = 0; };
 struct LabelLength { int dots = 0; };
 struct LabelHome { int x = 0; int y = 0; };
+struct LabelShift { int dots = 0; };
+struct PrintMode { QChar mode = u'T'; bool prePeel = false; };
 struct PrintOrientation { Orientation orientation = Orientation::Normal; };
 struct PrintRate { QString parameters; };
 struct MediaDarkness { int darkness = 0; };
@@ -61,9 +64,9 @@ struct UnknownCommand { QChar prefix = u'^'; QString opcode; QString parameters;
 
 using CommandPayload = std::variant<
     FormatStart, FormatEnd, FieldSeparator, FieldReverse, FieldOrigin, FieldTypeset,
-    FieldData, FieldDirection, FieldBlock, ScalableFont, ChangeFont, CharacterSet,
-    BarcodeDefault, PrintWidth, LabelLength, LabelHome, PrintOrientation, PrintRate,
-    MediaDarkness, PrintQuantity, GraphicBox,
+    FieldData, FieldDirection, FieldBlock, FieldEncoding, ScalableFont, ChangeFont, CharacterSet,
+    BarcodeDefault, PrintWidth, LabelLength, LabelHome, LabelShift, PrintMode,
+    PrintOrientation, PrintRate, MediaDarkness, PrintQuantity, GraphicBox,
     GraphicCircle, GraphicDiagonal, GraphicEllipse, GraphicField, Barcode, Comment,
     UnknownCommand>;
 

@@ -139,6 +139,102 @@ private slots:
     QVERIFY(result.has_value()); QCOMPARE(result->labels.size(),1); QCOMPARE(result->labels[0].size(),QSize(40,30));
     QCOMPARE(result->labels[0].pixelColor(5,5),QColor(Qt::black));
   }
+  void graphicBoxesUseThicknessForZeroDimensions() {
+    struct Case{QString zpl;QRect bounds;};
+    const QList<Case> cases{
+      {u"^XA^PW800^LL40^FO45,10^GB714,0,6^FS^XZ"_s,QRect(45,10,714,6)},
+      {u"^XA^PW40^LL180^FO10,20^GB0,124,6^FS^XZ"_s,QRect(10,20,6,124)},
+    };
+    for(const auto& test:cases){
+      const auto rendered=QtZpl::render(test.zpl);QVERIFY(rendered.has_value());
+      QCOMPARE(inkBounds(rendered->labels.front()),test.bounds);
+    }
+  }
+  void acceptsPrintModeLabelShiftAndDownloadedFont() {
+    const auto rendered=QtZpl::render(
+      u"^XA^PW80^LL50^MMT^LS7^FO0,0^GB10,10,1^FS^FT5,30^A@N,20,10,ARIALR.TTF^F8^FDX^FS^XZ");
+    QVERIFY(rendered.has_value());
+    QStringList unsupported;
+    for(const auto& diagnostic:rendered->diagnostics)
+      if(diagnostic.code==u"unsupported-command"_s)unsupported.append(diagnostic.command);
+    QVERIFY2(unsupported.isEmpty(),qPrintable(unsupported.join(u", "_s)));
+    QCOMPARE(rendered->labels.front().pixelColor(0,0),QColor(Qt::white));
+    QCOMPARE(rendered->labels.front().pixelColor(7,0),QColor(Qt::black));
+    QCOMPARE(rendered->labels.front().pixelColor(16,0),QColor(Qt::black));
+  }
+  void fieldBlockLayoutsInLogicalCoordinatesBeforeRotation() {
+    const auto renderOrientation=[](QChar orientation){
+      return QtZpl::render(
+        u"^XA^PW260^LL260^FT130,130^A0%1,20,10^FB55,3,7,L,10^FDMMMM MMMM\\&MMMM^FS^XZ"_s
+          .arg(orientation));
+    };
+    const auto normal=renderOrientation(u'N');QVERIFY(normal.has_value());
+    const auto rotated=renderOrientation(u'R');QVERIFY(rotated.has_value());
+    const auto inverted=renderOrientation(u'I');QVERIFY(inverted.has_value());
+    const auto bottomUp=renderOrientation(u'B');QVERIFY(bottomUp.has_value());
+    const auto& n=normal->labels.front();
+    const auto& r=rotated->labels.front();
+    const auto& i=inverted->labels.front();
+    const auto& b=bottomUp->labels.front();
+
+    qsizetype inkCount=0;
+    for(int y=0;y<n.height();++y)for(int x=0;x<n.width();++x){
+      if(n.pixelColor(x,y).value()>=128)continue;
+      ++inkCount;
+      QCOMPARE(r.pixelColor(260-y,x),QColor(Qt::black));
+      QCOMPARE(i.pixelColor(260-x,260-y),QColor(Qt::black));
+      QCOMPARE(b.pixelColor(y,260-x),QColor(Qt::black));
+    }
+    const auto countInk=[](const QImage& image){
+      qsizetype count=0;
+      for(int y=0;y<image.height();++y)for(int x=0;x<image.width();++x)
+        count+=image.pixelColor(x,y).value()<128;
+      return count;
+    };
+    QVERIFY(inkCount>0);
+    QCOMPARE(countInk(r),inkCount);
+    QCOMPARE(countInk(i),inkCount);
+    QCOMPARE(countInk(b),inkCount);
+
+    QList<QRect> lineBounds;
+    bool inLine=false;
+    for(int y=0;y<n.height();++y){
+      QRect rowBounds;
+      for(int x=0;x<n.width();++x)
+        if(n.pixelColor(x,y).value()<128)rowBounds|=QRect(x,y,1,1);
+      if(!rowBounds.isEmpty()){
+        if(!inLine)lineBounds.append(rowBounds);
+        else lineBounds.back()|=rowBounds;
+        inLine=true;
+      }else inLine=false;
+    }
+    QCOMPARE(lineBounds.size(),3);
+    QCOMPARE(lineBounds[1].left()-lineBounds[0].left(),10);
+    QCOMPARE(lineBounds[2].left(),lineBounds[1].left());
+    QCOMPARE(lineBounds[2].top()-lineBounds[1].top(),lineBounds[1].top()-lineBounds[0].top());
+  }
+  void fieldBlockHonorsCenteringAndTypesetMaximumLines() {
+    const auto centered=QtZpl::render(
+      u"^XA^PW180^LL100^FT30,60^A0N,20,10^FB100,1,0,C,0^FDMMMM^FS^XZ");
+    QVERIFY(centered.has_value());
+    const auto centeredBounds=inkBounds(centered->labels.front());
+    QVERIFY(!centeredBounds.isEmpty());
+    QVERIFY(std::abs(centeredBounds.center().x()-80)<=2);
+
+    const auto typeset=QtZpl::render(
+      u"^XA^PW120^LL120^FT20,100^A0N,20,10^FB60,3,0,L,0^FDMMMM^FS^XZ");
+    QVERIFY(typeset.has_value());
+    const auto typesetBounds=inkBounds(typeset->labels.front());
+    QVERIFY(!typesetBounds.isEmpty());
+    QVERIFY2(typesetBounds.bottom()<80,qPrintable(QString::number(typesetBounds.bottom())));
+
+    const auto medicine=QtZpl::render(
+      u"^XA^PW1065^LL2362^FT238,2362^A0B,40,50^FB1151,1,6,C^CI28^FDКардиомагнил^FS^XZ");
+    QVERIFY(medicine.has_value());
+    const auto medicineBounds=inkBounds(medicine->labels.front());
+    QVERIFY(!medicineBounds.isEmpty());
+    QVERIFY(std::abs(medicineBounds.center().y()-(2362-1151/2))<=3);
+  }
   void rendersZ64GraphicFieldAndValidatesCrc() {
     const auto rendered=QtZpl::render(
       u"^XA^PW8^LL2^FO0,0^GFA,10,2,1,:Z64:eJxbFQoAAasBAA==:B023^FS^XZ");
