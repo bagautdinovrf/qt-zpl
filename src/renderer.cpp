@@ -369,6 +369,100 @@ std::optional<QByteArray> decodeZ64(const GraphicField& gf,qsizetype offset,QLis
   return uncompressed;
 }
 
+int asciiCompressionRepeatCount(char code) {
+  if(code>='G'&&code<='Y')return code-'G'+1;
+  if(code>='g'&&code<='z')return (code-'g'+1)*20;
+  return 0;
+}
+
+std::optional<QByteArray> decodeAsciiGraphic(const GraphicField& gf,qsizetype offset,
+                                             QList<Diagnostic>& diagnostics) {
+  const auto fail=[&](QString message)->std::optional<QByteArray>{
+    diagnostics.append({Severity::Error,u"graphic-field-ascii-compression"_s,
+      std::move(message),offset,u"^GFA"_s});
+    return std::nullopt;
+  };
+  constexpr qsizetype maximumGraphicBytes=64*1024*1024;
+  if(gf.totalBytes<=0||gf.bytesPerRow<=0)
+    return fail(u"The graphic byte count and bytes-per-row must be positive."_s);
+  if(gf.totalBytes%gf.bytesPerRow!=0)
+    return fail(u"The graphic byte count is not an exact number of rows."_s);
+  if(gf.totalBytes>maximumGraphicBytes)
+    return fail(u"The expanded graphic exceeds the safe 64 MiB limit."_s);
+
+  const qsizetype rowNibbles=static_cast<qsizetype>(gf.bytesPerRow)*2;
+  const qsizetype expectedBytes=gf.totalBytes;
+  QByteArray decoded;decoded.reserve(gf.totalBytes);
+  QByteArray row;row.reserve(rowNibbles);
+  QByteArray previousRow;
+  const auto finishRow=[&]()->bool{
+    if(row.size()!=rowNibbles)return false;
+    const auto bytes=QByteArray::fromHex(row);
+    if(bytes.size()!=gf.bytesPerRow||decoded.size()+bytes.size()>expectedBytes)return false;
+    decoded.append(bytes);previousRow=bytes;row.clear();return true;
+  };
+  const auto appendNibbles=[&](char nibble,qsizetype count)->bool{
+    if(count<=0||count>rowNibbles-row.size())return false;
+    row.append(count,nibble);
+    return row.size()!=rowNibbles||finishRow();
+  };
+
+  for(qsizetype i=0;i<gf.data.size();){
+    const char code=gf.data[i];
+    if(code==' '||code=='\t'||code=='\r'||code=='\n'){++i;continue;}
+    if(code==',') { // Fill the remainder of this row with zero nibbles.
+      const auto remaining=rowNibbles-row.size();++i;
+      if(remaining<=0||!appendNibbles('0',remaining))
+        return fail(u"A zero-fill marker overflowed its row."_s);
+      continue;
+    }
+    if(code=='!') {
+      const auto remaining=rowNibbles-row.size();++i;
+      if(remaining<=0||!appendNibbles('F',remaining))
+        return fail(u"A one-fill marker overflowed its row."_s);
+      continue;
+    }
+    if(code==':') {
+      ++i;
+      if(!row.isEmpty()||previousRow.size()!=gf.bytesPerRow
+         ||decoded.size()+previousRow.size()>expectedBytes)
+        return fail(u"A repeat-row marker has no complete preceding row or overflows the graphic."_s);
+      decoded.append(previousRow);
+      continue;
+    }
+    if(const int firstCount=asciiCompressionRepeatCount(code);firstCount>0){
+      qsizetype count=0;
+      while(i<gf.data.size()){
+        const int part=asciiCompressionRepeatCount(gf.data[i]);
+        if(part==0)break;
+        count+=part;++i;
+      }
+      if(i>=gf.data.size())return fail(u"A repeat count has no following hexadecimal nibble."_s);
+      const char nibble=gf.data[i++];
+      const bool hexadecimal=(nibble>='0'&&nibble<='9')||(nibble>='A'&&nibble<='F')
+        ||(nibble>='a'&&nibble<='f');
+      if(!hexadecimal)return fail(u"A repeat count is not followed by a hexadecimal nibble."_s);
+      if(!appendNibbles(nibble,count))return fail(u"Repeated hexadecimal data overflowed its row."_s);
+      continue;
+    }
+    const bool hexadecimal=(code>='0'&&code<='9')||(code>='A'&&code<='F')
+      ||(code>='a'&&code<='f');
+    if(!hexadecimal)return fail(u"The compressed graphic contains an invalid character."_s);
+    ++i;
+    if(!appendNibbles(code,1))return fail(u"Hexadecimal data overflowed its row."_s);
+  }
+  if(!row.isEmpty()){
+    if(row.size()%2!=0)return fail(u"The compressed graphic ends with an unmatched hexadecimal nibble."_s);
+    return fail(u"The final graphic row contains fewer bytes than declared."_s);
+  }
+  // Zebra and Labelary treat omitted complete trailing rows as blank. Materialize
+  // those rows so the validated buffer still has exactly the declared size.
+  if(decoded.size()<expectedBytes)decoded.append(expectedBytes-decoded.size(),char{0});
+  if(decoded.size()!=expectedBytes)
+    return fail(u"The expanded graphic size exceeds the declared total byte count."_s);
+  return decoded;
+}
+
 void drawGraphicField(QImage& image,const QPoint& pos,const GraphicField& gf,const RenderOptions& options,
                       qsizetype offset,QList<Diagnostic>& diagnostics) {
   if (gf.bytesPerRow <= 0) return;
@@ -377,8 +471,12 @@ void drawGraphicField(QImage& image,const QPoint& pos,const GraphicField& gf,con
   const bool z64=gf.compression==u'A'&&QByteArrayView{gf.data}.trimmed().startsWith(":Z64:");
   const auto z64Data=z64?decodeZ64(gf,offset,diagnostics):std::optional<QByteArray>{};
   if(z64&&!z64Data)return;
-  if(gf.compression==u'B'||z64){
-    const QByteArrayView bytes=z64?QByteArrayView{*z64Data}:QByteArrayView{gf.data};
+  const auto asciiData=gf.compression==u'A'&&!z64?decodeAsciiGraphic(gf,offset,diagnostics)
+    :std::optional<QByteArray>{};
+  if(gf.compression==u'A'&&!z64&&!asciiData)return;
+  if(gf.compression==u'B'||z64||asciiData){
+    const QByteArrayView bytes=z64?QByteArrayView{*z64Data}
+      :(asciiData?QByteArrayView{*asciiData}:QByteArrayView{gf.data});
     for(const unsigned char byte:bytes){
       for(int bit=7;bit>=0;--bit){
         if(byte&(1U<<bit))painter.drawPoint(pos.x()+x,pos.y()+y);
@@ -386,17 +484,6 @@ void drawGraphicField(QImage& image,const QPoint& pos,const GraphicField& gf,con
       }
     }
     return;
-  }
-  QByteArray hex = gf.data;
-  hex.removeIf([](char c){ return c=='\r'||c=='\n'||c==' '||c=='\t'; });
-  for (const char c : hex) {
-    int nibble = -1;
-    if (c>='0'&&c<='9') nibble=c-'0'; else if(c>='A'&&c<='F') nibble=c-'A'+10; else if(c>='a'&&c<='f') nibble=c-'a'+10;
-    if (nibble<0) continue;
-    for(int bit=3;bit>=0;--bit) {
-      if(nibble&(1<<bit)) painter.drawPoint(pos.x()+x,pos.y()+y);
-      if(++x>=gf.bytesPerRow*8){x=0;++y;}
-    }
   }
 }
 
@@ -584,18 +671,12 @@ void drawCode128(QImage& image,State& state,const Barcode& barcode,const QString
   const bool interpretation=barcode.parameters.size()<=2||barcode.parameters[2].compare(u"N",Qt::CaseInsensitive)!=0;
   const bool interpretationAbove=barcode.parameters.size()>3&&barcode.parameters[3].compare(u"Y",Qt::CaseInsensitive)==0;
   const int gap=interpretation?5:0;
-  const int textHeight=interpretation?std::clamp(height/6,18,40):0;
-  const int barsTop=interpretationAbove?textHeight+gap:0;
-  const int symbolHeight=height+textHeight+gap;
-  QImage symbol(modules->size()*module,symbolHeight,QImage::Format_ARGB32_Premultiplied);symbol.fill(options.background);
-  QPainter painter(&symbol);painter.setRenderHint(QPainter::Antialiasing,false);painter.setPen(Qt::NoPen);painter.setBrush(options.foreground);
-  for(qsizetype i=0;i<modules->size();++i)if((*modules)[i])painter.drawRect(static_cast<int>(i)*module,barsTop,module,height);
+  QImage caption;
   if(interpretation){
     const QString interpretationText=code128Interpretation(text);
     // Zebra's Code 128 interpretation uses Font A with a larger fixed cell
     // than ordinary Font 0 text at the same bar height.
-    const int interpretationSize=std::max(textHeight,50);
-    const QFont font=builtInFont(u'A',interpretationSize,interpretationSize);
+    const QFont font=builtInFont(u'A',50,50);
     const QRect bounds=QFontMetrics(font).boundingRect(interpretationText).adjusted(-1,-1,1,1);
     QImage field(std::max(1,bounds.width()),std::max(1,bounds.height()),QImage::Format_ARGB32_Premultiplied);
     field.fill(Qt::transparent);
@@ -605,11 +686,17 @@ void drawCode128(QImage& image,State& state,const Barcode& barcode,const QString
     textPainter.drawText(-bounds.left(),-bounds.top(),interpretationText);
     textPainter.end();
     const QRect ink=alphaBounds(field);
+    if(!ink.isEmpty())caption=field.copy(ink);
+  }
+  const int captionHeight=caption.height();
+  const int barsTop=interpretationAbove?captionHeight+gap:0;
+  const int symbolHeight=height+captionHeight+gap;
+  QImage symbol(modules->size()*module,symbolHeight,QImage::Format_ARGB32_Premultiplied);symbol.fill(options.background);
+  QPainter painter(&symbol);painter.setRenderHint(QPainter::Antialiasing,false);painter.setPen(Qt::NoPen);painter.setBrush(options.foreground);
+  for(qsizetype i=0;i<modules->size();++i)if((*modules)[i])painter.drawRect(static_cast<int>(i)*module,barsTop,module,height);
+  if(!caption.isNull()){
     const int textTop=interpretationAbove?0:height+gap;
-    if(!ink.isEmpty()) {
-      const QImage cropped=field.copy(ink);
-      painter.drawImage((symbol.width()-cropped.width())/2,textTop,cropped);
-    }
+    painter.drawImage((symbol.width()-caption.width())/2,textTop,caption);
   }
   painter.end();symbol=rotateImage(symbol,barcode.orientation);
   QPoint position=state.position;

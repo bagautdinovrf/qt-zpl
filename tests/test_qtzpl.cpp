@@ -271,6 +271,43 @@ private slots:
       QCOMPARE(inkBounds(invalid->labels.front()),QRect{});
     }
   }
+  void rendersAsciiCompressedGraphicField() {
+    const auto rendered=QtZpl::render(
+      u"^XA^PW176^LL4^FO0,0^GFA,8,8,2,HA,:!,^FO16,0^GFA,11,11,11,gHF"
+      "^FO104,0^GFA,2,2,1,FF^FS^XZ");
+    QVERIFY(rendered.has_value());
+    QVERIFY(std::none_of(rendered->diagnostics.cbegin(),rendered->diagnostics.cend(),[](const auto& diagnostic){
+      return diagnostic.code==u"graphic-field-ascii-compression"_s;
+    }));
+    const auto& image=rendered->labels.front();
+    const QList<QByteArray> rows{QByteArray::fromHex("AA00"),QByteArray::fromHex("AA00"),
+      QByteArray::fromHex("FFFF"),QByteArray::fromHex("0000")};
+    for(int y=0;y<rows.size();++y)for(int x=0;x<16;++x){
+      const bool expectedInk=(static_cast<unsigned char>(rows[y][x/8])&(1U<<(7-x%8)))!=0;
+      QCOMPARE(image.pixelColor(x,y),expectedInk?QColor(Qt::black):QColor(Qt::white));
+    }
+    for(int x=16;x<104;++x)QCOMPARE(image.pixelColor(x,0),QColor(Qt::black));
+    for(int x=104;x<112;++x){
+      QCOMPARE(image.pixelColor(x,0),QColor(Qt::black));
+      QCOMPARE(image.pixelColor(x,1),QColor(Qt::white));
+    }
+  }
+  void rejectsMalformedAsciiCompressedGraphicField() {
+    const QList<QString> malformed{
+      u"^XA^PW16^LL2^GFA,1,1,1,F^FS^XZ"_s,
+      u"^XA^PW16^LL2^GFA,2,2,2,00^FS^XZ"_s,
+      u"^XA^PW16^LL2^GFA,1,1,1,I0^FS^XZ"_s,
+      u"^XA^PW16^LL2^GFA,1,1,1,:^FS^XZ"_s,
+    };
+    for(const auto& zpl:malformed){
+      const auto rendered=QtZpl::render(zpl);QVERIFY(rendered.has_value());
+      QVERIFY(std::any_of(rendered->diagnostics.cbegin(),rendered->diagnostics.cend(),[](const auto& diagnostic){
+        return diagnostic.severity==QtZpl::Severity::Error
+          &&diagnostic.code==u"graphic-field-ascii-compression"_s;
+      }));
+      QCOMPARE(inkBounds(rendered->labels.front()),QRect{});
+    }
+  }
   void graphicPrimitiveBoundsMatchLabelary() {
     struct Case{QString zpl;QRect bounds;};
     const QList<Case> cases{
@@ -526,6 +563,21 @@ private slots:
     QCOMPARE(result->labels[0].pixelColor(13,10),QColor(Qt::black));
     QCOMPARE(result->labels[0].pixelColor(14,10),QColor(Qt::white));
     QCOMPARE(inkBounds(result->labels[0]),QRect(10,10,202,60));
+  }
+  void code128InterpretationIsNotVerticallyClipped() {
+    const auto barcode=QtZpl::render(
+      u"^XA^PW400^LL400^BY3,2,250^FO50,50^BC^FD{{00}}^FS^XZ");
+    const auto standalone=QtZpl::render(
+      u"^XA^PW400^LL120^FO50,20^AAN,50,50^FD{{00}}^FS^XZ");
+    QVERIFY(barcode.has_value());QVERIFY(standalone.has_value());
+    qsizetype captionInk=0;
+    for(int y=305;y<barcode->labels.front().height();++y)for(int x=0;x<barcode->labels.front().width();++x)
+      captionInk+=barcode->labels.front().pixelColor(x,y).value()<128;
+    qsizetype standaloneInk=0;
+    for(int y=0;y<standalone->labels.front().height();++y)for(int x=0;x<standalone->labels.front().width();++x)
+      standaloneInk+=standalone->labels.front().pixelColor(x,y).value()<128;
+    QCOMPARE(captionInk,standaloneInk);
+    QCOMPARE(inkBounds(barcode->labels.front()).top(),50);
   }
   void reportsInvalidCode128SubsetC() {
     auto result=QtZpl::render(u"^XA^FO0,0^BCN,50,N,N,N,C^FD123^FS^XZ");
