@@ -3,3 +3,5 @@
 /.vscode/
 *.user
 label.png
+__pycache__/
+/rendered/

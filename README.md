@@ -66,3 +66,12 @@ py -3 tools/build_helper.py gallery
 ```
 
 Сгенерированные примеры сохраняются в каталоге `examples/rendered`.
+
+Для рендеринга собственного ZPL вставьте его в переменную `ZPL` в корневом
+файле `render_helper.py`, затем выполните:
+
+```text
+py -3 render_helper.py
+```
+
+Каждый блок `^XA...^XZ` сохраняется отдельным файлом `rendered/label_N.png`.
