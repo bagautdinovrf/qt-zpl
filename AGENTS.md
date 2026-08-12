@@ -39,11 +39,23 @@ add a focused test, and document the remaining discrepancy.
   py -3 tools/build_helper.py build --target QtZpl
   ```
 
+- Batch implementation work before verification. Do not rebuild or rerun tests
+  after every small edit. Complete a coherent set of changes first, then build
+  and run the relevant tests together. Additional intermediate verification is
+  appropriate only when it is needed to diagnose a failure or de-risk a
+  substantial change.
 - Use the isolated `build_agent_debug` directory for the default Debug build. Do not modify or depend on Qt
   Creator build directories.
 - Do not commit generated build trees, DLLs, executables, CMake caches, or test
   output images. Versioned reference images under `tests/golden` are test input,
   not generated test output, and must remain committed with their matching ZPL.
+
+## Communication
+
+- During long-running work, give the user a brief progress update at least once
+  every 30 seconds. State what is currently being done and, when useful, what
+  remains; do not leave the user without visible progress while tools, builds,
+  tests, or investigation are ongoing.
 
 ## Scope
 
