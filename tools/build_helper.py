@@ -2,15 +2,17 @@
 """Build QtZpl with a correctly initialized Qt/MSVC environment.
 
 Examples:
+    py -3 tools/build_helper.py
     py -3 tools/build_helper.py all --clean
     py -3 tools/build_helper.py test --config Debug
     py -3 tools/build_helper.py build --target QtZpl
-    py -3 tools/build_helper.py install --install-prefix C:\\QtZpl\\RelWithDebInfo
+    py -3 tools/build_helper.py install --install-prefix C:\\QtZpl\\Release
 """
 
 from __future__ import annotations
 
 import argparse
+import copy
 import os
 from pathlib import Path
 import shutil
@@ -20,9 +22,20 @@ import tempfile
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_BUILD_DIR = PROJECT_ROOT / "build_agent_debug"
 QT_ROOT = Path(os.environ.get("QT_ROOT", "C:/Qt"))
 QT_TOOLS = QT_ROOT / "Tools"
+
+ALL_BUILD_CONFIGS: tuple[tuple[str, Path], ...] = (
+    ("Debug", PROJECT_ROOT / "build_agent_debug"),
+    ("Release", PROJECT_ROOT / "build_agent_release"),
+)
+
+
+def build_dir_for_config(config: str) -> Path:
+    for preset_config, build_dir in ALL_BUILD_CONFIGS:
+        if preset_config == config:
+            return build_dir
+    return PROJECT_ROOT / f"build_agent_{config.casefold()}"
 
 
 def find_vcvars64() -> Path:
@@ -110,13 +123,54 @@ def configure(args: argparse.Namespace, environment: dict[str, str], qt_dir: Pat
     run(command, environment)
 
 
+def prepare_build_dir(args: argparse.Namespace) -> None:
+    if args.clean and args.build_dir.exists():
+        print(f"Removing {args.build_dir}")
+        shutil.rmtree(args.build_dir)
+    compiler = cached_compiler(args.build_dir)
+    if compiler and not compiler.exists():
+        print(f"Removing stale build directory (missing compiler: {compiler})")
+        shutil.rmtree(args.build_dir)
+
+
+def run_action(args: argparse.Namespace, environment: dict[str, str], qt_dir: Path) -> None:
+    prepare_build_dir(args)
+    if args.action in ("configure", "all") or not (args.build_dir / "CMakeCache.txt").exists():
+        configure(args, environment, qt_dir)
+    if args.action == "configure":
+        return
+
+    cmake = str(QT_TOOLS / "CMake_64" / "bin" / "cmake.exe")
+    target = "install" if args.action == "install" else ("qtzpl_gallery" if args.action == "gallery" else args.target)
+    run([cmake, "--build", str(args.build_dir), "--target", target, "--parallel", str(args.parallel)], environment)
+    if args.action in ("test", "all") and args.tests:
+        environment["PATH"] = str(args.build_dir) + os.pathsep + environment.get("PATH", "")
+        ctest = str(QT_TOOLS / "CMake_64" / "bin" / "ctest.exe")
+        run([ctest, "--test-dir", str(args.build_dir), "--output-on-failure", "-C", args.config], environment)
+    if args.action == "gallery":
+        environment["PATH"] = str(args.build_dir) + os.pathsep + environment.get("PATH", "")
+        run([str(args.build_dir / "examples" / "qtzpl_gallery.exe"), str(args.output_dir.resolve())], environment)
+
+    print(f"QtZpl {args.action} ({args.config}) succeeded. Build directory: {args.build_dir}")
+
+
+def wants_all_configs(argv: list[str], action: str) -> bool:
+    if action in ("install", "gallery", "configure", "test"):
+        return False
+    return "--config" not in argv and "--build-dir" not in argv
+
+
+def resolve_build_dir(config: str, build_dir: Path | None) -> Path:
+    return build_dir.resolve() if build_dir is not None else build_dir_for_config(config)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("action", nargs="?", default="all", choices=("configure", "build", "test", "install", "gallery", "all"))
     parser.add_argument("--qt-version", default="6.11.1")
     parser.add_argument("--compiler", default="msvc2022_64")
-    parser.add_argument("--config", default="RelWithDebInfo", choices=("Debug", "Release", "RelWithDebInfo"))
-    parser.add_argument("--build-dir", type=Path, default=DEFAULT_BUILD_DIR)
+    parser.add_argument("--config", choices=("Debug", "Release", "RelWithDebInfo"))
+    parser.add_argument("--build-dir", type=Path)
     parser.add_argument(
         "--install-prefix",
         type=Path,
@@ -132,7 +186,6 @@ def main() -> int:
     parser.add_argument("--no-examples", dest="examples", action="store_false")
     parser.set_defaults(shared=True, tests=True, examples=True)
     args = parser.parse_args()
-    args.build_dir = args.build_dir.resolve()
     if args.install_prefix is not None:
         args.install_prefix = args.install_prefix.resolve()
     if args.action == "install" and args.install_prefix is None:
@@ -142,35 +195,23 @@ def main() -> int:
     if not qt_dir.is_dir():
         parser.error(f"Qt kit does not exist: {qt_dir}")
 
-    if args.clean and args.build_dir.exists():
-        print(f"Removing {args.build_dir}")
-        shutil.rmtree(args.build_dir)
-    compiler = cached_compiler(args.build_dir)
-    if compiler and not compiler.exists():
-        print(f"Removing stale build directory (missing compiler: {compiler})")
-        shutil.rmtree(args.build_dir)
-
     environment = capture_environment(qt_dir, args.compiler)
-    if args.action in ("configure", "all") or not (args.build_dir / "CMakeCache.txt").exists():
-        configure(args, environment, qt_dir)
-    if args.action == "configure":
+
+    if wants_all_configs(sys.argv[1:], args.action):
+        print("Building all preset configurations: Debug, Release")
+        for config, build_dir in ALL_BUILD_CONFIGS:
+            variant = copy.copy(args)
+            variant.config = config
+            variant.build_dir = build_dir
+            if args.action in ("test", "all"):
+                variant.tests = False
+            run_action(variant, environment, qt_dir)
         return 0
 
-    cmake = str(QT_TOOLS / "CMake_64" / "bin" / "cmake.exe")
-    target = "install" if args.action == "install" else ("qtzpl_gallery" if args.action == "gallery" else args.target)
-    run([cmake, "--build", str(args.build_dir), "--target", target, "--parallel", str(args.parallel)], environment)
-    if args.action in ("test", "all") and args.tests:
-        # The shared QtZpl DLL is emitted at the build root while the test
-        # executable lives in the selected build directory's tests folder. Make it discoverable without
-        # copying artifacts or modifying the user's global PATH.
-        environment["PATH"] = str(args.build_dir) + os.pathsep + environment.get("PATH", "")
-        ctest = str(QT_TOOLS / "CMake_64" / "bin" / "ctest.exe")
-        run([ctest, "--test-dir", str(args.build_dir), "--output-on-failure", "-C", args.config], environment)
-    if args.action == "gallery":
-        environment["PATH"] = str(args.build_dir) + os.pathsep + environment.get("PATH", "")
-        run([str(args.build_dir / "examples" / "qtzpl_gallery.exe"), str(args.output_dir.resolve())], environment)
-
-    print(f"QtZpl {args.action} succeeded. Build directory: {args.build_dir}")
+    variant = copy.copy(args)
+    variant.config = args.config or "Debug"
+    variant.build_dir = resolve_build_dir(variant.config, args.build_dir)
+    run_action(variant, environment, qt_dir)
     return 0
 
 

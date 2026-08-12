@@ -29,33 +29,68 @@ DataMatrix выбирается идентификатором формата `1
 
 ## Сборка
 
-```text
-cmake -S . -B build -G Ninja -DCMAKE_PREFIX_PATH=C:/Qt/6.11.1/msvc2022_64
-cmake --build build
-ctest --test-dir build --output-on-failure
-```
+### Windows (рекомендуется)
 
-В Windows используйте вспомогательный скрипт, который настраивает окружение Qt
-и MSVC и выполняет Debug-сборку в изолированном каталоге `build_agent_debug`:
+Скрипт `tools/build_helper.py` сам поднимает окружение Qt 6.11 и MSVC 2022 и
+вызывает CMake/Ninja.
+
+**Без параметров** — собирает Debug и Release в отдельных каталогах, без тестов:
 
 ```text
+py -3 tools/build_helper.py
 py -3 tools/build_helper.py all --clean
-py -3 tools/build_helper.py test --config Debug
-py -3 tools/build_helper.py build --target QtZpl
 ```
 
-Чтобы установить динамическую библиотеку для использования в другом проекте,
-задайте переменную `QTZPL_ROOT` либо явно передайте префикс установки:
+Каталоги: `build_agent_debug`, `build_agent_release`.
+
+**Одна конфигурация** — укажите `--config` (каталог подбирается автоматически):
 
 ```text
-set QTZPL_ROOT=C:\QtZpl\RelWithDebInfo
-py -3 tools/build_helper.py install --clean --config RelWithDebInfo
-py -3 tools/build_helper.py install --install-prefix C:\QtZpl\RelWithDebInfo
+py -3 tools/build_helper.py all --clean --config Debug
+py -3 tools/build_helper.py test --config Debug
+py -3 tools/build_helper.py build --config Debug --target QtZpl
+
+py -3 tools/build_helper.py all --clean --config Release
+py -3 tools/build_helper.py build --config Release --target QtZpl
 ```
 
-По умолчанию используется Qt 6.11.1 с комплектом `msvc2022_64`. Для выбора
-другого установленного комплекта предназначены параметры `--qt-version` и
-`--compiler`.
+Свой каталог сборки — только если нужен нестандартный путь:
+
+```text
+py -3 tools/build_helper.py build --config Release --build-dir build_custom
+```
+
+Повторная сборка без переконфигурации:
+
+```text
+py -3 tools/build_helper.py build --config Debug
+py -3 tools/build_helper.py build --config Release
+```
+
+### Установка в другой проект
+
+```text
+set QTZPL_ROOT=C:\QtZpl\Release
+py -3 tools/build_helper.py install --clean --config Release --build-dir build_agent_release --install-prefix C:\QtZpl\Release
+```
+
+Debug-установка — `--config Debug`. Другой kit Qt — `--qt-version` и `--compiler`.
+
+### Ручная сборка (CMake)
+
+Если окружение Qt и MSVC уже настроено в терминале:
+
+```text
+cmake -S . -B build_debug -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH=C:/Qt/6.11.1/msvc2022_64
+cmake --build build_debug
+ctest --test-dir build_debug --output-on-failure
+
+cmake -S . -B build_release -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=C:/Qt/6.11.1/msvc2022_64
+cmake --build build_release
+```
+
+По умолчанию в `build_helper.py` используется Qt **6.11.1**, комплект **msvc2022_64**.
+Параметры `--qt-version` и `--compiler` переключают другой kit из `C:\Qt`.
 
 ## Примеры рендеринга
 
