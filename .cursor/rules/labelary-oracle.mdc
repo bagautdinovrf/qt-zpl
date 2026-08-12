@@ -1,0 +1,14 @@
+---
+description: Labelary is the pixel oracle; go-zpl supplies ZPL fixtures only
+alwaysApply: true
+---
+
+# Labelary vs go-zpl
+
+When working on QtZpl rendering, tests, or golden parity:
+
+- **Labelary** (`https://labelary.com/`, `tests/golden/**/*-labelary-bitonal.png`) is the **pixel oracle**. Compare QtZpl output to Labelary goldens.
+- **go-zpl** (`tests/corpus/go-zpl-demo/`, sibling repo) supplies **ZPL fixtures and parser semantics only**. Do not compare QtZpl raster to go-zpl WASM/site render output.
+- Text like `go-zpl` inside a ZPL file is label content, not a comparison target.
+
+For debugging: `qtzpl_compare_golden` + `manifest.json` options. Do not suggest "compare with go-zpl" for visual acceptance work.

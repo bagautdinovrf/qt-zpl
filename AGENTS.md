@@ -170,6 +170,39 @@ The library does not own:
 
 ## Testing and acceptance
 
+### Labelary is the pixel oracle; go-zpl is not a renderer reference
+
+When diagnosing rendering differences, comparing acceptance output, or
+recommending fixes, **always orient on Labelary**, never on go-zpl render
+output.
+
+| Source | Role | Use for |
+|---|---|---|
+| [Labelary](https://labelary.com/) | **Pixel oracle** | Visual acceptance, golden PNGs, diff/debug |
+| go-zpl demo / `C:\GitRepos\go-zpl` | **ZPL corpus + parser semantics** | Input fixtures, command behavior while porting |
+| QtZpl | **Implementation under test** | Actual PNG to compare against Labelary |
+
+**Do**
+
+- Compare QtZpl output to committed `*-labelary-bitonal.png` goldens under
+  `tests/golden/`.
+- Regenerate goldens from Labelary with `X-Quality: Bitonal` when fixtures or
+  sizes change.
+- Use `qtzpl_compare_golden` and `tests/corpus/go-zpl-demo/manifest.json`
+  render options for demo fixtures.
+
+**Do not**
+
+- Compare QtZpl output to go-zpl WASM/site render output during acceptance or
+  debugging.
+- Treat the string `go-zpl` in label text (for example in `hello.zpl`) as a
+  signal to compare against the go-zpl project renderer.
+- Call Labelary or the go-zpl website from normal tests; use committed fixtures
+  and goldens only.
+
+The directory name `tests/corpus/go-zpl-demo/` means the ZPL came from the
+public demo catalog, **not** that go-zpl produces the expected raster.
+
 - Every example published by the sibling go-zpl demo at
   `https://stirlingmarketinggroup.github.io/go-zpl/` must parse and render
   without `unsupported-command`, `barcode-render-pending`, or render-error
@@ -199,6 +232,36 @@ The library does not own:
   and must be embedded in the test target so normal tests never use the network.
   Do not replace bitonal references with grayscale PNGs or locally thresholded
   derivatives.
+- The go-zpl demo supplies ZPL fixtures under `tests/corpus/go-zpl-demo/` and
+  `manifest.json` render options. Labelary bitonal PNGs under
+  `tests/golden/go-zpl-demo/` are the pixel oracle. Do not compare QtZpl output
+  to go-zpl render output during acceptance work.
+- To inspect a fixture against its Labelary golden, build and run
+  `qtzpl_compare_golden`. Pass render options from `manifest.json` when the
+  fixture comes from the demo corpus:
+
+  ```text
+  py -3 tools/build_helper.py build --config Debug --target qtzpl_compare_golden
+  build_agent_debug\examples\qtzpl_compare_golden.exe ^
+    tests\corpus\go-zpl-demo\hello.zpl ^
+    tests\golden\go-zpl-demo\hello-page-1-labelary-bitonal.png ^
+    build_agent_debug\hello-actual.png ^
+    build_agent_debug\hello-diff.png ^
+    --width 812 --height 609 --dpi 203 --ignore-label-home
+  ```
+
+  The tool writes the rendered PNG, an optional red diff overlay, and prints ink
+  bounds, different pixel count, and ink Jaccard. On Windows, `qtzpl_tests` may
+  not emit useful stdout under CTest; use `qtzpl_compare_golden` or run
+  `qtzpl_tests -o build_agent_debug\test_results.txt -v2` when diagnosing
+  failures.
+- Known open discrepancy (2026-08-12): `hello.zpl` QR (`^BQN`) matches Labelary
+  pixel-perfect, but Font 0 text at `^FO` does not. With manifest options
+  (812×609, `ignoreLabelHome=true`), ink bounds are actual `(50,51 397×204)`
+  vs golden `(50,49 413×206)`, 2558 different pixels, ink Jaccard 0.826. The
+  diff is confined to the two `^A0` fields; suspect `^FO` Y anchor and Font 0
+  glyph width/stretch in `drawText` (`src/renderer.cpp`). Fix with
+  `font0TextMatchesHelloDemoGolden` and re-check `demoCorpusGoldenParity`.
 - Preserve the current EAN-13 golden matrix: module widths 1 through 5,
   interpretation above and below, and orientations N, R, I, and B. Preserve the
   DataMatrix N/R/I/B pixel-exact golden matrix.
@@ -209,14 +272,17 @@ The library does not own:
 - Before handing off a change, run the standard clean Debug build and report the
   exact test result. For performance-sensitive changes, also run a Release or
   RelWithDebInfo build.
-- Expand visual regression coverage against go-zpl and selected real-printer
-  samples; keep Labelary as a reviewed reference rather than assuming it always
-  overrides authoritative Zebra behavior.
+- Expand visual regression coverage using the go-zpl demo **ZPL catalog** and
+  selected real-printer samples; compare rendered output only against Labelary
+  goldens, not against go-zpl images.
 
 ## Reference implementation
 
-The sibling repository `C:\GitRepos\go-zpl` is the current behavioral reference
-for parser and renderer parity. Port behavior deliberately; do not mechanically
-translate Go idioms into C++. If the Go implementation conflicts with Zebra or
-an authoritative test, preserve the evidence in a regression test and fix the
-Qt implementation toward the printer-correct result.
+The sibling repository `C:\GitRepos\go-zpl` is a **behavioral** reference while
+porting parser and command semantics. It is **not** the pixel oracle for
+acceptance. For visible output, committed Labelary bitonal PNGs under
+`tests/golden/` override go-zpl render output. Port behavior deliberately; do
+not mechanically translate Go idioms into C++. If the Go implementation conflicts
+with Zebra or an authoritative Labelary golden, preserve the evidence in a
+regression test and fix the Qt implementation toward the printer-correct or
+Labelary-reviewed result.
