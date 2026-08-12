@@ -631,6 +631,26 @@ private slots:
     QCOMPARE(words.count(char(232)),1);
     QCOMPARE(words.count(char(30)),1);
   }
+  void gs1DataMatrixPharmaPayloadMatchesGoReference() {
+    const QString payload=u"01046700124620402158HZ"_s+QString(QChar(0x001d))+u"91FFD0"_s+QString(QChar(0x001d))+u"92dGVzdA=="_s;
+    const auto zpl=u"^XA^FT59,474^BXN,6,200,36,36,1,|^FD|1"_s+payload.mid(2)+u"^FS^XZ";
+    const auto result=QtZpl::render(zpl);
+    QVERIFY(result.has_value());
+    QVERIFY(std::none_of(result->diagnostics.cbegin(),result->diagnostics.cend(),[](const auto& d){return d.severity==QtZpl::Severity::Error;}));
+    const auto words=QtZpl::BarcodeEncoders::Detail::dataMatrixCodewords(payload.toLatin1(),true);
+    QCOMPARE(words.count(char(232)),1);
+    QCOMPARE(words.count(char(30)),2);
+    int darkModules=0;
+    const auto& image=result->labels.front();
+    for(int y=258;y<474;++y)for(int x=59;x<275;++x)if(image.pixelColor(x,y).value()<128)++darkModules;
+    QVERIFY2(darkModules>1000,qPrintable(u"Expected a rendered GS1 DataMatrix symbol in the barcode region."_s));
+  }
+  void warnsWhenGs1DataMatrixUsesLiteralUnicodeEscapeSpelling() {
+    const auto zpl=u"^XA^FO10,10^BXN,4,200,0,0,1,|^FD|10109501101530003\\u001D10ABC123^FS^XZ";
+    const auto result=QtZpl::render(zpl);
+    QVERIFY(result.has_value());
+    QVERIFY(std::any_of(result->diagnostics.cbegin(),result->diagnostics.cend(),[](const auto& d){return d.code==u"gs1-datamatrix-separator"_s;}));
+  }
   void reportsInvalidEan13() {
     auto result=QtZpl::render(u"^XA^FO0,0^BEN,50,N^FD5901234123458^FS^XZ");
     QVERIFY(result.has_value());

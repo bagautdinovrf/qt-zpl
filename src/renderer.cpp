@@ -538,7 +538,11 @@ void drawDataMatrix(QImage& image,State& state,const Barcode& barcode,const QStr
   const int columns=barcode.parameters.size()>3?barcode.parameters[3].toInt():0;
   const int rows=barcode.parameters.size()>4?barcode.parameters[4].toInt():0;
   const int requestedSize=columns>0&&columns==rows?columns:0;
-  auto matrix=BarcodeEncoders::dataMatrix(decodeDataMatrixData(text,escape,gs1),gs1,requestedSize);
+  const auto decoded=decodeDataMatrixData(text,escape,gs1);
+  if(gs1&&!decoded.contains(char(0x1d))&&(text.contains(u"\\u001D"_s,Qt::CaseInsensitive)||text.contains(u"\\x1D"_s,Qt::CaseInsensitive)))
+    diagnostics.append({Severity::Warning,u"gs1-datamatrix-separator"_s,
+      u"GS1 DataMatrix field data contains a literal \\\\u001D or \\\\x1D text sequence; use byte 0x1D, |d029, or ^FH hex instead of an escape spelling."_s,-1,u"^BX"_s});
+  auto matrix=BarcodeEncoders::dataMatrix(decoded,gs1,requestedSize);
   if(!matrix){diagnostics.append({Severity::Error,u"datamatrix-encode"_s,matrix.error(),-1,u"^BX"_s});return;}
   QImage symbol(matrix->width*module,matrix->height*module,QImage::Format_ARGB32_Premultiplied);symbol.fill(options.background);
   QPainter p(&symbol);p.setPen(Qt::NoPen);p.setBrush(options.foreground);
