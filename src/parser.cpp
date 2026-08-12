@@ -215,7 +215,7 @@ private:
   void parseGraphicField(const QList<QString>& p, qsizetype offset, const QString& raw) {
     const auto firstComma = raw.indexOf(u',');
     const auto dataStart = [&] { qsizetype pos=-1; for(int i=0;i<4;++i) pos=raw.indexOf(u',',pos+1); return pos; }();
-    GraphicField gf{charValue(p,0,u'A'),intValue(p,1),intValue(p,2),intValue(p,3),{}};
+    GraphicField gf{charValue(p,0,u'A'),intValue(p,2),intValue(p,1),intValue(p,3),{}};
     if (dataStart >= 0) {
       const auto data=raw.mid(dataStart+1);
       gf.data = gf.compression == u'A' ? data.trimmed().toLatin1() : data.toLatin1();

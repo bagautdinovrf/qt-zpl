@@ -139,6 +139,42 @@ private slots:
     QVERIFY(result.has_value()); QCOMPARE(result->labels.size(),1); QCOMPARE(result->labels[0].size(),QSize(40,30));
     QCOMPARE(result->labels[0].pixelColor(5,5),QColor(Qt::black));
   }
+  void rendersZ64GraphicFieldAndValidatesCrc() {
+    const auto rendered=QtZpl::render(
+      u"^XA^PW8^LL2^FO0,0^GFA,10,2,1,:Z64:eJxbFQoAAasBAA==:B023^FS^XZ");
+    QVERIFY(rendered.has_value());
+    QCOMPARE(rendered->labels.size(),1);
+    const auto& image=rendered->labels.front();
+    QCOMPARE(image.size(),QSize(8,2));
+    QStringList z64Diagnostics;
+    for(const auto& diagnostic:rendered->diagnostics)
+      if(diagnostic.code.startsWith(u"graphic-field-z64"_s))z64Diagnostics.append(diagnostic.code+u": "_s+diagnostic.message);
+    QVERIFY2(z64Diagnostics.isEmpty(),qPrintable(z64Diagnostics.join(u", "_s)));
+    for(int y=0;y<2;++y)for(int x=0;x<8;++x){
+      const bool expectedInk=((y==0?0xAA:0x55)&(1U<<(7-x)))!=0;
+      QCOMPARE(image.pixelColor(x,y),expectedInk?QColor(Qt::black):QColor(Qt::white));
+    }
+    const auto badCrc=QtZpl::render(
+      u"^XA^PW8^LL2^FO0,0^GFA,10,2,1,:Z64:eJxbFQoAAasBAA==:B022^FS^XZ");
+    QVERIFY(badCrc.has_value());
+    QVERIFY(std::any_of(badCrc->diagnostics.cbegin(),badCrc->diagnostics.cend(),[](const auto& diagnostic){
+      return diagnostic.severity==QtZpl::Severity::Error
+        &&diagnostic.code==u"graphic-field-z64-crc"_s;
+    }));
+    QCOMPARE(inkBounds(badCrc->labels.front()),QRect{});
+
+    const QList<std::pair<QString,QString>> invalidEncodings{
+      {u"^XA^PW8^LL2^GFA,4,2,1,:Z64:!!!!:F198^FS^XZ"_s,u"graphic-field-z64-base64"_s},
+      {u"^XA^PW8^LL2^GFA,3,2,1,:Z64:AAAA:54AD^FS^XZ"_s,u"graphic-field-z64-zlib"_s},
+    };
+    for(const auto& [zpl,code]:invalidEncodings){
+      const auto invalid=QtZpl::render(zpl);QVERIFY(invalid.has_value());
+      QVERIFY(std::any_of(invalid->diagnostics.cbegin(),invalid->diagnostics.cend(),[&](const auto& diagnostic){
+        return diagnostic.severity==QtZpl::Severity::Error&&diagnostic.code==code;
+      }));
+      QCOMPARE(inkBounds(invalid->labels.front()),QRect{});
+    }
+  }
   void graphicPrimitiveBoundsMatchLabelary() {
     struct Case{QString zpl;QRect bounds;};
     const QList<Case> cases{

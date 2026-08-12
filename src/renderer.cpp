@@ -4,6 +4,7 @@
 #include "maxicode_encoder.hpp"
 
 #include <QtCore/QByteArray>
+#include <QtCore/QtEndian>
 #include <QtGui/QPainter>
 #include <QtGui/QPainterPath>
 #include <QtGui/QFontDatabase>
@@ -199,12 +200,63 @@ void drawText(QImage& image, State& state, const QString& text, const RenderOpti
   state.reverse=false; state.block.reset();
 }
 
-void drawGraphicField(QImage& image, const QPoint& pos, const GraphicField& gf, const RenderOptions& options) {
+quint16 z64Crc(QByteArrayView encoded) {
+  quint16 crc=0;
+  for(const unsigned char byte:encoded){
+    crc^=static_cast<quint16>(byte)<<8;
+    for(int bit=0;bit<8;++bit)crc=crc&0x8000U?static_cast<quint16>((crc<<1)^0x1021U):static_cast<quint16>(crc<<1);
+  }
+  return crc;
+}
+
+std::optional<QByteArray> decodeZ64(const GraphicField& gf,qsizetype offset,QList<Diagnostic>& diagnostics) {
+  constexpr int maximumGraphicBytes=64*1024*1024;
+  const auto fail=[&](QString code,QString message)->std::optional<QByteArray>{
+    diagnostics.append({Severity::Error,std::move(code),std::move(message),offset,u"^GF"_s});
+    return std::nullopt;
+  };
+  if(gf.totalBytes<=0||gf.totalBytes>maximumGraphicBytes)
+    return fail(u"graphic-field-z64-size"_s,u"The Z64 graphic declares an invalid or unsafe decompressed size."_s);
+
+  const auto data=QByteArrayView{gf.data}.trimmed();
+  constexpr QByteArrayView prefix{":Z64:"};
+  const auto checksumSeparator=data.lastIndexOf(':');
+  if(!data.startsWith(prefix)||checksumSeparator<=prefix.size()||data.size()-checksumSeparator-1!=4)
+    return fail(u"graphic-field-z64-format"_s,u"The Z64 graphic must use :Z64:<Base64>:<CRC16>."_s);
+
+  const auto encoded=data.sliced(prefix.size(),checksumSeparator-prefix.size());
+  bool checksumOk=false;
+  const auto expectedCrc=QString::fromLatin1(data.sliced(checksumSeparator+1)).toUShort(&checksumOk,16);
+  if(!checksumOk)
+    return fail(u"graphic-field-z64-format"_s,u"The Z64 graphic CRC must contain four hexadecimal digits."_s);
+  if(z64Crc(encoded)!=expectedCrc)
+    return fail(u"graphic-field-z64-crc"_s,u"The Z64 graphic CRC does not match its Base64-encoded data."_s);
+
+  const auto decoded=QByteArray::fromBase64Encoding(encoded.toByteArray(),
+    QByteArray::Base64Encoding|QByteArray::AbortOnBase64DecodingErrors);
+  if(!decoded)
+    return fail(u"graphic-field-z64-base64"_s,u"The Z64 graphic contains invalid Base64 data."_s);
+
+  QByteArray compressedWithSize(4,Qt::Uninitialized);
+  qToBigEndian<quint32>(static_cast<quint32>(gf.totalBytes),compressedWithSize.data());
+  compressedWithSize.append(decoded.decoded);
+  auto uncompressed=qUncompress(compressedWithSize);
+  if(uncompressed.size()!=gf.totalBytes)
+    return fail(u"graphic-field-z64-zlib"_s,u"The Z64 graphic could not be decompressed to its declared size."_s);
+  return uncompressed;
+}
+
+void drawGraphicField(QImage& image,const QPoint& pos,const GraphicField& gf,const RenderOptions& options,
+                      qsizetype offset,QList<Diagnostic>& diagnostics) {
   if (gf.bytesPerRow <= 0) return;
   int x=0,y=0;
   QPainter painter(&image); painter.setPen(options.foreground);
-  if(gf.compression==u'B'){
-    for(const unsigned char byte:gf.data){
+  const bool z64=gf.compression==u'A'&&QByteArrayView{gf.data}.trimmed().startsWith(":Z64:");
+  const auto z64Data=z64?decodeZ64(gf,offset,diagnostics):std::optional<QByteArray>{};
+  if(z64&&!z64Data)return;
+  if(gf.compression==u'B'||z64){
+    const QByteArrayView bytes=z64?QByteArrayView{*z64Data}:QByteArrayView{gf.data};
+    for(const unsigned char byte:bytes){
       for(int bit=7;bit>=0;--bit){
         if(byte&(1U<<bit))painter.drawPoint(pos.x()+x,pos.y()+y);
         if(++x>=gf.bytesPerRow*8){x=0;++y;}
@@ -660,7 +712,7 @@ std::expected<QImage, RenderError> renderLabel(const Label& label, int index, co
         }
         state.reverse=false;
       }
-      else if constexpr(std::is_same_v<T,GraphicField>) drawGraphicField(image,state.position,value,options);
+      else if constexpr(std::is_same_v<T,GraphicField>) drawGraphicField(image,state.position,value,options,command.offset,diagnostics);
     },command.payload);
   }
   image=rotateImage(image,state.printOrientation);
