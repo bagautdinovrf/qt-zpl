@@ -5,7 +5,7 @@
 #include <QtGui/QColor>
 #include <QtGui/QImage>
 
-#include <QtZpl/model.hpp>
+#include "model.hpp"
 
 namespace QtZpl {
 

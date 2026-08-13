@@ -8,7 +8,7 @@
 #include <optional>
 #include <variant>
 
-#include <QtZpl/export.hpp>
+#include "export.hpp"
 
 namespace QtZpl {
 
