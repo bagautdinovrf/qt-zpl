@@ -18,7 +18,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
-import tempfile
+from uuid import uuid4
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -54,31 +54,32 @@ def capture_environment(qt_dir: Path, compiler: str) -> dict[str, str]:
     if not qtenv.is_file():
         raise FileNotFoundError(f"Qt environment script was not found: {qtenv}")
 
-    fd, capture_name = tempfile.mkstemp(prefix="qtzpl_env_", suffix=".txt")
-    os.close(fd)
-    capture = Path(capture_name)
+    environment_marker = f"__AGENT_ENV_CAPTURE_{uuid4().hex}__"
     commands = [f'call "{qtenv}"']
     if compiler.lower().startswith("msvc"):
         commands.append(f'call "{find_vcvars64()}"')
-    commands.append(f'set > "{capture}"')
+    commands.extend(["echo(", f"echo {environment_marker}", "set"])
 
-    try:
-        completed = subprocess.run(
-            " && ".join(commands), shell=True, text=True, encoding="cp866",
-            errors="replace", capture_output=True, check=False,
+    completed = subprocess.run(
+        " && ".join(commands), shell=True, text=True, encoding="cp866",
+        errors="replace", capture_output=True, check=False,
+    )
+    lines = completed.stdout.splitlines(keepends=True)
+    marker_index = next(
+        (index for index, line in enumerate(lines) if line.strip() == environment_marker),
+        None,
+    )
+    if completed.returncode != 0 or marker_index is None:
+        diagnostic_stdout = "".join(lines if marker_index is None else lines[:marker_index])
+        raise RuntimeError(
+            "Failed to initialize Qt/compiler environment\n"
+            f"stdout:\n{diagnostic_stdout}\nstderr:\n{completed.stderr}"
         )
-        if completed.returncode != 0:
-            raise RuntimeError(
-                "Failed to initialize Qt/compiler environment\n"
-                f"stdout:\n{completed.stdout}\nstderr:\n{completed.stderr}"
-            )
-        environment = os.environ.copy()
-        for line in capture.read_text(encoding="cp866", errors="replace").splitlines():
-            if "=" in line:
-                name, value = line.split("=", 1)
-                environment[name] = value
-    finally:
-        capture.unlink(missing_ok=True)
+    environment = os.environ.copy()
+    for line in lines[marker_index + 1:]:
+        name, separator, value = line.rstrip("\r\n").partition("=")
+        if name and separator:
+            environment[name] = value
 
     tool_paths = [QT_TOOLS / "CMake_64" / "bin", QT_TOOLS / "Ninja"]
     path_keys = [name for name in environment if name.casefold() == "path"]
