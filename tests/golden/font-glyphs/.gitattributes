@@ -1,0 +1,7 @@
+# Preserve provenance fingerprints across platforms; do not normalize bytes.
+*.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+*.zpl -text
+*.png -text
+# The original 16 fixtures already use CRLF in the working corpus.
+font0-h*.zpl text eol=crlf
+font0-special-h*.zpl text eol=crlf

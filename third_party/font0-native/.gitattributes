@@ -1,0 +1,8 @@
+# These bytes participate in provenance SHA-256 fingerprints.
+*.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# Preserve upstream license formatting, including original trailing spaces.
+*.txt -text -whitespace
+*.ttf -text
+*.otf -text
+*.svg -text
+*.html -text

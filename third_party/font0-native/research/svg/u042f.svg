@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-33 -1598 1172 1650">
+<title>U+042F Я</title>
+<metadata>{"codepoint": "U+042F", "advance": 1215, "unitsPerEm": 2048, "sourceId": "roboto-condensed", "fontSha256": "dbeaeab99e1c64baf6616e820117d2a2039c18df9acb10e1ba58679218bbe71d"}</metadata>
+<path fill="black" transform="scale(1,-1)" d="M868 627H555L425 670Q237 727 166.5 826.0Q96 925 96 1060Q96 1198 146.5 1309.0Q197 1420 321.0 1477.0Q445 1534 614 1534H1075V12H779V1285H614Q501 1285 440.5 1214.0Q380 1143 380 1045Q380 979 408.5 934.0Q437 889 495.0 866.5Q553 844 623 844H868ZM648 750 312 12H31L296 750Z"/>
+</svg>

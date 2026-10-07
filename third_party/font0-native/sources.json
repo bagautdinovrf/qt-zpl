@@ -1,0 +1,525 @@
+{
+  "schema_version": 1,
+  "repository": "https://github.com/google/fonts",
+  "revision": "5e8a3ba899557829a76cfdac30fa512bda91d7ca",
+  "retrieved_date": "2026-10-08",
+  "purpose": "Unmodified, open-licensed candidate contours for the QtZpl native Font 0 derivative. Similarity to Labelary is not established by inclusion.",
+  "license_policy": "Only OFL-1.1 sources. Preserve all source copyright notices and license texts; any derivative font stays under OFL-1.1 and uses its own font name, respecting reserved font names.",
+  "coverage_definitions": {
+    "ascii_printable": "U+0020 through U+007E (95 characters)",
+    "russian_letters": "U+0410 through U+044F plus U+0401 and U+0451 (66 letters)",
+    "cyrillic_u0400_u052f": "Encoded code points in U+0400 through U+052F",
+    "greek_u0370_u03ff": "Encoded code points in U+0370 through U+03FF",
+    "unicode_codepoints": "Number of entries in fontTools getBestCmap()"
+  },
+  "fonts": [
+    {
+      "id": "roboto-condensed",
+      "family": "Roboto Condensed",
+      "style": "upright variable",
+      "file": "sources/roboto-condensed/RobotoCondensed[wght].ttf",
+      "source_url": "https://raw.githubusercontent.com/google/fonts/5e8a3ba899557829a76cfdac30fa512bda91d7ca/ofl/robotocondensed/RobotoCondensed%5Bwght%5D.ttf",
+      "sha256": "dace262afcee68a5276f200d8026c57221735c0118ab5fda8c2c0d3dc409a8d0",
+      "size_bytes": 371616,
+      "license_spdx": "OFL-1.1",
+      "license_file": "sources/roboto-condensed/OFL.txt",
+      "license_url": "https://raw.githubusercontent.com/google/fonts/5e8a3ba899557829a76cfdac30fa512bda91d7ca/ofl/robotocondensed/OFL.txt",
+      "license_sha256": "0e4cc6ece88573545be2ed25835363662a6182ba4a4c1b5c8feda52add30e8a6",
+      "license_size_bytes": 4393,
+      "upstream_repository": "https://github.com/googlefonts/roboto-classic",
+      "version": [
+        "Version 3.008; 2023"
+      ],
+      "copyright": [
+        "Copyright 2011 Google Inc. All Rights Reserved."
+      ],
+      "axes": [
+        {
+          "tag": "wght",
+          "minimum": 100.0,
+          "default": 400.0,
+          "maximum": 900.0
+        }
+      ],
+      "default_instance": {
+        "wght": 700
+      },
+      "coverage": {
+        "unicode_codepoints": 922,
+        "ascii_printable": 95,
+        "russian_letters": 66,
+        "cyrillic_u0400_u052f": 275,
+        "greek_u0370_u03ff": 75
+      },
+      "license_notice": "Copyright 2011 The Roboto Project Authors (https://github.com/googlefonts/roboto-classic)",
+      "reserved_font_names": []
+    },
+    {
+      "id": "noto-sans",
+      "family": "Noto Sans",
+      "style": "upright variable",
+      "file": "sources/noto-sans/NotoSans[wdth,wght].ttf",
+      "source_url": "https://raw.githubusercontent.com/google/fonts/5e8a3ba899557829a76cfdac30fa512bda91d7ca/ofl/notosans/NotoSans%5Bwdth%2Cwght%5D.ttf",
+      "sha256": "bfb7bb691513f12e734dc346c03a03f784912432d7e3fa8e56efcf906fe86b3d",
+      "size_bytes": 2049096,
+      "license_spdx": "OFL-1.1",
+      "license_file": "sources/noto-sans/OFL.txt",
+      "license_url": "https://raw.githubusercontent.com/google/fonts/5e8a3ba899557829a76cfdac30fa512bda91d7ca/ofl/notosans/OFL.txt",
+      "license_sha256": "cee9892f9f0cc8fe882c9e9537ee6a89621d86ee7ceaf70b02e2b2b1c25c061a",
+      "license_size_bytes": 4396,
+      "upstream_repository": "https://github.com/notofonts/latin-greek-cyrillic",
+      "version": [
+        "Version 2.015"
+      ],
+      "copyright": [
+        "Copyright 2022 The Noto Project Authors (https://github.com/notofonts/latin-greek-cyrillic)"
+      ],
+      "axes": [
+        {
+          "tag": "wght",
+          "minimum": 100.0,
+          "default": 400.0,
+          "maximum": 900.0
+        },
+        {
+          "tag": "wdth",
+          "minimum": 62.5,
+          "default": 100.0,
+          "maximum": 100.0
+        }
+      ],
+      "default_instance": {
+        "wght": 700,
+        "wdth": 75
+      },
+      "coverage": {
+        "unicode_codepoints": 3094,
+        "ascii_printable": 95,
+        "russian_letters": 66,
+        "cyrillic_u0400_u052f": 304,
+        "greek_u0370_u03ff": 121
+      },
+      "license_notice": "Copyright 2022 The Noto Project Authors (https://github.com/notofonts/latin-greek-cyrillic)",
+      "reserved_font_names": []
+    },
+    {
+      "id": "arimo",
+      "family": "Arimo",
+      "style": "upright variable",
+      "file": "sources/arimo/Arimo[wght].ttf",
+      "source_url": "https://raw.githubusercontent.com/google/fonts/5e8a3ba899557829a76cfdac30fa512bda91d7ca/ofl/arimo/Arimo%5Bwght%5D.ttf",
+      "sha256": "e43898b143ec826ac8cb4034816458a7047fbe0836558de2a1f8c6223ae3e0ca",
+      "size_bytes": 496268,
+      "license_spdx": "OFL-1.1",
+      "license_file": "sources/arimo/OFL.txt",
+      "license_url": "https://raw.githubusercontent.com/google/fonts/5e8a3ba899557829a76cfdac30fa512bda91d7ca/ofl/arimo/OFL.txt",
+      "license_sha256": "11cce536cd2f3864d767003af5dcd739e2e15818cf2279b6175edeadd3960992",
+      "license_size_bytes": 4384,
+      "upstream_repository": "https://github.com/googlefonts/arimo",
+      "version": [
+        "Version 1.341"
+      ],
+      "copyright": [
+        "Copyright 2020 The Arimo Project Authors (https://github.com/googlefonts/arimo)"
+      ],
+      "axes": [
+        {
+          "tag": "wght",
+          "minimum": 400.0,
+          "default": 400.0,
+          "maximum": 700.0
+        }
+      ],
+      "default_instance": {
+        "wght": 700.0
+      },
+      "coverage": {
+        "unicode_codepoints": 3010,
+        "ascii_printable": 95,
+        "russian_letters": 66,
+        "cyrillic_u0400_u052f": 304,
+        "greek_u0370_u03ff": 135
+      },
+      "license_notice": "Copyright 2026 The Arimo Project Authors (https://github.com/googlefonts/arimo)",
+      "reserved_font_names": []
+    },
+    {
+      "id": "barlow-condensed",
+      "family": "Barlow Condensed",
+      "style": "Bold",
+      "file": "sources/barlow-condensed/BarlowCondensed-Bold.ttf",
+      "source_url": "https://raw.githubusercontent.com/google/fonts/5e8a3ba899557829a76cfdac30fa512bda91d7ca/ofl/barlowcondensed/BarlowCondensed-Bold.ttf",
+      "sha256": "e476562ec9c1e16cf16475895b511f08c804f438cc9a9f80a44ea50a0eeb5b65",
+      "size_bytes": 109912,
+      "license_spdx": "OFL-1.1",
+      "license_file": "sources/barlow-condensed/OFL.txt",
+      "license_url": "https://raw.githubusercontent.com/google/fonts/5e8a3ba899557829a76cfdac30fa512bda91d7ca/ofl/barlowcondensed/OFL.txt",
+      "license_sha256": "186d750eb496a4c17a76385f82be6aea2ac1cf2de074a811d63786cf374ea73f",
+      "license_size_bytes": 4377,
+      "upstream_repository": "https://github.com/jpt/barlow",
+      "version": [
+        "Version 1.408"
+      ],
+      "copyright": [
+        "Copyright 2017 The Barlow Project Authors (https://github.com/jpt/barlow)"
+      ],
+      "axes": [],
+      "default_instance": {},
+      "coverage": {
+        "unicode_codepoints": 525,
+        "ascii_printable": 95,
+        "russian_letters": 0,
+        "cyrillic_u0400_u052f": 0,
+        "greek_u0370_u03ff": 4
+      },
+      "license_notice": "Copyright 2017 The Barlow Project Authors (https://github.com/jpt/barlow)",
+      "reserved_font_names": []
+    },
+    {
+      "id": "barlow-semi-condensed",
+      "family": "Barlow Semi Condensed",
+      "style": "Bold",
+      "file": "sources/barlow-semi-condensed/BarlowSemiCondensed-Bold.ttf",
+      "source_url": "https://raw.githubusercontent.com/google/fonts/5e8a3ba899557829a76cfdac30fa512bda91d7ca/ofl/barlowsemicondensed/BarlowSemiCondensed-Bold.ttf",
+      "sha256": "5bd6757e459a110da81b44532f0f43058e2dab2401688abca84f2fdbde193cbb",
+      "size_bytes": 111772,
+      "license_spdx": "OFL-1.1",
+      "license_file": "sources/barlow-semi-condensed/OFL.txt",
+      "license_url": "https://raw.githubusercontent.com/google/fonts/5e8a3ba899557829a76cfdac30fa512bda91d7ca/ofl/barlowsemicondensed/OFL.txt",
+      "license_sha256": "186d750eb496a4c17a76385f82be6aea2ac1cf2de074a811d63786cf374ea73f",
+      "license_size_bytes": 4377,
+      "upstream_repository": "https://github.com/jpt/barlow",
+      "version": [
+        "Version 1.408"
+      ],
+      "copyright": [
+        "Copyright 2017 The Barlow Project Authors (https://github.com/jpt/barlow)"
+      ],
+      "axes": [],
+      "default_instance": {},
+      "coverage": {
+        "unicode_codepoints": 525,
+        "ascii_printable": 95,
+        "russian_letters": 0,
+        "cyrillic_u0400_u052f": 0,
+        "greek_u0370_u03ff": 4
+      },
+      "license_notice": "Copyright 2017 The Barlow Project Authors (https://github.com/jpt/barlow)",
+      "reserved_font_names": []
+    },
+    {
+      "id": "oswald",
+      "family": "Oswald",
+      "style": "upright variable",
+      "file": "sources/oswald/Oswald[wght].ttf",
+      "source_url": "https://raw.githubusercontent.com/google/fonts/5e8a3ba899557829a76cfdac30fa512bda91d7ca/ofl/oswald/Oswald%5Bwght%5D.ttf",
+      "sha256": "5b38c246e255a12f5712d640d56bcced0472466fc68983d2d0410ec0457c2817",
+      "size_bytes": 172088,
+      "license_spdx": "OFL-1.1",
+      "license_file": "sources/oswald/OFL.txt",
+      "license_url": "https://raw.githubusercontent.com/google/fonts/5e8a3ba899557829a76cfdac30fa512bda91d7ca/ofl/oswald/OFL.txt",
+      "license_sha256": "0fd731a904b729a4e02eaf5e8ebd06783edd9abe400e8882760160230675b652",
+      "license_size_bytes": 4483,
+      "upstream_repository": "https://github.com/googlefonts/OswaldFont",
+      "version": [
+        "Version 4.103;gftools[0.9.33.dev8+g029e19f]"
+      ],
+      "copyright": [
+        "Copyright 2016 The Oswald Project Authors (https://github.com/googlefonts/OswaldFont)"
+      ],
+      "axes": [
+        {
+          "tag": "wght",
+          "minimum": 200.0,
+          "default": 400.0,
+          "maximum": 700.0
+        }
+      ],
+      "default_instance": {
+        "wght": 700.0
+      },
+      "coverage": {
+        "unicode_codepoints": 850,
+        "ascii_printable": 95,
+        "russian_letters": 66,
+        "cyrillic_u0400_u052f": 236,
+        "greek_u0370_u03ff": 2
+      },
+      "license_notice": "Copyright 2016 The Oswald Project Authors (https://github.com/googlefonts/OswaldFont)",
+      "reserved_font_names": []
+    },
+    {
+      "id": "archivo",
+      "family": "Archivo",
+      "style": "upright variable",
+      "file": "sources/archivo/Archivo[wdth,wght].ttf",
+      "source_url": "https://raw.githubusercontent.com/google/fonts/5e8a3ba899557829a76cfdac30fa512bda91d7ca/ofl/archivo/Archivo%5Bwdth%2Cwght%5D.ttf",
+      "sha256": "0e094a7d3c7c4c25cf1310c4b30014f1dae9332220b1c2c88f4fa996f0b05053",
+      "size_bytes": 658596,
+      "license_spdx": "OFL-1.1",
+      "license_file": "sources/archivo/OFL.txt",
+      "license_url": "https://raw.githubusercontent.com/google/fonts/5e8a3ba899557829a76cfdac30fa512bda91d7ca/ofl/archivo/OFL.txt",
+      "license_sha256": "108b4e57c9c796d3d38d0428ca7ee39de47ad93187302718d9b2d8864b9b716b",
+      "license_size_bytes": 4388,
+      "upstream_repository": "https://github.com/Omnibus-Type/Archivo",
+      "version": [
+        "Version 2.001"
+      ],
+      "copyright": [
+        "Copyright 2020 The Archivo Project Authors (https://github.com/Omnibus-Type/Archivo)"
+      ],
+      "axes": [
+        {
+          "tag": "wght",
+          "minimum": 100.0,
+          "default": 600.0,
+          "maximum": 900.0
+        },
+        {
+          "tag": "wdth",
+          "minimum": 62.0,
+          "default": 100.0,
+          "maximum": 125.0
+        }
+      ],
+      "default_instance": {
+        "wght": 700,
+        "wdth": 75
+      },
+      "coverage": {
+        "unicode_codepoints": 653,
+        "ascii_printable": 95,
+        "russian_letters": 0,
+        "cyrillic_u0400_u052f": 0,
+        "greek_u0370_u03ff": 4
+      },
+      "license_notice": "Copyright 2020 The Archivo Project Authors (https://github.com/Omnibus-Type/Archivo)",
+      "reserved_font_names": []
+    },
+    {
+      "id": "archivo-narrow",
+      "family": "Archivo Narrow",
+      "style": "upright variable",
+      "file": "sources/archivo-narrow/ArchivoNarrow[wght].ttf",
+      "source_url": "https://raw.githubusercontent.com/google/fonts/5e8a3ba899557829a76cfdac30fa512bda91d7ca/ofl/archivonarrow/ArchivoNarrow%5Bwght%5D.ttf",
+      "sha256": "adbe027f625c8393ae0f6e174e32e233dda485bc3eda5153ce428275394ef97f",
+      "size_bytes": 93304,
+      "license_spdx": "OFL-1.1",
+      "license_file": "sources/archivo-narrow/OFL.txt",
+      "license_url": "https://raw.githubusercontent.com/google/fonts/5e8a3ba899557829a76cfdac30fa512bda91d7ca/ofl/archivonarrow/OFL.txt",
+      "license_sha256": "b2087ef3fb91248e346600d19021249152a9688efea72905aa1996bb16a4c8de",
+      "license_size_bytes": 4495,
+      "upstream_repository": "https://github.com/Omnibus-Type/ArchivoNarrow",
+      "version": [
+        "Version 3.002"
+      ],
+      "copyright": [
+        "Copyright 2019 The Archivo Narrow Project Authors (https://github.com/Omnibus-Type/ArchivoNarrow)"
+      ],
+      "axes": [
+        {
+          "tag": "wght",
+          "minimum": 400.0,
+          "default": 400.0,
+          "maximum": 700.0
+        }
+      ],
+      "default_instance": {
+        "wght": 700.0
+      },
+      "coverage": {
+        "unicode_codepoints": 657,
+        "ascii_printable": 95,
+        "russian_letters": 0,
+        "cyrillic_u0400_u052f": 0,
+        "greek_u0370_u03ff": 2
+      },
+      "license_notice": "Copyright 2019 The Archivo Narrow Project Authors (https://github.com/Omnibus-Type/ArchivoNarrow)",
+      "reserved_font_names": []
+    },
+    {
+      "id": "roboto",
+      "family": "Roboto",
+      "style": "upright variable",
+      "file": "sources/roboto/Roboto[wdth,wght].ttf",
+      "source_url": "https://raw.githubusercontent.com/google/fonts/5e8a3ba899557829a76cfdac30fa512bda91d7ca/ofl/roboto/Roboto%5Bwdth%2Cwght%5D.ttf",
+      "sha256": "d7598e12c5dbef095ff8272cfc55da0250bd07fbdecbac8a530b9b277872a134",
+      "size_bytes": 488584,
+      "license_spdx": "OFL-1.1",
+      "license_file": "sources/roboto/OFL.txt",
+      "license_url": "https://raw.githubusercontent.com/google/fonts/5e8a3ba899557829a76cfdac30fa512bda91d7ca/ofl/roboto/OFL.txt",
+      "license_sha256": "061402327a96aadb0bfb694a960ed289ecd38d383e396243831ab81feb109c41",
+      "license_size_bytes": 4394,
+      "upstream_repository": "https://github.com/googlefonts/roboto-classic",
+      "version": [
+        "Version 3.015; 2026"
+      ],
+      "copyright": [
+        "Copyright 2011 The Roboto Project Authors (https://github.com/googlefonts/roboto-classic)"
+      ],
+      "axes": [
+        {
+          "tag": "wght",
+          "minimum": 100.0,
+          "default": 400.0,
+          "maximum": 900.0
+        },
+        {
+          "tag": "wdth",
+          "minimum": 75.0,
+          "default": 100.0,
+          "maximum": 100.0
+        }
+      ],
+      "default_instance": {
+        "wght": 700,
+        "wdth": 75.0
+      },
+      "coverage": {
+        "unicode_codepoints": 927,
+        "ascii_printable": 95,
+        "russian_letters": 66,
+        "cyrillic_u0400_u052f": 275,
+        "greek_u0370_u03ff": 75
+      },
+      "license_notice": "Copyright 2011 The Roboto Project Authors (https://github.com/googlefonts/roboto-classic)",
+      "reserved_font_names": []
+    },
+    {
+      "id": "ibm-plex-sans-condensed",
+      "family": "IBM Plex Sans Condensed",
+      "style": "Bold",
+      "file": "sources/ibm-plex-sans-condensed/IBMPlexSansCondensed-Bold.ttf",
+      "source_url": "https://raw.githubusercontent.com/google/fonts/5e8a3ba899557829a76cfdac30fa512bda91d7ca/ofl/ibmplexsanscondensed/IBMPlexSansCondensed-Bold.ttf",
+      "sha256": "b65492d86cdd5cd9d43d2671b55d5d36fec36859fc8b08bc6aba78e441d6c849",
+      "size_bytes": 112228,
+      "license_spdx": "OFL-1.1",
+      "license_file": "sources/ibm-plex-sans-condensed/OFL.txt",
+      "license_url": "https://raw.githubusercontent.com/google/fonts/5e8a3ba899557829a76cfdac30fa512bda91d7ca/ofl/ibmplexsanscondensed/OFL.txt",
+      "license_sha256": "7e6b2818edbd8f6a01ae80641cc8f16a51080d08fb4e532be3a0b6f74adb07da",
+      "license_size_bytes": 4456,
+      "upstream_repository": "https://github.com/googlefonts/plex",
+      "version": [
+        "Version 1.3"
+      ],
+      "copyright": [
+        "Copyright 2019 IBM Corp. All rights reserved."
+      ],
+      "axes": [],
+      "default_instance": {},
+      "coverage": {
+        "unicode_codepoints": 604,
+        "ascii_printable": 95,
+        "russian_letters": 0,
+        "cyrillic_u0400_u052f": 0,
+        "greek_u0370_u03ff": 1
+      },
+      "license_notice": "Copyright © 2017 IBM Corp. with Reserved Font Name \"Plex\"",
+      "reserved_font_names": [
+        "Plex"
+      ]
+    },
+    {
+      "id": "qtzpl-geometric",
+      "family": "QtZpl Geometric",
+      "style": "Bold",
+      "origin": "authored",
+      "file": "sources/qtzpl-geometric/QtZplGeometric-Bold.ttf",
+      "sha256": "f21bf3377b1796dc0a3a6b3856dd9704a5b5ef93ba980755afc11634c9f55cc8",
+      "size_bytes": 4120,
+      "license_spdx": "OFL-1.1",
+      "license_file": "sources/qtzpl-geometric/OFL.txt",
+      "license_sha256": "9ebc0ddfb402aba3ce8bcb4fc753578ad7776e36e48f22647f770f0391ee4c27",
+      "license_size_bytes": 4431,
+      "generator_file": "tools/generate_font0_symbols.py",
+      "generator_sha256": "e0460fe323709e4be40c64c80d32e18a14fd612bd40e99e22e2596c372766e53",
+      "generator_command": "py -3 tools/generate_font0_symbols.py --update-manifest",
+      "fonttools_version": "4.63.0",
+      "upstream_repository": null,
+      "version": [
+        "Version 0.100; original geometric primitives"
+      ],
+      "copyright": [
+        "Copyright 2026 QtZpl contributors."
+      ],
+      "license_notice": "Copyright 2026 QtZpl contributors.",
+      "reserved_font_names": [],
+      "axes": [],
+      "default_instance": {},
+      "coverage": {
+        "unicode_codepoints": 47,
+        "ascii_printable": 26,
+        "russian_letters": 6,
+        "cyrillic_u0400_u052f": 7,
+        "greek_u0370_u03ff": 4
+      },
+      "authorship": "Original rectangles and polygons authored in the pinned generator. No imported font outlines, raster tracing, or oracle contours."
+    },
+    {
+      "id": "stix-two-math",
+      "family": "STIX Two Math",
+      "style": "Regular",
+      "file": "sources/stix-two-math/STIXTwoMath-Regular.ttf",
+      "source_url": "https://raw.githubusercontent.com/google/fonts/5e8a3ba899557829a76cfdac30fa512bda91d7ca/ofl/stixtwomath/STIXTwoMath-Regular.ttf",
+      "sha256": "562551b15b836e6e01d1b7350909baf3c8c8d83260c1190fbf4544333e6936de",
+      "size_bytes": 1517976,
+      "license_spdx": "OFL-1.1",
+      "license_file": "sources/stix-two-math/OFL.txt",
+      "license_url": "https://raw.githubusercontent.com/google/fonts/5e8a3ba899557829a76cfdac30fa512bda91d7ca/ofl/stixtwomath/OFL.txt",
+      "license_sha256": "0c8825913b60d858aacdb33c4ca6660a7d64b0d6464702efbb19313f5765861a",
+      "license_size_bytes": 4519,
+      "upstream_repository": "https://github.com/stipub/stixfonts",
+      "version": [
+        "Version 2.12 b168a"
+      ],
+      "copyright": [
+        "Copyright 2001-2021 The STIX Fonts Project Authors (https://github.com/stipub/stixfonts)"
+      ],
+      "axes": [],
+      "default_instance": {},
+      "coverage": {
+        "unicode_codepoints": 4605,
+        "ascii_printable": 95,
+        "russian_letters": 66,
+        "cyrillic_u0400_u052f": 106,
+        "greek_u0370_u03ff": 93
+      },
+      "license_notice": "Copyright 2001-2021 The STIX Fonts Project Authors (https://github.com/stipub/stixfonts), with Reserved Font Name \"TM Math\". STIX Fonts™ is a trademark of The Institute of Electrical and Electronics Engineers, Inc.",
+      "reserved_font_names": [
+        "TM Math"
+      ]
+    },
+    {
+      "id": "noto-sans-math",
+      "family": "Noto Sans Math",
+      "style": "Regular",
+      "file": "sources/noto-sans-math/NotoSansMath-Regular.ttf",
+      "source_url": "https://raw.githubusercontent.com/google/fonts/5e8a3ba899557829a76cfdac30fa512bda91d7ca/ofl/notosansmath/NotoSansMath-Regular.ttf",
+      "sha256": "3f495fe933c06786e4d5f6d86b8ee70b6753a68ee3b9d87528726de0f6e2c47d",
+      "size_bytes": 1015396,
+      "license_spdx": "OFL-1.1",
+      "license_file": "sources/noto-sans-math/OFL.txt",
+      "license_url": "https://raw.githubusercontent.com/google/fonts/5e8a3ba899557829a76cfdac30fa512bda91d7ca/ofl/notosansmath/OFL.txt",
+      "license_sha256": "403a95275b469061b7d4371c328e0ada3bc7d63328abe2e88aad5cd243b2fe21",
+      "license_size_bytes": 4380,
+      "upstream_repository": "https://www.github.com/notofonts/math",
+      "version": [
+        "Version 3.000; ttfautohint (v1.8.4.7-5d5b)"
+      ],
+      "copyright": [
+        "Copyright 2022 Google LLC. All Rights Reserved."
+      ],
+      "axes": [],
+      "default_instance": {},
+      "coverage": {
+        "unicode_codepoints": 3033,
+        "ascii_printable": 95,
+        "russian_letters": 64,
+        "cyrillic_u0400_u052f": 64,
+        "greek_u0370_u03ff": 59
+      },
+      "license_notice": "Copyright 2022 The Noto Project Authors (https://github.com/notofonts/math)",
+      "reserved_font_names": []
+    }
+  ]
+}

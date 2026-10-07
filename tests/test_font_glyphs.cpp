@@ -50,6 +50,13 @@ private slots:
         QVERIFY(!manifest_[u"cases"_s].toArray().isEmpty());
         for(const auto value:manifest_[u"unsupportedCharacters"_s].toArray())unsupported_.insert(value.toString());
         for(const auto cp:{u"U+037E",u"U+2044",u"U+FB01",u"U+FB02"})QVERIFY(unsupported_.contains(QString(cp)));
+        QSet<QString> covered;
+        for(const auto value:manifest_[u"characters"_s].toArray())covered.insert(value.toString());
+        for(int cp=0x20;cp<=0x7e;++cp)
+            QVERIFY(covered.contains(u"U+"_s+QString::number(cp,16).rightJustified(4,u'0').toUpper()));
+        for(int cp=0x410;cp<=0x44f;++cp)
+            QVERIFY(covered.contains(u"U+"_s+QString::number(cp,16).rightJustified(4,u'0').toUpper()));
+        for(const auto cp:{u"U+0401",u"U+0451"})QVERIFY(covered.contains(QString(cp)));
     }
     void glyphAtlas_data() {
         QTest::addColumn<int>("caseIndex");
@@ -64,7 +71,8 @@ private slots:
         QFile file(base+u".zpl"_s);QVERIFY(file.open(QIODevice::ReadOnly));
         const auto expected=QImage(base+u"-labelary-bitonal.png"_s).convertToFormat(QImage::Format_RGB32);
         QVERIFY(!expected.isNull());
-        QCOMPARE(expected.size(),QSize(manifest_[u"width"_s].toInt(),manifest_[u"height"_s].toInt()));
+        QCOMPARE(expected.size(),QSize(profile[u"width"_s].toInt(manifest_[u"width"_s].toInt()),
+                                      profile[u"height"_s].toInt(manifest_[u"height"_s].toInt())));
         const auto rendered=QtZpl::render(QString::fromUtf8(file.readAll()),{},
             QtZpl::RenderOptions{.width=expected.width(),.height=expected.height()});
         QVERIFY2(rendered.has_value(),"The glyph atlas could not be rendered");
@@ -76,6 +84,9 @@ private slots:
         int diagnosticFailures=0;
         const auto recordFailure=[&](QJsonObject failure){
             failure[u"case"_s]=name;failure[u"fontHeight"_s]=profile[u"fontHeight"_s];failure[u"fontWidth"_s]=profile[u"fontWidth"_s];
+            failure[u"role"_s]=profile[u"role"_s];
+            failure[u"anchor"_s]=profile[u"anchor"_s].toString(u"FT"_s);
+            failure[u"orientation"_s]=profile[u"orientation"_s].toString(u"N"_s);
             failures_.append(failure);
         };
         for(const auto value:profile[u"cells"_s].toArray()){
@@ -112,6 +123,8 @@ private slots:
         }
         const auto total=differences(actual,expected,actual.rect());
         results_.append(QJsonObject{{u"case"_s,name},{u"fontHeight"_s,profile[u"fontHeight"_s]},{u"fontWidth"_s,profile[u"fontWidth"_s]},
+                                   {u"role"_s,profile[u"role"_s]},{u"anchor"_s,profile[u"anchor"_s].toString(u"FT"_s)},
+                                   {u"orientation"_s,profile[u"orientation"_s].toString(u"N"_s)},
                                    {u"differentPixels"_s,qint64(total)},{u"glyphs"_s,glyphResults},{u"diagnostics"_s,diagnosticResults}});
         if(total)actual.save(QCoreApplication::applicationDirPath()+u"/glyph-"_s+name+u"-actual.png"_s);
         QCOMPARE(diagnosticFailures,0);

@@ -161,3 +161,24 @@ qt_add_resources(qtzpl_tests "qtzpl_demo_corpus_goldens"
   BASE "${CMAKE_CURRENT_SOURCE_DIR}/golden/go-zpl-demo"
   FILES ${QTZPL_DEMO_CORPUS_GOLDENS}
 )
+
+# This large corpus is an optional offline integrity check, not a renderer
+# parity test. Keep its resources out of the ordinary test executables.
+option(QTZPL_BUILD_FONT0_SWEEP_TESTS "Embed and verify the complete Font 0 size-sweep references" OFF)
+if(QTZPL_BUILD_FONT0_SWEEP_TESTS)
+  add_executable(qtzpl_font0_sweep_references_tests test_font0_sweep_references.cpp)
+  target_link_libraries(qtzpl_font0_sweep_references_tests PRIVATE Qt6::Core Qt6::Test)
+  file(GLOB_RECURSE QTZPL_FONT0_SWEEP_REFERENCES CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/golden/font0-size-sweep/*.json"
+    "${CMAKE_CURRENT_SOURCE_DIR}/golden/font0-size-sweep/*.zpl"
+    "${CMAKE_CURRENT_SOURCE_DIR}/golden/font0-size-sweep/*.png")
+  qt_add_resources(qtzpl_font0_sweep_references_tests "font0_size_sweep_references"
+    BIG_RESOURCES
+    PREFIX "/qtzpl/tests/golden/font0-size-sweep"
+    BASE "${CMAKE_CURRENT_SOURCE_DIR}/golden/font0-size-sweep"
+    FILES ${QTZPL_FONT0_SWEEP_REFERENCES})
+  add_test(NAME qtzpl_font0_sweep_references_tests
+    COMMAND qtzpl_font0_sweep_references_tests
+      -o "${CMAKE_CURRENT_BINARY_DIR}/font0_sweep_references_results.txt,txt")
+  set_tests_properties(qtzpl_font0_sweep_references_tests PROPERTIES LABELS "font0-sweep;reference-integrity")
+endif()

@@ -1,0 +1,2611 @@
+{
+  "schemaVersion": 1,
+  "family": "QtZpl Font Zero Extended",
+  "fontSha256": "dbeaeab99e1c64baf6616e820117d2a2039c18df9acb10e1ba58679218bbe71d",
+  "unitsPerEm": 2048,
+  "glyphCount": 371,
+  "outlineCount": 369,
+  "extensionGlyphCount": 54,
+  "validationScope": "cmap and outline presence only",
+  "pixelParityEvaluated": false,
+  "glyphs": [
+    {
+      "codepoint": "U+0020",
+      "mapped": true,
+      "hasOutline": false,
+      "intentionalWhitespace": true,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0021",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0022",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0023",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0024",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0025",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0026",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0027",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0028",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0029",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+002A",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+002B",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+002C",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+002D",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+002E",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+002F",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0030",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0031",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0032",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0033",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0034",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0035",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0036",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0037",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0038",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0039",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+003A",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+003B",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+003C",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+003D",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+003E",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+003F",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0040",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0041",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0042",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0043",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0044",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0045",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0046",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0047",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0048",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0049",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+004A",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+004B",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+004C",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+004D",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+004E",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+004F",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0050",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0051",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0052",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0053",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0054",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0055",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0056",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0057",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0058",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0059",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+005A",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+005B",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+005C",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+005D",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+005E",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+005F",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0060",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0061",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0062",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0063",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0064",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0065",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0066",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0067",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0068",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0069",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+006A",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+006B",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+006C",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+006D",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+006E",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+006F",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0070",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0071",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0072",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0073",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0074",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0075",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0076",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0077",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0078",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0079",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+007A",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+007B",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+007C",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+007D",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+007E",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00A0",
+      "mapped": true,
+      "hasOutline": false,
+      "intentionalWhitespace": true,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00A1",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00A2",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00A3",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00A4",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00A5",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00A6",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00A7",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00A8",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00A9",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00AA",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00AB",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00AC",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00AE",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00AF",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00B0",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00B1",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00B2",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00B3",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00B4",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00B5",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00B6",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00B7",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00B8",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00B9",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00BA",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00BB",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00BC",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00BD",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00BE",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00BF",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00C0",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00C1",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00C2",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00C3",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00C4",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00C5",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00C6",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00C7",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00C8",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00C9",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00CA",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00CB",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00CC",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00CD",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00CE",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00CF",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00D0",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00D1",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00D2",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00D3",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00D4",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00D5",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00D6",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00D7",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00D8",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00D9",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00DA",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00DB",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00DC",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00DD",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00DE",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00DF",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00E0",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00E1",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00E2",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00E3",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00E4",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00E5",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00E6",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00E7",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00E8",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00E9",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00EA",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00EB",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00EC",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00ED",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00EE",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00EF",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00F0",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00F1",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00F2",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00F3",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00F4",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00F5",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00F6",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00F7",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00F8",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00F9",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00FA",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00FB",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00FC",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00FD",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00FE",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+00FF",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0131",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0141",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0142",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0152",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0153",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0160",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0161",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0178",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+017D",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+017E",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0192",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+02C6",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+02C7",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+02C9",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+02D8",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+02D9",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+02DA",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+02DB",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+02DC",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+02DD",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+037E",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+03A9",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+03BC",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0401",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0404",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0406",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0407",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0410",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0411",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0412",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0413",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0414",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0415",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0416",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0417",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0418",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0419",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+041A",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+041B",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+041C",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+041D",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+041E",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+041F",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0420",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0421",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0422",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0423",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0424",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0425",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0426",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0427",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0428",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0429",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+042A",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+042B",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+042C",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+042D",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+042E",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+042F",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0430",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0431",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0432",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0433",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0434",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0435",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0436",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0437",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0438",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0439",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+043A",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+043B",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+043C",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+043D",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+043E",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+043F",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0440",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0441",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0442",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0443",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0444",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0445",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0446",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0447",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0448",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0449",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+044A",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+044B",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+044C",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+044D",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+044E",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+044F",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0451",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0454",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0456",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0457",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0490",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+0491",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+2012",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2013",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+2014",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+2015",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+2016",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2017",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+2018",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+2019",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+201A",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+201B",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+201C",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+201D",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+201E",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+201F",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2020",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+2021",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+2022",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+2023",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2024",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2025",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2026",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+2027",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2030",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+2032",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2033",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2034",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2035",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2036",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2037",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2039",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+203A",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+203C",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+203D",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2042",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2044",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+204E",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2051",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2052",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2053",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2055",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+20A9",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+20AA",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+20AC",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+20B4",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+20B9",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+20BD",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+20BF",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2105",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2113",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2116",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+2122",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+2126",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+212E",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2190",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+2191",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+2192",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+2193",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+2194",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+2195",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+2202",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2205",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2206",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2208",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2209",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+220F",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2211",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2212",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+2215",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+2219",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "inherited base recipe; not remeasured"
+    },
+    {
+      "codepoint": "U+221A",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+221E",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2229",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+222A",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+222B",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+223C",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2248",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2260",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2261",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2264",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2265",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2713",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+2717",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+FB01",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    },
+    {
+      "codepoint": "U+FB02",
+      "mapped": true,
+      "hasOutline": true,
+      "intentionalWhitespace": false,
+      "measurementStatus": "oracle-unsupported; unvalidated extension"
+    }
+  ],
+  "recipeSha256": "b5b30ba282af2284d3fd41f46198ee5f0cd5886e88712dbcad038eddb5cbea37"
+}

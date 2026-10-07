@@ -1,0 +1,4 @@
+# Hashes describe exact UTF-8 source/manifest bytes, including line endings.
+*.zpl -text
+*.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+*.png -text

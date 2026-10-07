@@ -1,0 +1,58 @@
+{
+  "status": "research; Font 0 pixel parity remains unresolved",
+  "cleanDebug": {
+    "command": "py -3 tools/build_helper.py all --clean --config Debug",
+    "compilationPassed": true,
+    "ctestSuites": 15,
+    "ctestPassed": 12,
+    "ctestFailed": [
+      "qtzpl_tests",
+      "qtzpl_command_extensions_tests",
+      "qtzpl_font_glyphs_tests"
+    ],
+    "testRowsPassed": 751,
+    "testRowsFailed": 51,
+    "seconds": 102.95
+  },
+  "releaseProbeBuildPassed": true,
+  "pythonGeneratorTestsPassed": 33,
+  "curatedOriginalOraclePairsVerified": 44,
+  "minimumSizeClampExactPairs": 12,
+  "svgXmlAndHashesVerified": 371,
+  "baseFontRebuildByteIdentical": true,
+  "productionFontReplaced": false,
+  "embeddedSweepIntegrity": {
+    "ctestPassed": 1,
+    "qtTestRowsPassed": 511,
+    "failed": 0,
+    "seconds": 11.42,
+    "buildDirectory": "build_agent_sweep_verify",
+    "option": "QTZPL_BUILD_FONT0_SWEEP_TESTS=ON"
+  },
+  "fullSweepScore": {
+    "sizes": 509,
+    "oraclePages": 755,
+    "supported": 161353,
+    "unsupported": 27486,
+    "missing": 0,
+    "exact": 2793,
+    "errorGlyphs": 158560,
+    "differentPixels": 270178527,
+    "intersectionPixels": 2191197654,
+    "unionPixels": 2461376181,
+    "iou": 0.8902327368382054,
+    "meanSizeIou": 0.8784122786673433,
+    "candidateFitsOwnCells": true,
+    "cellDiffSumEqualsWholeAtlasDiff": true
+  },
+  "fullOracleValidation": {
+    "command": "py -3 tools/font0_size_sweep.py --check",
+    "exitCode": 0,
+    "originalPairs": 755,
+    "sizes": 509,
+    "cells": 188839,
+    "pngCrcAndBitonalVerified": true,
+    "originalShaVerified": true,
+    "fullPageCoverageVerified": true
+  }
+}

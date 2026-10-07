@@ -1,0 +1,4089 @@
+{
+  "schemaVersion": 1,
+  "fontSha256": "dbeaeab99e1c64baf6616e820117d2a2039c18df9acb10e1ba58679218bbe71d",
+  "recipeSha256": "b5b30ba282af2284d3fd41f46198ee5f0cd5886e88712dbcad038eddb5cbea37",
+  "glyphs": {
+    "U+0020": {
+      "file": "u0020.svg",
+      "advance": 601,
+      "bounds": [
+        0,
+        0,
+        601,
+        1536.0
+      ],
+      "sha256": "2843599b1ab5016936d2e7db09e60ccaf80b85c31be4a50025d34f141680df38"
+    },
+    "U+0021": {
+      "file": "u0021.svg",
+      "advance": 601,
+      "bounds": [
+        159,
+        0,
+        481,
+        1521
+      ],
+      "sha256": "2b04733176599a04751b839326eb46ea3635543489ac327b4b93074c9154450b"
+    },
+    "U+0022": {
+      "file": "u0022.svg",
+      "advance": 983,
+      "bounds": [
+        185,
+        949,
+        834,
+        1534
+      ],
+      "sha256": "6af9fb868e4bf56179a642bfa00af6c95247ab132de45bc60a89598d83dd077d"
+    },
+    "U+0023": {
+      "file": "u0023.svg",
+      "advance": 983,
+      "bounds": [
+        20,
+        -31,
+        983,
+        1549
+      ],
+      "sha256": "b9175474387c645acb3f16b8a2f01522be36ff9f0c3cf17d6ad85258238c234d"
+    },
+    "U+0024": {
+      "file": "u0024.svg",
+      "advance": 983,
+      "bounds": [
+        20,
+        -163,
+        942,
+        1660
+      ],
+      "sha256": "01776f00c47e97cff0f5983cbf7ab113c338e3a83e0dba1892caa0d88b46bb4d"
+    },
+    "U+0025": {
+      "file": "u0025.svg",
+      "advance": 1850,
+      "bounds": [
+        63,
+        -38,
+        1805,
+        1566
+      ],
+      "sha256": "33a2f71b53cabc953f275d975db9e161b77344899c2e65c7cd0c023564d06d29"
+    },
+    "U+0026": {
+      "file": "u0026.svg",
+      "advance": 1249,
+      "bounds": [
+        107,
+        -29,
+        1252,
+        1571
+      ],
+      "sha256": "3c86941f058594cf3abe48839ec0da72d4e1273aba4e9000391127f40778b522"
+    },
+    "U+0027": {
+      "file": "u0027.svg",
+      "advance": 601,
+      "bounds": [
+        178,
+        944,
+        473,
+        1530
+      ],
+      "sha256": "da4d92cb781fe9b339768c85065f73f918b1d1f70120d8f2e669e76a35cf8ef2"
+    },
+    "U+0028": {
+      "file": "u0028.svg",
+      "advance": 601,
+      "bounds": [
+        126,
+        -351,
+        633,
+        1521
+      ],
+      "sha256": "b81ad164d704eb34bf0254f5b2bfe754ebe6714d3feb203daf53b311e0d16eb0"
+    },
+    "U+0029": {
+      "file": "u0029.svg",
+      "advance": 601,
+      "bounds": [
+        -18,
+        -349,
+        492,
+        1523
+      ],
+      "sha256": "4ec9361f0e67f78b00576e16a9601ead05c11464b739826fd57efb7f74c72316"
+    },
+    "U+002A": {
+      "file": "u002a.svg",
+      "advance": 983,
+      "bounds": [
+        146,
+        855,
+        846,
+        1531
+      ],
+      "sha256": "66df489332b4c8c12b18db8f02b4b364c31916acfeff8a2bd8e7932b8c3dd5fb"
+    },
+    "U+002B": {
+      "file": "u002b.svg",
+      "advance": 1850,
+      "bounds": [
+        348,
+        -30,
+        1509,
+        1252
+      ],
+      "sha256": "df7b01875557c36ecda997432cfcfc2b231b84fefeed8ed466d9ade0dba97092"
+    },
+    "U+002C": {
+      "file": "u002c.svg",
+      "advance": 601,
+      "bounds": [
+        184,
+        -301,
+        469,
+        284
+      ],
+      "sha256": "6c9f62961cf402c0bca5eb0f134f4f55f288d50a0ac25729616dbb5c525e3402"
+    },
+    "U+002D": {
+      "file": "u002d.svg",
+      "advance": 1850,
+      "bounds": [
+        348,
+        497,
+        1516,
+        731
+      ],
+      "sha256": "197c53f3e5c6da1fec98444ea08e227be418f7002b7efc3dd94a9b671a1a337c"
+    },
+    "U+002E": {
+      "file": "u002e.svg",
+      "advance": 601,
+      "bounds": [
+        184,
+        0,
+        471,
+        282
+      ],
+      "sha256": "db9fc4f5919fdc467146936509cfc188af804505b2e6f0e407ca9bfa0ed7caf6"
+    },
+    "U+002F": {
+      "file": "u002f.svg",
+      "advance": 601,
+      "bounds": [
+        0,
+        -31,
+        591,
+        1527
+      ],
+      "sha256": "2f8fe8a8782bd2e33100a857b1e705fd4e79a7d8662a754185de1a9d5007c7b8"
+    },
+    "U+0030": {
+      "file": "u0030.svg",
+      "advance": 983,
+      "bounds": [
+        75,
+        -31,
+        907,
+        1549
+      ],
+      "sha256": "48892d2250bef7f06abe83030d5952ecc5061986e53deffc9de538e8243d3a0e"
+    },
+    "U+0031": {
+      "file": "u0031.svg",
+      "advance": 983,
+      "bounds": [
+        147,
+        0,
+        767,
+        1467
+      ],
+      "sha256": "f88eadf8bb8c713ffe08765ddb8433bcaf52b044245ce1dfcf6ca0ced21e1c08"
+    },
+    "U+0032": {
+      "file": "u0032.svg",
+      "advance": 983,
+      "bounds": [
+        49,
+        0,
+        889,
+        1551
+      ],
+      "sha256": "647abb114ce1dbb76c4eb55bd6303d1dff3a44bb51c84c70515d9877329598f6"
+    },
+    "U+0033": {
+      "file": "u0033.svg",
+      "advance": 983,
+      "bounds": [
+        59,
+        -29,
+        895,
+        1551
+      ],
+      "sha256": "f75d88ec29792175ff3a458d26e6b4a2b1f049c3d6beb4c4e3a9397c6adc7997"
+    },
+    "U+0034": {
+      "file": "u0034.svg",
+      "advance": 983,
+      "bounds": [
+        61,
+        0,
+        957,
+        1521
+      ],
+      "sha256": "d801219d6ea3d18ee1e65ab923da2b5121f7b431da1d6a524762956ab7e14037"
+    },
+    "U+0035": {
+      "file": "u0035.svg",
+      "advance": 983,
+      "bounds": [
+        68,
+        0,
+        916,
+        1535
+      ],
+      "sha256": "850bc255b36807a7d71d2a3825d1e8bf8db09b0acb09ac55b945d32f3d2c3005"
+    },
+    "U+0036": {
+      "file": "u0036.svg",
+      "advance": 983,
+      "bounds": [
+        82,
+        -25,
+        942,
+        1555
+      ],
+      "sha256": "c47e57efe48eb3073a1d2b3ff4dc87823bb0e6a732d6e9490b6c8dff9d75d402"
+    },
+    "U+0037": {
+      "file": "u0037.svg",
+      "advance": 983,
+      "bounds": [
+        71,
+        8,
+        926,
+        1530
+      ],
+      "sha256": "ba663d227c792e9a2b46a55c2e6ffac49992222217bfd7a0d8a79de5a8c5194a"
+    },
+    "U+0038": {
+      "file": "u0038.svg",
+      "advance": 983,
+      "bounds": [
+        64,
+        -27,
+        905.2045454545455,
+        1545
+      ],
+      "sha256": "65594ae0c1299dc4d2294879f080db364122e10cd55a540bffc32cbc5c6aced6"
+    },
+    "U+0039": {
+      "file": "u0039.svg",
+      "advance": 983,
+      "bounds": [
+        55,
+        -33,
+        895,
+        1539
+      ],
+      "sha256": "e2bb6f4d11cb638c91f881de4200e874bf8f9099887889cd7e7e4c59b1afae1d"
+    },
+    "U+003A": {
+      "file": "u003a.svg",
+      "advance": 601,
+      "bounds": [
+        146,
+        2,
+        436,
+        1143
+      ],
+      "sha256": "f76d8df213f274c450546545fb34ba5a10f2f0bd7fdf498d64cfc5b4441c397a"
+    },
+    "U+003B": {
+      "file": "u003b.svg",
+      "advance": 601,
+      "bounds": [
+        141,
+        -328,
+        465,
+        1136
+      ],
+      "sha256": "23a55f777e910bb143b3e10b41b6e0c0e643e35072420b837aca9c6cb11ed576"
+    },
+    "U+003C": {
+      "file": "u003c.svg",
+      "advance": 2041,
+      "bounds": [
+        412,
+        -2,
+        1646,
+        1312
+      ],
+      "sha256": "2f07a9679406f17e52576f4f4125234729ea9ed81f15c02d8c6b7a37cb5270fc"
+    },
+    "U+003D": {
+      "file": "u003d.svg",
+      "advance": 1850,
+      "bounds": [
+        341,
+        284,
+        1513,
+        987
+      ],
+      "sha256": "d5bcfb7058ae753a0198c8d5a167460d15a8f15db1bb812299ea86e1e2f3dc4d"
+    },
+    "U+003E": {
+      "file": "u003e.svg",
+      "advance": 2041,
+      "bounds": [
+        409,
+        2,
+        1633,
+        1310
+      ],
+      "sha256": "a935141c2aaa8d59165bb9a12866029b91bd2de3c63cbd9340bdc9ca3993f9a5"
+    },
+    "U+003F": {
+      "file": "u003f.svg",
+      "advance": 908,
+      "bounds": [
+        63,
+        0,
+        883,
+        1566
+      ],
+      "sha256": "3da1619e84fc30c7e7f755be7d3a6b552cb1bb3e1f15ab71e09a24ca5efdce92"
+    },
+    "U+0040": {
+      "file": "u0040.svg",
+      "advance": 1850,
+      "bounds": [
+        301,
+        -279,
+        1581,
+        1451.0162601626016
+      ],
+      "sha256": "c6c0a97ecb64369cfd3229da2dd8f4ddb0c399a7e66c99993738997be70f11b6"
+    },
+    "U+0041": {
+      "file": "u0041.svg",
+      "advance": 1133,
+      "bounds": [
+        20,
+        0,
+        1106,
+        1560
+      ],
+      "sha256": "fb00c2f7afd474e901b75c7ea29cc482c5e3556db2673263cf6c785c1034a357"
+    },
+    "U+0042": {
+      "file": "u0042.svg",
+      "advance": 1133,
+      "bounds": [
+        138,
+        8,
+        1042,
+        1530
+      ],
+      "sha256": "c8d1fb0103801024977dab87d81a3cff8564fbc974f7f005716b1b683b687bea"
+    },
+    "U+0043": {
+      "file": "u0043.svg",
+      "advance": 1092,
+      "bounds": [
+        86,
+        -30,
+        979,
+        1547
+      ],
+      "sha256": "44c8a461e383bf524e896066aa56d8f8b23bbe284a9e666cc28202d89f80072c"
+    },
+    "U+0044": {
+      "file": "u0044.svg",
+      "advance": 1208,
+      "bounds": [
+        136,
+        0,
+        1103,
+        1529
+      ],
+      "sha256": "b55a8ccf51e81efed7842e396252df81d7a7d12170e13b72156bf080422e9ba8"
+    },
+    "U+0045": {
+      "file": "u0045.svg",
+      "advance": 1017,
+      "bounds": [
+        152,
+        2,
+        950,
+        1516
+      ],
+      "sha256": "572e9ce0f947aa890a9f619f624e7e4729a69f9c41406e3ed2b2d8a955237790"
+    },
+    "U+0046": {
+      "file": "u0046.svg",
+      "advance": 1017,
+      "bounds": [
+        149,
+        8,
+        1001,
+        1530
+      ],
+      "sha256": "2e6baeee2049af174afbca4aae1f4ec63e84d91ea249b8ba3a3beee8c6fa4a4e"
+    },
+    "U+0047": {
+      "file": "u0047.svg",
+      "advance": 1208,
+      "bounds": [
+        84,
+        -40,
+        1087,
+        1595
+      ],
+      "sha256": "eac971f81f9d17bf79a3a97aef5ba569e38574886970e3042bde0da55367a804"
+    },
+    "U+0048": {
+      "file": "u0048.svg",
+      "advance": 1249,
+      "bounds": [
+        137,
+        8,
+        1110,
+        1522
+      ],
+      "sha256": "cf06dab8641fef9c3b9a538bfc58463a8164863645b47100da95067ae37b815d"
+    },
+    "U+0049": {
+      "file": "u0049.svg",
+      "advance": 567,
+      "bounds": [
+        144,
+        0,
+        435,
+        1521
+      ],
+      "sha256": "5d4cea9b6ac505e95765d53cf5789dc09f13665609eb1e908a329b29410f9848"
+    },
+    "U+004A": {
+      "file": "u004a.svg",
+      "advance": 908,
+      "bounds": [
+        5,
+        -38,
+        797,
+        1521
+      ],
+      "sha256": "593dcc011a2f188d3a1c0747e638def32182b6b03873430d2c0db52ba0e8e8c9"
+    },
+    "U+004B": {
+      "file": "u004b.svg",
+      "advance": 1133,
+      "bounds": [
+        151,
+        6,
+        1149,
+        1535
+      ],
+      "sha256": "c00845529572172d7e01725582200144e382e460b7ef61306e5d360751459106"
+    },
+    "U+004C": {
+      "file": "u004c.svg",
+      "advance": 983,
+      "bounds": [
+        143,
+        -6,
+        963,
+        1515
+      ],
+      "sha256": "e1b6027839f3af26b1d2b1a6c326f9bb77e3330167fba3fcba2775ade9fdce83"
+    },
+    "U+004D": {
+      "file": "u004d.svg",
+      "advance": 1550,
+      "bounds": [
+        143,
+        14,
+        1434,
+        1528
+      ],
+      "sha256": "9ac81f5f32c0fc4542755a974b52d1cb164461988104c8e4bea5242e9ef24e1b"
+    },
+    "U+004E": {
+      "file": "u004e.svg",
+      "advance": 1249,
+      "bounds": [
+        142,
+        -2,
+        1151,
+        1519
+      ],
+      "sha256": "215cffa185ed636f914cfaa0b64f1e4995795ddbbf1242ece0321cf04011eec7"
+    },
+    "U+004F": {
+      "file": "u004f.svg",
+      "advance": 1174,
+      "bounds": [
+        84,
+        -40,
+        1087,
+        1564
+      ],
+      "sha256": "eb7562fb25b18e4321daade5442e90074ca44e23d658314285ab5be50eea0b90"
+    },
+    "U+0050": {
+      "file": "u0050.svg",
+      "advance": 1133,
+      "bounds": [
+        144,
+        -8,
+        1090,
+        1521
+      ],
+      "sha256": "6ef8e2d0869428d2494b38dca8a7373506a9f5db0e67900155a26a634d4c44cf"
+    },
+    "U+0051": {
+      "file": "u0051.svg",
+      "advance": 1174,
+      "bounds": [
+        76,
+        -223,
+        1090,
+        1574
+      ],
+      "sha256": "ae1723fda5480f18e381931980459ce0fd60d3ed349af15fe7abeaf36909c1cd"
+    },
+    "U+0052": {
+      "file": "u0052.svg",
+      "advance": 1208,
+      "bounds": [
+        147,
+        6,
+        1182,
+        1528
+      ],
+      "sha256": "aab544de798f69d39f8baf472bb74aa1fd1be3778499c7f776f3b71cca022e9d"
+    },
+    "U+0053": {
+      "file": "u0053.svg",
+      "advance": 1092,
+      "bounds": [
+        74,
+        -29,
+        1021,
+        1566
+      ],
+      "sha256": "2a5b9255fe83c4e65870ee6a5d664a729d9c59c94d0cb41baf5c76bb43c6fe4f"
+    },
+    "U+0054": {
+      "file": "u0054.svg",
+      "advance": 1017,
+      "bounds": [
+        53,
+        0,
+        995,
+        1521
+      ],
+      "sha256": "55a846749b3908f42b19d0dd6a69b493e26394ce3b44be756496affb7fb53aea"
+    },
+    "U+0055": {
+      "file": "u0055.svg",
+      "advance": 1249,
+      "bounds": [
+        144,
+        -38,
+        1112,
+        1521
+      ],
+      "sha256": "daf5b96fcd38ddbadfb3e655230ac696606337b2058261a56f0ae7a95d9534d8"
+    },
+    "U+0056": {
+      "file": "u0056.svg",
+      "advance": 1092,
+      "bounds": [
+        5,
+        8,
+        1087,
+        1530
+      ],
+      "sha256": "8153f784d04db548243753a1f97422b2b8063b4f8b491aca1bc6f21f34d07bb0"
+    },
+    "U+0057": {
+      "file": "u0057.svg",
+      "advance": 1659,
+      "bounds": [
+        59,
+        4,
+        1666,
+        1525
+      ],
+      "sha256": "74a3649151b3840379b8f13fa0c9dbb42f3956c9f6e4eb6e8b444c4f29288f90"
+    },
+    "U+0058": {
+      "file": "u0058.svg",
+      "advance": 1133,
+      "bounds": [
+        25,
+        6,
+        1116,
+        1528
+      ],
+      "sha256": "5369e913c44e3f0e08a21e5dd72f913f8bb483a6bc7b46653320d4786d51e6e2"
+    },
+    "U+0059": {
+      "file": "u0059.svg",
+      "advance": 1133,
+      "bounds": [
+        20,
+        12,
+        1141,
+        1534
+      ],
+      "sha256": "d7d7c29f4edb0f8da8e5c8be2f79fd8e9ef31543bea9a0f0a40c2415bba3a50d"
+    },
+    "U+005A": {
+      "file": "u005a.svg",
+      "advance": 1017,
+      "bounds": [
+        74,
+        10,
+        959,
+        1532
+      ],
+      "sha256": "ad8ccb1eef7895fcb0310eca22f3c45bb0060fc5f200984d652d3f6affb9f3ca"
+    },
+    "U+005B": {
+      "file": "u005b.svg",
+      "advance": 601,
+      "bounds": [
+        87,
+        -343,
+        583,
+        1530
+      ],
+      "sha256": "69ebbeed90ed2d4b2c2e2cce9cbe269a17fd41a0beba54d69cf4854d0d09b0a5"
+    },
+    "U+005C": {
+      "file": "u005c.svg",
+      "advance": 983,
+      "bounds": [
+        72,
+        -164,
+        913,
+        1710
+      ],
+      "sha256": "a1cff43b9723482acd24759b6a508ce2b5badfbdd7d9c0ff2dbd63d271084a9c"
+    },
+    "U+005D": {
+      "file": "u005d.svg",
+      "advance": 601,
+      "bounds": [
+        61,
+        -351,
+        530,
+        1521
+      ],
+      "sha256": "736a8efe462b582c3acd6f875f9e1d61345680c7c9d7db468b4854ff9c2278d5"
+    },
+    "U+005E": {
+      "file": "u005e.svg",
+      "advance": 1017,
+      "bounds": [
+        115,
+        986,
+        951,
+        1498
+      ],
+      "sha256": "070956cb79fe0d1037137340b275e62870237ca522b69bc887f94b0d32aa1fe0"
+    },
+    "U+005F": {
+      "file": "u005f.svg",
+      "advance": 1017,
+      "bounds": [
+        0,
+        -511,
+        1024,
+        -386
+      ],
+      "sha256": "901f808271c2cc9c6156baad27c4e1f4d7810b0129f8015ba268f2c1736b4f34"
+    },
+    "U+0060": {
+      "file": "u0060.svg",
+      "advance": 601,
+      "bounds": [
+        146,
+        973,
+        440,
+        1568
+      ],
+      "sha256": "349fe227bf9d0b729f400bb2474f761cc176a55609bc8ff1c3b5a960ae06729e"
+    },
+    "U+0061": {
+      "file": "u0061.svg",
+      "advance": 942,
+      "bounds": [
+        61,
+        -32,
+        876,
+        1180
+      ],
+      "sha256": "64bd82ed1f11371f0a679e1b86d1d9fc1e00849b7b05b03aa38ba402963b78af"
+    },
+    "U+0062": {
+      "file": "u0062.svg",
+      "advance": 1017,
+      "bounds": [
+        129,
+        -32,
+        956,
+        1560
+      ],
+      "sha256": "eb3307f04e3a57c8b9634973ba322b791e8a8e084bc27333fd9cf8a2ffb33ccb"
+    },
+    "U+0063": {
+      "file": "u0063.svg",
+      "advance": 908,
+      "bounds": [
+        82,
+        -29,
+        819,
+        1170
+      ],
+      "sha256": "1118a62335875b4323e212a63adac90c46c473938452d543cde01c96589b3ce1"
+    },
+    "U+0064": {
+      "file": "u0064.svg",
+      "advance": 1017,
+      "bounds": [
+        74,
+        -30,
+        872,
+        1586
+      ],
+      "sha256": "9cb5fd8f370c52ee1cbf8a3badc540c7fe5bfa753b205028458c53ddcf16c46b"
+    },
+    "U+0065": {
+      "file": "u0065.svg",
+      "advance": 983,
+      "bounds": [
+        83,
+        -32,
+        890,
+        1180
+      ],
+      "sha256": "00144b4b714846b0dd3c33ad1f02895ce5081b87df3da9304af49fcef0b982fd"
+    },
+    "U+0066": {
+      "file": "u0066.svg",
+      "advance": 567,
+      "bounds": [
+        29,
+        10,
+        549,
+        1561
+      ],
+      "sha256": "8c9046b63a5d4afe6e943231e9fcd2fb21e9b03b0d96d73e27a1209b8f8e7e95"
+    },
+    "U+0067": {
+      "file": "u0067.svg",
+      "advance": 1017,
+      "bounds": [
+        74,
+        -408,
+        877,
+        1167
+      ],
+      "sha256": "a961853da6a38386c73b33fd42a4a25d1104ea6523f5a759172d08ee8973db19"
+    },
+    "U+0068": {
+      "file": "u0068.svg",
+      "advance": 1017,
+      "bounds": [
+        143,
+        0,
+        896,
+        1560
+      ],
+      "sha256": "1d37a534a0c351617842a6a4eb23bab2dc20621ee9dd6445a4eb995155b537a1"
+    },
+    "U+0069": {
+      "file": "u0069.svg",
+      "advance": 526,
+      "bounds": [
+        129,
+        -10,
+        399,
+        1511
+      ],
+      "sha256": "b58b32ca82ee6f2e45c409fcd737f93e4f7667ebde37b64eefaedaa830411a83"
+    },
+    "U+006A": {
+      "file": "u006a.svg",
+      "advance": 526,
+      "bounds": [
+        39,
+        -382,
+        402,
+        1519
+      ],
+      "sha256": "6f214c5533e0ce2c91c12df1f11aa6029f54fd49a4d17873c9fa707962f85231"
+    },
+    "U+006B": {
+      "file": "u006b.svg",
+      "advance": 908,
+      "bounds": [
+        125,
+        6,
+        903,
+        1528
+      ],
+      "sha256": "06c285d5b8610101b4ebc426a311e1d0cbc1f0c098d454e230e3b38aec38d75f"
+    },
+    "U+006C": {
+      "file": "u006c.svg",
+      "advance": 526,
+      "bounds": [
+        124,
+        0,
+        395,
+        1521
+      ],
+      "sha256": "b5085f371ced778c22ea67e183f17583019d05f56d3372331c35a9df3e3e05c4"
+    },
+    "U+006D": {
+      "file": "u006d.svg",
+      "advance": 1550,
+      "bounds": [
+        145,
+        8,
+        1415,
+        1173
+      ],
+      "sha256": "0b0f367886c0e5cc58434b493d7d67ed75b0c8c1fcee52d61f0231c9ac94a8d3"
+    },
+    "U+006E": {
+      "file": "u006e.svg",
+      "advance": 1017,
+      "bounds": [
+        133,
+        -2,
+        886,
+        1174
+      ],
+      "sha256": "97d8cfbee55affd93f48918cc583ffa6b38b8af3120ae88a38e5ad7e98e62e9f"
+    },
+    "U+006F": {
+      "file": "u006f.svg",
+      "advance": 983,
+      "bounds": [
+        82,
+        -38,
+        886,
+        1198
+      ],
+      "sha256": "643dc34ea18c3d748456bcd1542fa741a0cdca6df859bd2d5f08bb04e1f81abe"
+    },
+    "U+0070": {
+      "file": "u0070.svg",
+      "advance": 1017,
+      "bounds": [
+        129,
+        -380,
+        956,
+        1170
+      ],
+      "sha256": "8bb2b807e48f171b74c6986d3e37472679d5e8c19dc8c3cc5b3eb41db3f2a9e1"
+    },
+    "U+0071": {
+      "file": "u0071.svg",
+      "advance": 1017,
+      "bounds": [
+        74,
+        -382,
+        877,
+        1176
+      ],
+      "sha256": "140d69114cc6808f1fa3d37cf3f12e1aef922cca76662b28d06a4b69e2a710df"
+    },
+    "U+0072": {
+      "file": "u0072.svg",
+      "advance": 683,
+      "bounds": [
+        149,
+        10,
+        667,
+        1164
+      ],
+      "sha256": "fa59fcc913a2735ea86433e9cfbda5ec43655be61def923b4d9d7fbe36107375"
+    },
+    "U+0073": {
+      "file": "u0073.svg",
+      "advance": 867,
+      "bounds": [
+        84,
+        -32,
+        837,
+        1185
+      ],
+      "sha256": "baf7a083526f68ac6ba56ad9345608f16e6287e1ce9b418a4ffe3534882d54cc"
+    },
+    "U+0074": {
+      "file": "u0074.svg",
+      "advance": 567,
+      "bounds": [
+        61,
+        -39,
+        532,
+        1453
+      ],
+      "sha256": "96c3e323bbf7226c25d48e20f096e971706bfba5287a9f2a18773bb9538a3508"
+    },
+    "U+0075": {
+      "file": "u0075.svg",
+      "advance": 1017,
+      "bounds": [
+        122,
+        -27,
+        876,
+        1149
+      ],
+      "sha256": "0a53a75068e8c23654b75a72d959ec20aa01456db7941e40acaed0494d2243bf"
+    },
+    "U+0076": {
+      "file": "u0076.svg",
+      "advance": 908,
+      "bounds": [
+        12,
+        6,
+        882,
+        1147
+      ],
+      "sha256": "2551a4818250276afd4446ac5061186cc554e79595e38cf807bf3725d804f223"
+    },
+    "U+0077": {
+      "file": "u0077.svg",
+      "advance": 1359,
+      "bounds": [
+        32,
+        -8,
+        1326,
+        1144
+      ],
+      "sha256": "70b7b427042b1753c953035c8f698d572a82d0aff11556c74b0d0f9c65b5bc59"
+    },
+    "U+0078": {
+      "file": "u0078.svg",
+      "advance": 908,
+      "bounds": [
+        20,
+        0,
+        881,
+        1147
+      ],
+      "sha256": "0828a4f1571cd63736ab25d158f0bc0dc22df4cc267e57301335902a152552c3"
+    },
+    "U+0079": {
+      "file": "u0079.svg",
+      "advance": 908,
+      "bounds": [
+        14,
+        -392,
+        879,
+        1144
+      ],
+      "sha256": "132efe1bd36c4259430cbbab6cc2cd4124b19fe31a8b2dc8e0213e970ac88cc3"
+    },
+    "U+007A": {
+      "file": "u007a.svg",
+      "advance": 792,
+      "bounds": [
+        14,
+        4,
+        756,
+        1145
+      ],
+      "sha256": "feab59760f6a704205ba4c27ecb51131f3ff10793e4f04745817e0dff208c569"
+    },
+    "U+007B": {
+      "file": "u007b.svg",
+      "advance": 1017,
+      "bounds": [
+        182,
+        -458,
+        854,
+        1561
+      ],
+      "sha256": "d8204571ef75171d5cfba73f30af5caf1e31830a3e996c61b7569a3df1f5ca23"
+    },
+    "U+007C": {
+      "file": "u007c.svg",
+      "advance": 1017,
+      "bounds": [
+        469,
+        -497,
+        588,
+        1521
+      ],
+      "sha256": "e2d260927950219bba77a08a09518d4bc9a8e3fcb2eabbdc1fceb33500fb6f37"
+    },
+    "U+007D": {
+      "file": "u007d.svg",
+      "advance": 1017,
+      "bounds": [
+        127,
+        -476,
+        848,
+        1542
+      ],
+      "sha256": "27dcb5c1244d97c8eddedab19c0dabe8bde87bbe9cfa984b7748a040d5e19766"
+    },
+    "U+007E": {
+      "file": "u007e.svg",
+      "advance": 2041,
+      "bounds": [
+        397,
+        447,
+        1688,
+        769
+      ],
+      "sha256": "358622eb308cf8632857a96545f2c81a9e8f92402b013390d4436b7f6d481b5e"
+    },
+    "U+00A0": {
+      "file": "u00a0.svg",
+      "advance": 601,
+      "bounds": [
+        0,
+        0,
+        601,
+        1536.0
+      ],
+      "sha256": "cd48daf259394e3b17d97f43c2f2322fcdd60191a2cb9647dd01f96174f810f5"
+    },
+    "U+00A1": {
+      "file": "u00a1.svg",
+      "advance": 601,
+      "bounds": [
+        126,
+        -351,
+        469,
+        1147
+      ],
+      "sha256": "9b4f949ffdd8a44430aaf9c03bfb1357f03fce8cbe79b9e7a6e4c28e3968b5f9"
+    },
+    "U+00A2": {
+      "file": "u00a2.svg",
+      "advance": 983,
+      "bounds": [
+        72,
+        -164,
+        913,
+        1710
+      ],
+      "sha256": "171633a37ac9eb174cf6da67a73415628d13bd2c7e5ad1bf584d4f1d833c6ab1"
+    },
+    "U+00A3": {
+      "file": "u00a3.svg",
+      "advance": 983,
+      "bounds": [
+        117,
+        -29,
+        944,
+        1551
+      ],
+      "sha256": "1a9d3fb76b6c054c87205177b19eaec5c82e6b7b4634860deea3bd054a69761f"
+    },
+    "U+00A4": {
+      "file": "u00a4.svg",
+      "advance": 983,
+      "bounds": [
+        3,
+        176,
+        1046,
+        1177
+      ],
+      "sha256": "34bc57bb7d86f7376658e901e28e486ebd1d8c100675a697321fc29851c20f2d"
+    },
+    "U+00A5": {
+      "file": "u00a5.svg",
+      "advance": 983,
+      "bounds": [
+        -2,
+        8,
+        975,
+        1522
+      ],
+      "sha256": "1574141ce874358b62da82ab7bbbb9225248bcde8f713963386a29bf3a665b39"
+    },
+    "U+00A6": {
+      "file": "u00a6.svg",
+      "advance": 1017,
+      "bounds": [
+        469,
+        -429,
+        588,
+        1551
+      ],
+      "sha256": "bd0ff86d0327c79b36caa55f8b6053ee8c853d4b9245fb747100a44d3b6f76a3"
+    },
+    "U+00A7": {
+      "file": "u00a7.svg",
+      "advance": 983,
+      "bounds": [
+        87,
+        -314,
+        972,
+        1559
+      ],
+      "sha256": "842720d286ea72090991846b5965d9004e71c3c06915abd56d2fdf01acbb2b74"
+    },
+    "U+00A8": {
+      "file": "u00a8.svg",
+      "advance": 983,
+      "bounds": [
+        258,
+        1296,
+        750,
+        1559
+      ],
+      "sha256": "b93d5e62cabc2d1575855edddef61638a45dcb6c68d24efb1529dc66ff8188df"
+    },
+    "U+00A9": {
+      "file": "u00a9.svg",
+      "advance": 1017,
+      "bounds": [
+        80,
+        585,
+        1030,
+        1521
+      ],
+      "sha256": "048cc3e30ec89b86408f5ab6db0ed6e8d7897f0fd84ac5d9bd92218d120ef818"
+    },
+    "U+00AA": {
+      "file": "u00aa.svg",
+      "advance": 758,
+      "bounds": [
+        90,
+        767,
+        674,
+        1557
+      ],
+      "sha256": "dc2d1732858d28e28ee63f2316b3bc0c15130209afb8b96fead2d9024a069206"
+    },
+    "U+00AB": {
+      "file": "u00ab.svg",
+      "advance": 833,
+      "bounds": [
+        105,
+        125,
+        799,
+        989
+      ],
+      "sha256": "06dad55bd168d22ac5a50bd0a3a4e7c63428cfead3e465513744b072517a410f"
+    },
+    "U+00AC": {
+      "file": "u00ac.svg",
+      "advance": 1850,
+      "bounds": [
+        346,
+        207,
+        1513,
+        978
+      ],
+      "sha256": "555b0fb482f107c449d3d19166e14e97ff1c89d0c74e2cb94956e311e39075ad"
+    },
+    "U+00AE": {
+      "file": "u00ae.svg",
+      "advance": 1017,
+      "bounds": [
+        76,
+        566,
+        1018,
+        1519
+      ],
+      "sha256": "ff879da2fa00972ce24c497fb542328a0a143b287490769d2b9a6c03fa6be48b"
+    },
+    "U+00AF": {
+      "file": "u00af.svg",
+      "advance": 1017,
+      "bounds": [
+        0,
+        1521,
+        1024,
+        1638
+      ],
+      "sha256": "9f6459b086cf65005491534c9ccd5d687417bdab7a98bb6e718a2f5ec2e2d2d1"
+    },
+    "U+00B0": {
+      "file": "u00b0.svg",
+      "advance": 983,
+      "bounds": [
+        116,
+        731,
+        880,
+        1521
+      ],
+      "sha256": "9da454ab58af61d733dace92fc5dbc41ac7292163ec29feb60572a406244cb30"
+    },
+    "U+00B1": {
+      "file": "u00b1.svg",
+      "advance": 1850,
+      "bounds": [
+        356,
+        -322,
+        1524,
+        1204
+      ],
+      "sha256": "f5667150c3b52fd4f0dfc63c037e373e19a8f4f7221f009cf130860ba2ae476f"
+    },
+    "U+00B2": {
+      "file": "u00b2.svg",
+      "advance": 758,
+      "bounds": [
+        81,
+        527,
+        667,
+        1551
+      ],
+      "sha256": "1015ebf8ed554c13c1960db0c3b8ac62affc90de89d617a2261bfdee017b84a9"
+    },
+    "U+00B3": {
+      "file": "u00b3.svg",
+      "advance": 758,
+      "bounds": [
+        56,
+        501,
+        649,
+        1555
+      ],
+      "sha256": "0ea93cc79c531261e2ed75640bce714226ba7e67872f93c84daa98db3a2f3f36"
+    },
+    "U+00B4": {
+      "file": "u00b4.svg",
+      "advance": 983,
+      "bounds": [
+        370,
+        1260,
+        738,
+        1582
+      ],
+      "sha256": "608320d6c947429d9b179abfc06e37a9169d1bb28323e434be7b566f1f324945"
+    },
+    "U+00B5": {
+      "file": "u00b5.svg",
+      "advance": 1208,
+      "bounds": [
+        -119,
+        -390,
+        1220,
+        981
+      ],
+      "sha256": "65cbe0a713fd4e7f1b458ccddc88e3059841d2178ee57db437ba7a2a3c404e10"
+    },
+    "U+00B6": {
+      "file": "u00b6.svg",
+      "advance": 983,
+      "bounds": [
+        81,
+        -328,
+        846,
+        1515
+      ],
+      "sha256": "e9606dc305457ffe1bebb1172ed6a467f47b7f92abfea3e72b5d4cfd8d19fc1c"
+    },
+    "U+00B7": {
+      "file": "u00b7.svg",
+      "advance": 191,
+      "bounds": [
+        -29,
+        693,
+        215,
+        952
+      ],
+      "sha256": "b21b3eb4fbd7ed3e2d1abc4111c83de453cbc302fc4f4d8c49a962ed8784425a"
+    },
+    "U+00B8": {
+      "file": "u00b8.svg",
+      "advance": 983,
+      "bounds": [
+        256,
+        -416,
+        707,
+        30
+      ],
+      "sha256": "015077567320399c475880ff92f580573460191261d633fe1ca3b892fc709290"
+    },
+    "U+00B9": {
+      "file": "u00b9.svg",
+      "advance": 758,
+      "bounds": [
+        126,
+        520,
+        537,
+        1515
+      ],
+      "sha256": "da50d6d48c5f0ada0869b1310c720d3649a485713da4da0280c4e5ba2882ca18"
+    },
+    "U+00BA": {
+      "file": "u00ba.svg",
+      "advance": 758,
+      "bounds": [
+        85,
+        759,
+        685,
+        1549
+      ],
+      "sha256": "8d87b27afacddb6edcfaa436cd7a0ba8d937356c75344375ca1543e3dcf42538"
+    },
+    "U+00BB": {
+      "file": "u00bb.svg",
+      "advance": 833,
+      "bounds": [
+        61,
+        143,
+        730,
+        1003
+      ],
+      "sha256": "57983141e3741ab21f72bd28bd150c6a44327aca1836920c5a27abb5bba6570a"
+    },
+    "U+00BC": {
+      "file": "u00bc.svg",
+      "advance": 1850,
+      "bounds": [
+        124,
+        14,
+        1653,
+        1532
+      ],
+      "sha256": "11e87a25daea5c8e1b1120a3af83cbbdfb0f732ba5fc917dcfbe958aa130fc93"
+    },
+    "U+00BD": {
+      "file": "u00bd.svg",
+      "advance": 1850,
+      "bounds": [
+        64,
+        1,
+        1647,
+        1558
+      ],
+      "sha256": "f2c65c60fce9c7c0a5ebe2e0a4c64a27a91a70e4d81662860808eee9aed282ac"
+    },
+    "U+00BE": {
+      "file": "u00be.svg",
+      "advance": 1850,
+      "bounds": [
+        139,
+        -21,
+        1778,
+        1551
+      ],
+      "sha256": "be6b968a315a32bb70494c62b01debe825f8fa4472493acb14750b91b3b74fa3"
+    },
+    "U+00BF": {
+      "file": "u00bf.svg",
+      "advance": 908,
+      "bounds": [
+        20,
+        -420,
+        840,
+        1139
+      ],
+      "sha256": "fecbba7fd7b10c5c42e1621e6e6c56227cedd6816e3d462251cdc58036ca3c9c"
+    },
+    "U+00C0": {
+      "file": "u00c0.svg",
+      "advance": 1133,
+      "bounds": [
+        18,
+        12,
+        1104,
+        1993
+      ],
+      "sha256": "194e1a89b2b252df09b22614941ab0e555afef2e0217ec5a787e91bb92cbe1ed"
+    },
+    "U+00C1": {
+      "file": "u00c1.svg",
+      "advance": 1133,
+      "bounds": [
+        27,
+        14,
+        1106,
+        1975
+      ],
+      "sha256": "0e7759c6904d454d2c9f2a0e8a4ecb9ec127ca6e7ae87862429fd2ec49200dea"
+    },
+    "U+00C2": {
+      "file": "u00c2.svg",
+      "advance": 1133,
+      "bounds": [
+        29,
+        14,
+        1114,
+        1975
+      ],
+      "sha256": "9b22c43d7d5ebbeca3b84e92c3ad95730e403a4e26cbc9705fd04667762b5aa5"
+    },
+    "U+00C3": {
+      "file": "u00c3.svg",
+      "advance": 1133,
+      "bounds": [
+        20,
+        31,
+        1118,
+        1972
+      ],
+      "sha256": "b2e6c7e38244d68a4d133d37efe0112679f5d4f193ccf705d1182d0b6523f843"
+    },
+    "U+00C4": {
+      "file": "u00c4.svg",
+      "advance": 1133,
+      "bounds": [
+        18,
+        10,
+        1110,
+        1961
+      ],
+      "sha256": "a9021528e0cd9330820aef2d570b4898e945b365da3e403137ac90e326773744"
+    },
+    "U+00C5": {
+      "file": "u00c5.svg",
+      "advance": 1133,
+      "bounds": [
+        19,
+        2,
+        1123,
+        2092
+      ],
+      "sha256": "a914f2332b350c3688d49a86ea794e31008ca3bddc899c7db01ab886321df5fe"
+    },
+    "U+00C6": {
+      "file": "u00c6.svg",
+      "advance": 1775,
+      "bounds": [
+        2,
+        6,
+        1709,
+        1520
+      ],
+      "sha256": "570ba4d5a0f5cab47342452ff4ac91108ea7b3f27b1b1e172c983d43fd1a1fcd"
+    },
+    "U+00C7": {
+      "file": "u00c7.svg",
+      "advance": 1092,
+      "bounds": [
+        79,
+        -466,
+        983,
+        1564
+      ],
+      "sha256": "45449a5a7f5b7ff0171695bcbc71dd5786fa6a557f6e581c309c7dd1c694b330"
+    },
+    "U+00C8": {
+      "file": "u00c8.svg",
+      "advance": 1017,
+      "bounds": [
+        153,
+        -10,
+        960,
+        1950
+      ],
+      "sha256": "1b4d5b45440c097550ced4d6df7101a4d515a964d693ce77b758dd790c95dc5c"
+    },
+    "U+00C9": {
+      "file": "u00c9.svg",
+      "advance": 1017,
+      "bounds": [
+        153,
+        14,
+        948,
+        1985
+      ],
+      "sha256": "fa95e81c37c6549c696e882e143793da8fda014fb4917edd8c89b55d4734c691"
+    },
+    "U+00CA": {
+      "file": "u00ca.svg",
+      "advance": 1017,
+      "bounds": [
+        152,
+        -10,
+        950,
+        1950
+      ],
+      "sha256": "71e87735d0db9d612dbd148f5df9e4faf9bb3dee31e4fb5219f8a28a03d074bb"
+    },
+    "U+00CB": {
+      "file": "u00cb.svg",
+      "advance": 1017,
+      "bounds": [
+        150,
+        10,
+        982,
+        1941
+      ],
+      "sha256": "fbf2d32bc11c3a554539e067e6aaeea6035f4bbcd6a54c8b72062fd04699030c"
+    },
+    "U+00CC": {
+      "file": "u00cc.svg",
+      "advance": 567,
+      "bounds": [
+        53,
+        -6,
+        436,
+        1954
+      ],
+      "sha256": "518683d46ecaa9d489ea6544460179a23852b6715acb1e8f7402b21c35627129"
+    },
+    "U+00CD": {
+      "file": "u00cd.svg",
+      "advance": 567,
+      "bounds": [
+        144,
+        6,
+        532.3333333333334,
+        1937
+      ],
+      "sha256": "37f40f59a03ccf6192dadd9096c9869e8c8ada05be1074c3d84facc83f5677b2"
+    },
+    "U+00CE": {
+      "file": "u00ce.svg",
+      "advance": 567,
+      "bounds": [
+        22,
+        10,
+        568,
+        2001
+      ],
+      "sha256": "7d60e5fab98740f9829ce1b2d91f12c95420ca0170ea96c2aef9cddcc2532dcc"
+    },
+    "U+00CF": {
+      "file": "u00cf.svg",
+      "advance": 567,
+      "bounds": [
+        61,
+        -8,
+        526,
+        1942
+      ],
+      "sha256": "e3929e2255374e6af3506b18822c5eefc5045d14db50af1a5ffec91769b43cf4"
+    },
+    "U+00D0": {
+      "file": "u00d0.svg",
+      "advance": 1208,
+      "bounds": [
+        63,
+        6,
+        1110,
+        1535
+      ],
+      "sha256": "9953839362b541bf93ad7b9babf07b471b7442b1865c232d83c3a60d2bddbebb"
+    },
+    "U+00D1": {
+      "file": "u00d1.svg",
+      "advance": 1249,
+      "bounds": [
+        145,
+        8,
+        1149,
+        1939
+      ],
+      "sha256": "88efb3b6f95e90e324270eb3ae2d25b343bfb63d199699eb453e20eb2c04fe0d"
+    },
+    "U+00D2": {
+      "file": "u00d2.svg",
+      "advance": 1174,
+      "bounds": [
+        84,
+        -37,
+        1087,
+        1952
+      ],
+      "sha256": "fb553e5d94f95c683ec2c2b57e6cb61672f623971c546f313086d64199c8e626"
+    },
+    "U+00D3": {
+      "file": "u00d3.svg",
+      "advance": 1174,
+      "bounds": [
+        84,
+        -37,
+        1087,
+        1952
+      ],
+      "sha256": "b6dc17b6038712916a0babc766087be0737553537621454873ba297eb0881286"
+    },
+    "U+00D4": {
+      "file": "u00d4.svg",
+      "advance": 1174,
+      "bounds": [
+        84,
+        -37,
+        1087,
+        1952
+      ],
+      "sha256": "a52528809e77b8ef723abd246c4e5a97cb955587e3822ca36019a87ef07012b0"
+    },
+    "U+00D5": {
+      "file": "u00d5.svg",
+      "advance": 1174,
+      "bounds": [
+        84,
+        -34,
+        1087,
+        1966
+      ],
+      "sha256": "83de3ae2630ea311370014b6fdfb929bf3369f20df5d9fa597c22ddbd33fd00b"
+    },
+    "U+00D6": {
+      "file": "u00d6.svg",
+      "advance": 1174,
+      "bounds": [
+        81,
+        -32,
+        1103,
+        1958
+      ],
+      "sha256": "b69d68f60e4cf4aba897958c87e069e6f0cf79bdcce796ee5e6e3d181ba9f1a0"
+    },
+    "U+00D7": {
+      "file": "u00d7.svg",
+      "advance": 1850,
+      "bounds": [
+        328,
+        34,
+        1516,
+        1196
+      ],
+      "sha256": "9cf8e864bfb88af855fcf0b8ced48161694e01c45026d9ea22002a8141795ce7"
+    },
+    "U+00D8": {
+      "file": "u00d8.svg",
+      "advance": 1174,
+      "bounds": [
+        48.878787878787875,
+        -118.88095238095238,
+        1146.6451612903227,
+        1652.8809523809523
+      ],
+      "sha256": "a7500fbdb48f0ec49b6fd3b0227c78bdb012edcfdbbcac095a8f53de6b9fcc6e"
+    },
+    "U+00D9": {
+      "file": "u00d9.svg",
+      "advance": 1249,
+      "bounds": [
+        144,
+        -42,
+        1112,
+        1948
+      ],
+      "sha256": "6de922e7cde405916dfe6915c3c39acccd1dd3e649fbd6b4614b85a16f67987a"
+    },
+    "U+00DA": {
+      "file": "u00da.svg",
+      "advance": 1249,
+      "bounds": [
+        151,
+        -44,
+        1103,
+        1946
+      ],
+      "sha256": "d4990ae3098ed07c242e3721069c3dd24d9cb4f29fcd273450377c21fc2711f6"
+    },
+    "U+00DB": {
+      "file": "u00db.svg",
+      "advance": 1249,
+      "bounds": [
+        144,
+        -42,
+        1112,
+        1948
+      ],
+      "sha256": "186cefd29b6e1901d46278bfdbad499e11464f7a190d4e9ad493540e70f58de7"
+    },
+    "U+00DC": {
+      "file": "u00dc.svg",
+      "advance": 1249,
+      "bounds": [
+        144,
+        -31,
+        1112,
+        1929
+      ],
+      "sha256": "c5ebaf340821fb76c7f1b11538d7f489ed360beb2cb96a856aff559e616efcf6"
+    },
+    "U+00DD": {
+      "file": "u00dd.svg",
+      "advance": 1133,
+      "bounds": [
+        12,
+        10,
+        1133,
+        1951
+      ],
+      "sha256": "827a1ea1ae71c4a832991ec94dbbfc0b3988b57beef0d2c6b1d4b7793e8bcf00"
+    },
+    "U+00DE": {
+      "file": "u00de.svg",
+      "advance": 1133,
+      "bounds": [
+        143,
+        0,
+        1085,
+        1544
+      ],
+      "sha256": "2b3ef4140ed474b3ce9d1962c996a3a12c6e36720bc71f7a098496c3f434697c"
+    },
+    "U+00DF": {
+      "file": "u00df.svg",
+      "advance": 1058,
+      "bounds": [
+        141,
+        -40,
+        980,
+        1564
+      ],
+      "sha256": "8984b007af02ba7a13829b7c1ff4bf9df692bdde96b0d36b2734925824d92330"
+    },
+    "U+00E0": {
+      "file": "u00e0.svg",
+      "advance": 942,
+      "bounds": [
+        63,
+        -23,
+        941,
+        1586
+      ],
+      "sha256": "9c42fc681d1a057cc5ff9b076e5246dd3df7ec1912d2d772a59e58cb23047b40"
+    },
+    "U+00E1": {
+      "file": "u00e1.svg",
+      "advance": 942,
+      "bounds": [
+        66,
+        -29,
+        949,
+        1588
+      ],
+      "sha256": "3965b1e842c36925a6720171b91b0c8cde5c443b7f34aaf7130269536f70723f"
+    },
+    "U+00E2": {
+      "file": "u00e2.svg",
+      "advance": 942,
+      "bounds": [
+        66,
+        -23,
+        949,
+        1586
+      ],
+      "sha256": "14fb7cfa38d0a645f9fbff032357aebec5400e746702afa7586cf52ca1f1bc78"
+    },
+    "U+00E3": {
+      "file": "u00e3.svg",
+      "advance": 942,
+      "bounds": [
+        61,
+        -17,
+        944,
+        1563
+      ],
+      "sha256": "72b2bb25b65648a67c850232f47dd739dd0c94e559ebb136db8845711891b9ab"
+    },
+    "U+00E4": {
+      "file": "u00e4.svg",
+      "advance": 942,
+      "bounds": [
+        59,
+        -17,
+        972,
+        1563
+      ],
+      "sha256": "48559cd136730968349047fc04cade3e59eb117679a5fffb90aaf4bde78ac49f"
+    },
+    "U+00E5": {
+      "file": "u00e5.svg",
+      "advance": 942,
+      "bounds": [
+        59,
+        -19,
+        875,
+        1710
+      ],
+      "sha256": "85369cd8590e34720b1480d201e40cf4998c47411427f9f3f80d99b53ce43848"
+    },
+    "U+00E6": {
+      "file": "u00e6.svg",
+      "advance": 1475,
+      "bounds": [
+        47,
+        -30,
+        1378,
+        1188
+      ],
+      "sha256": "fe9480e9954c9d6b28f5d1fa040526e0087485ab62665b50f69fc4eab00fc582"
+    },
+    "U+00E7": {
+      "file": "u00e7.svg",
+      "advance": 908,
+      "bounds": [
+        77,
+        -426,
+        810,
+        1194
+      ],
+      "sha256": "7fb9beffa7be49505e26feeace031a83237e150daeed0c12c0b7346d20be2951"
+    },
+    "U+00E8": {
+      "file": "u00e8.svg",
+      "advance": 983,
+      "bounds": [
+        83,
+        -31,
+        890,
+        1586
+      ],
+      "sha256": "e26e90d6c3ae3cfb069d3ae5df2ab706fd6dca268e981bc01c595ecedebaeb74"
+    },
+    "U+00E9": {
+      "file": "u00e9.svg",
+      "advance": 983,
+      "bounds": [
+        83,
+        -34,
+        890,
+        1592
+      ],
+      "sha256": "52dcaca43d4e808c11744c18f5efbe8a1fae92c8c1aec4bb8567ed7125c5e11a"
+    },
+    "U+00EA": {
+      "file": "u00ea.svg",
+      "advance": 983,
+      "bounds": [
+        83,
+        -31,
+        890,
+        1578
+      ],
+      "sha256": "edf1813c483c91b2359a2925d2986d39a8214cf46ab2bc0094172bddcf80f2e8"
+    },
+    "U+00EB": {
+      "file": "u00eb.svg",
+      "advance": 983,
+      "bounds": [
+        81,
+        -26,
+        889,
+        1587
+      ],
+      "sha256": "3eb266427328cbc7f488cc0751350c2cafd15284aa4bedccbfef707fca8b42bb"
+    },
+    "U+00EC": {
+      "file": "u00ec.svg",
+      "advance": 526,
+      "bounds": [
+        -26,
+        6,
+        399,
+        1585
+      ],
+      "sha256": "fbf03aa05d6f0a925eda87080481dd6628c85afda0b9554ab8bdb4e6cf98b983"
+    },
+    "U+00ED": {
+      "file": "u00ed.svg",
+      "advance": 526,
+      "bounds": [
+        130,
+        -12,
+        479.6666666666667,
+        1545
+      ],
+      "sha256": "2d63e25b8613a58d22d43e7d0830bdfd95a763ed201cfce03e8ccbdf0340a3dc"
+    },
+    "U+00EE": {
+      "file": "u00ee.svg",
+      "advance": 526,
+      "bounds": [
+        -10,
+        2,
+        558,
+        1598
+      ],
+      "sha256": "fa54b91b6dab52d4be94e63b7b45f58cee57bd24eb921a1b8b65b330f4248956"
+    },
+    "U+00EF": {
+      "file": "u00ef.svg",
+      "advance": 526,
+      "bounds": [
+        22,
+        2,
+        505,
+        1553
+      ],
+      "sha256": "be388f4d013669e15620f10beab6f18fc0700208dee2573e01cec908fc4e547c"
+    },
+    "U+00F0": {
+      "file": "u00f0.svg",
+      "advance": 983,
+      "bounds": [
+        75,
+        -31,
+        888,
+        1557
+      ],
+      "sha256": "8eb8aa6441d117c64f2ac3e12c40de3c14b6ce8e822e0f13fec24ff67b1ff520"
+    },
+    "U+00F1": {
+      "file": "u00f1.svg",
+      "advance": 1017,
+      "bounds": [
+        130,
+        8,
+        874,
+        1559
+      ],
+      "sha256": "eec63f1d9232bf2b96cb7603465a03d05bd7c2fe9239d1f23d7964d65d7a8619"
+    },
+    "U+00F2": {
+      "file": "u00f2.svg",
+      "advance": 983,
+      "bounds": [
+        81,
+        -34,
+        894,
+        1592
+      ],
+      "sha256": "64d2bf848cd3458fbc9e3cd97af8bb2df6fd227fa9639bb34406bc8c17ed2d0a"
+    },
+    "U+00F3": {
+      "file": "u00f3.svg",
+      "advance": 983,
+      "bounds": [
+        73,
+        -38,
+        891,
+        1588
+      ],
+      "sha256": "de8a89c49818d1e35c693b731aa7fc3964a60aace095fb0dc44034300df99b9e"
+    },
+    "U+00F4": {
+      "file": "u00f4.svg",
+      "advance": 983,
+      "bounds": [
+        81,
+        -31,
+        894,
+        1586
+      ],
+      "sha256": "ea4e1e0ab5a4a95aebc20a44851c5a7fd25cb9250375f93aa4ad60d98f93c1f2"
+    },
+    "U+00F5": {
+      "file": "u00f5.svg",
+      "advance": 983,
+      "bounds": [
+        72,
+        -32,
+        910,
+        1565
+      ],
+      "sha256": "6acf5c8f3cbea0471dcb4ff45be770ff045c1c16f925f968d2ef4e695f811e1a"
+    },
+    "U+00F6": {
+      "file": "u00f6.svg",
+      "advance": 983,
+      "bounds": [
+        63,
+        -40,
+        915,
+        1565
+      ],
+      "sha256": "6a0cd488f54a738c05bcd4b13279ca5c4179ea201af0483142a008dc2cc58667"
+    },
+    "U+00F7": {
+      "file": "u00f7.svg",
+      "advance": 1850,
+      "bounds": [
+        348,
+        21,
+        1495,
+        1191
+      ],
+      "sha256": "9e39ec35912608672d7af828f932e558defacc5ad0361e4ede4156d5180881fa"
+    },
+    "U+00F8": {
+      "file": "u00f8.svg",
+      "advance": 983,
+      "bounds": [
+        77,
+        -99,
+        931,
+        1241
+      ],
+      "sha256": "25c691040025fd06b258c5c73864b159c3aeb16a846a1242fefe60b46ab32337"
+    },
+    "U+00F9": {
+      "file": "u00f9.svg",
+      "advance": 1017,
+      "bounds": [
+        123,
+        -29,
+        886,
+        1580
+      ],
+      "sha256": "4973904055d1ff2151523193d9af3d98dba550b0aa068a44f3bff4568cffb54e"
+    },
+    "U+00FA": {
+      "file": "u00fa.svg",
+      "advance": 1017,
+      "bounds": [
+        123,
+        -19,
+        881,
+        1559
+      ],
+      "sha256": "5fe50fbe40444bee2fe6f19a45b22509520ca1dd26bfffe75fffc51fcc233104"
+    },
+    "U+00FB": {
+      "file": "u00fb.svg",
+      "advance": 1017,
+      "bounds": [
+        121,
+        -39,
+        884,
+        1570
+      ],
+      "sha256": "cf7e609aad7bd662d5c3cd4a56ff059237b56b4f360508127eab6961ae1decab"
+    },
+    "U+00FC": {
+      "file": "u00fc.svg",
+      "advance": 1017,
+      "bounds": [
+        123,
+        -27,
+        886,
+        1553
+      ],
+      "sha256": "5c90def40b3701b64ecf4679599f0087fc7653a0270b4616429fe258c9f37a1d"
+    },
+    "U+00FD": {
+      "file": "u00fd.svg",
+      "advance": 908,
+      "bounds": [
+        19,
+        -414,
+        888,
+        1578
+      ],
+      "sha256": "fc568e7fb8a3ac5a24368b1fa0c8bf3b25cf6a440adcbdc66ad90e03e2223a66"
+    },
+    "U+00FE": {
+      "file": "u00fe.svg",
+      "advance": 1017,
+      "bounds": [
+        128,
+        -389,
+        951,
+        1574
+      ],
+      "sha256": "4b93a0b447c8fdcae0c9a196d62f2741f1e2c6f6a84ce7f204298634062b5484"
+    },
+    "U+00FF": {
+      "file": "u00ff.svg",
+      "advance": 908,
+      "bounds": [
+        23,
+        -391,
+        893,
+        1540
+      ],
+      "sha256": "0bc37de3e04135778e790cde7de0374189849c737aeaf65883c18e997eadd153"
+    },
+    "U+0131": {
+      "file": "u0131.svg",
+      "advance": 526,
+      "bounds": [
+        131,
+        8,
+        397,
+        1149
+      ],
+      "sha256": "4eec716c532030d6cc4f17d601b3da207e38823ab32f485889b32d71e825cc3e"
+    },
+    "U+0141": {
+      "file": "u0141.svg",
+      "advance": 983,
+      "bounds": [
+        38,
+        -8,
+        953,
+        1528
+      ],
+      "sha256": "3a69f677c8fa22daef0954c4408bb9ea89e7275495a665239116910eaec35876"
+    },
+    "U+0142": {
+      "file": "u0142.svg",
+      "advance": 526,
+      "bounds": [
+        1,
+        0,
+        556,
+        1521
+      ],
+      "sha256": "0f689a5e7b14478ee7b028eeb200fa11c45032b72d6e49055150ff347abe6d6a"
+    },
+    "U+0152": {
+      "file": "u0152.svg",
+      "advance": 1659,
+      "bounds": [
+        78,
+        -29,
+        1637,
+        1551
+      ],
+      "sha256": "3ebb935deae21b4c96361680944d7829dcc3a545d3dbb0edbd485f908bd456f6"
+    },
+    "U+0153": {
+      "file": "u0153.svg",
+      "advance": 1509,
+      "bounds": [
+        80,
+        -30,
+        1411,
+        1182
+      ],
+      "sha256": "8fff3cb10232a8011536a97f8a8f87b21f05a044693ab79abdb1df5123af9b09"
+    },
+    "U+0160": {
+      "file": "u0160.svg",
+      "advance": 1092,
+      "bounds": [
+        89,
+        -29,
+        1016,
+        1960
+      ],
+      "sha256": "e158c6592ae6088b783cf85c799ca9b491903867a97f82d72e9d63413a885feb"
+    },
+    "U+0161": {
+      "file": "u0161.svg",
+      "advance": 867,
+      "bounds": [
+        75,
+        -29,
+        844,
+        1580
+      ],
+      "sha256": "42d128c40fc0eaded3eee7018382522136af67db08c723a6c3d5a69cfaffad82"
+    },
+    "U+0178": {
+      "file": "u0178.svg",
+      "advance": 1133,
+      "bounds": [
+        20,
+        4,
+        1135,
+        1935
+      ],
+      "sha256": "b1bb3c57c3cf1edd5158bed32bd2dd2cfc70dad580599e26333125f441ab9831"
+    },
+    "U+017D": {
+      "file": "u017d.svg",
+      "advance": 1017,
+      "bounds": [
+        73,
+        0,
+        944,
+        1960
+      ],
+      "sha256": "4286ad6ef7194a4c357031ccdf049083f20d4c318152eb682d80e9abcac20aed"
+    },
+    "U+017E": {
+      "file": "u017e.svg",
+      "advance": 792,
+      "bounds": [
+        5,
+        0,
+        780,
+        1572
+      ],
+      "sha256": "1b9c7597b4b2e92e161105aee39b3ed4807b922532c0f0b114b0babc6c352358"
+    },
+    "U+0192": {
+      "file": "u0192.svg",
+      "advance": 983,
+      "bounds": [
+        58,
+        -15,
+        829,
+        1547
+      ],
+      "sha256": "419d291c121554617e2ca3b04fd4a198436f743502093734835ff764dc78efc7"
+    },
+    "U+02C6": {
+      "file": "u02c6.svg",
+      "advance": 983,
+      "bounds": [
+        227.07692307692307,
+        1264,
+        784,
+        1586
+      ],
+      "sha256": "15a6c0dbcde0d167ca9eaa8c656b1f1fe4a01d448659d4d95e0d7266f4253b86"
+    },
+    "U+02C7": {
+      "file": "u02c7.svg",
+      "advance": 983,
+      "bounds": [
+        189,
+        1260,
+        764,
+        1582
+      ],
+      "sha256": "fb61b5f19815e91a8e03b0caa13cfc151cc8fb80757a4ab7d76e79909c565a87"
+    },
+    "U+02C9": {
+      "file": "u02c9.svg",
+      "advance": 983,
+      "bounds": [
+        233,
+        1359,
+        757,
+        1506
+      ],
+      "sha256": "2ed536e8ecfe083bf249871ef139c46617a2b103ff7a4241fcc287dcd6355400"
+    },
+    "U+02D8": {
+      "file": "u02d8.svg",
+      "advance": 983,
+      "bounds": [
+        226,
+        1258,
+        766,
+        1580
+      ],
+      "sha256": "4a7beb322131562895b65ca39233598bf6c0fff90224fe24662211ab0a09dbc9"
+    },
+    "U+02D9": {
+      "file": "u02d9.svg",
+      "advance": 983,
+      "bounds": [
+        328,
+        1308,
+        584,
+        1572
+      ],
+      "sha256": "7a7d825bf71fc5602541a4f2fdfaf2e1c52a3e92b7a5c880895915eb990759f7"
+    },
+    "U+02DA": {
+      "file": "u02da.svg",
+      "advance": 983,
+      "bounds": [
+        287,
+        1260,
+        705,
+        1670
+      ],
+      "sha256": "4b36ad4166be64a9a13857b59ace916c809d893ec69663f9bda923bb61bafdaf"
+    },
+    "U+02DB": {
+      "file": "u02db.svg",
+      "advance": 983,
+      "bounds": [
+        471,
+        -439,
+        840,
+        56
+      ],
+      "sha256": "611819afe97e32ca2f5875af4e32a11917e03be6f7787354136709d04077ef68"
+    },
+    "U+02DC": {
+      "file": "u02dc.svg",
+      "advance": 2041,
+      "bounds": [
+        397,
+        447,
+        1688,
+        769
+      ],
+      "sha256": "2965cb41736ca28a8443d8063f57d747d2abef88111b9632d8912a1e85bf5597"
+    },
+    "U+02DD": {
+      "file": "u02dd.svg",
+      "advance": 983,
+      "bounds": [
+        180.7391304347826,
+        1264,
+        943.3333333333334,
+        1586
+      ],
+      "sha256": "213f9412de7d6d1693514f5907cb8c76449db648fc39a44d934f4af524ad759e"
+    },
+    "U+037E": {
+      "file": "u037e.svg",
+      "advance": 577,
+      "bounds": [
+        71,
+        -279,
+        459,
+        1191
+      ],
+      "sha256": "5409de3f76d8ce9980752e131ac0a2768252c514ce314cf6a138e948ae5ee28c"
+    },
+    "U+03A9": {
+      "file": "u03a9.svg",
+      "advance": 1174,
+      "bounds": [
+        85,
+        8,
+        1093,
+        1590
+      ],
+      "sha256": "ddd546669d312ddd661a9a1d38f8ae52dca41ce0bca4ec7f85cafd4accb76e2c"
+    },
+    "U+03BC": {
+      "file": "u03bc.svg",
+      "advance": 1031,
+      "bounds": [
+        123,
+        -462,
+        983,
+        1127
+      ],
+      "sha256": "024d3b2bfc67bcf504e66efa37747a82c87b829d87acd297937bd6d283aeae78"
+    },
+    "U+0401": {
+      "file": "u0401.svg",
+      "advance": 1017,
+      "bounds": [
+        149,
+        -2,
+        957,
+        1949
+      ],
+      "sha256": "44d3f965c64ce4b2ce7e7b77208340ae20cee6caa4198e323da954060d97067a"
+    },
+    "U+0404": {
+      "file": "u0404.svg",
+      "advance": 1092,
+      "bounds": [
+        91,
+        -30,
+        1043,
+        1574
+      ],
+      "sha256": "cc5cc8e145b2214831831c8bbda362a0406dba76509f96b34f81dea98c9078dc"
+    },
+    "U+0406": {
+      "file": "u0406.svg",
+      "advance": 573,
+      "bounds": [
+        144,
+        0,
+        435,
+        1521
+      ],
+      "sha256": "8cf91bf00f1fbbc8fba5e746e09f4de3f4bc7f169a09a1b1c71956c1f3a602e5"
+    },
+    "U+0407": {
+      "file": "u0407.svg",
+      "advance": 567,
+      "bounds": [
+        11,
+        33,
+        535,
+        1964
+      ],
+      "sha256": "314464aeb3da5e49c67d7c167c1774f0bba61f54b0f37f79f78cf7283245e854"
+    },
+    "U+0410": {
+      "file": "u0410.svg",
+      "advance": 1133,
+      "bounds": [
+        23,
+        0,
+        1128,
+        1560
+      ],
+      "sha256": "3c80c846e40ed0819cc482031fb83a4fb397a3738eaeb1e2063bc264e1e2ff06"
+    },
+    "U+0411": {
+      "file": "u0411.svg",
+      "advance": 1106,
+      "bounds": [
+        146,
+        0,
+        1073,
+        1521
+      ],
+      "sha256": "a13e0e05b7def6d8a15055a9f7abbe175a96c9301856b46c9dba7affbcb2900d"
+    },
+    "U+0412": {
+      "file": "u0412.svg",
+      "advance": 1126,
+      "bounds": [
+        138,
+        8,
+        1044,
+        1530
+      ],
+      "sha256": "45803209c2ceed8b04e86c0a11b4f6e2c658a278f6c7e997c4604bcc705eb32c"
+    },
+    "U+0413": {
+      "file": "u0413.svg",
+      "advance": 983,
+      "bounds": [
+        143,
+        0,
+        963,
+        1521
+      ],
+      "sha256": "a01d0760005571041211d03e440cc718f804595e644ecdc42618d678af8593e0"
+    },
+    "U+0414": {
+      "file": "u0414.svg",
+      "advance": 1304,
+      "bounds": [
+        -23,
+        -267,
+        1322,
+        1517
+      ],
+      "sha256": "b7e5284c3013c6ba541f5db8d507a9ffb3b0c17a735b82c539c896b768abbc1d"
+    },
+    "U+0415": {
+      "file": "u0415.svg",
+      "advance": 1017,
+      "bounds": [
+        154,
+        10,
+        986,
+        1532
+      ],
+      "sha256": "008054632da4ab7da1f1aa02882752376d6a0cbdf229a4eff9c6bda6562ee22c"
+    },
+    "U+0416": {
+      "file": "u0416.svg",
+      "advance": 1707,
+      "bounds": [
+        -1,
+        -2,
+        1693,
+        1519
+      ],
+      "sha256": "40ac26749b74e25e5ef87dee9212d0b7878ef5b4590e02d1bf2d7e13f1519493"
+    },
+    "U+0417": {
+      "file": "u0417.svg",
+      "advance": 1065,
+      "bounds": [
+        81,
+        -23,
+        949,
+        1557
+      ],
+      "sha256": "9e0e76afa47d58f6824dad58e6a24430ef74ec70e7b9d264107f39242d2fd512"
+    },
+    "U+0418": {
+      "file": "u0418.svg",
+      "advance": 1249,
+      "bounds": [
+        135,
+        2,
+        1118,
+        1523
+      ],
+      "sha256": "9a55831f6894bb002a0c283c37841ae9e214d7fb57e738f0ebfbc058488b66cc"
+    },
+    "U+0419": {
+      "file": "u0419.svg",
+      "advance": 1249,
+      "bounds": [
+        150,
+        0,
+        1117,
+        1960
+      ],
+      "sha256": "43d4b70e4a4adcf599d7d066b780da93f20dfbb4e28bc660656712581e7ae831"
+    },
+    "U+041A": {
+      "file": "u041a.svg",
+      "advance": 1188,
+      "bounds": [
+        141,
+        -14,
+        1268,
+        1522
+      ],
+      "sha256": "1f0886ae5c5eaf7dfe080b7c8b1bbf0e277802a5760ce9bf0e2adb7c62dcae0c"
+    },
+    "U+041B": {
+      "file": "u041b.svg",
+      "advance": 1311,
+      "bounds": [
+        21,
+        8.46875,
+        1193,
+        1531
+      ],
+      "sha256": "3853af5b5204cb414ba97cbea5d12bb30d0c976fa68a40136c5108c21bf0099c"
+    },
+    "U+041C": {
+      "file": "u041c.svg",
+      "advance": 1563,
+      "bounds": [
+        135,
+        10,
+        1427,
+        1524
+      ],
+      "sha256": "01469e1e35a963b955a0560b4009cbec1fef465bfbc94110a784a8559320e54a"
+    },
+    "U+041D": {
+      "file": "u041d.svg",
+      "advance": 1256,
+      "bounds": [
+        144,
+        -2,
+        1112,
+        1527
+      ],
+      "sha256": "f37b5aacaf23c173f188c1116329e01fa7795b57b0dfc8d3a16f620b4834af52"
+    },
+    "U+041E": {
+      "file": "u041e.svg",
+      "advance": 1174,
+      "bounds": [
+        82,
+        -51,
+        1092,
+        1600
+      ],
+      "sha256": "50ec9f7c699ef0d30bea4a0a32d323aef6ef1562e3839f9feea99dbd874927d0"
+    },
+    "U+041F": {
+      "file": "u041f.svg",
+      "advance": 1256,
+      "bounds": [
+        146,
+        8,
+        1114,
+        1530
+      ],
+      "sha256": "0e964400f04c24fcc7aef64384e448e6777859fb84214fdc93c0ce5dafa95011"
+    },
+    "U+0420": {
+      "file": "u0420.svg",
+      "advance": 1133,
+      "bounds": [
+        146,
+        -8,
+        1092,
+        1521
+      ],
+      "sha256": "557936cf80af80fcef3893b2345d32340c179c5d28c2104ef2dbf38b2c399b29"
+    },
+    "U+0421": {
+      "file": "u0421.svg",
+      "advance": 1085,
+      "bounds": [
+        81,
+        -29,
+        999,
+        1558
+      ],
+      "sha256": "7509fec4dec06bb5790d876ae58385d2173bb743a217c8af56b93b4cd0e1f558"
+    },
+    "U+0422": {
+      "file": "u0422.svg",
+      "advance": 1010,
+      "bounds": [
+        18,
+        0,
+        961,
+        1521
+      ],
+      "sha256": "f0918e918627b513bdd5f2683fa7821fc69921bf110b57596e411ddc131c2f38"
+    },
+    "U+0423": {
+      "file": "u0423.svg",
+      "advance": 1147,
+      "bounds": [
+        51,
+        10,
+        1107,
+        1524
+      ],
+      "sha256": "b39533cd1599ec1ba3959381c0ea189907a6f5d69d8f4a4068b025739b47bec5"
+    },
+    "U+0424": {
+      "file": "u0424.svg",
+      "advance": 1502,
+      "bounds": [
+        57,
+        -33,
+        1470,
+        1547
+      ],
+      "sha256": "5b6e13fcd2359d521f27bf667811ff27e30f6b4dd3e419fb63d1b0b35ee2d8bc"
+    },
+    "U+0425": {
+      "file": "u0425.svg",
+      "advance": 1133,
+      "bounds": [
+        28,
+        10,
+        1108,
+        1532
+      ],
+      "sha256": "37218403cf2d5bfd5802001b13575f8853e6f0d2454f43d6e6f6dc5e5e848798"
+    },
+    "U+0426": {
+      "file": "u0426.svg",
+      "advance": 1290,
+      "bounds": [
+        146,
+        -366,
+        1284,
+        1524
+      ],
+      "sha256": "ad34173e1025f52b548c8e3f28d8b37c2ba8f847bbc51725c36e0b9068534c8e"
+    },
+    "U+0427": {
+      "file": "u0427.svg",
+      "advance": 1256,
+      "bounds": [
+        152,
+        -10,
+        1114,
+        1519
+      ],
+      "sha256": "397e488e4d6605d9a9008d3118fe7d47f2ff27a16b181dcdcd95c10e8469129b"
+    },
+    "U+0428": {
+      "file": "u0428.svg",
+      "advance": 1830,
+      "bounds": [
+        135,
+        -8,
+        1671,
+        1521
+      ],
+      "sha256": "fc793e370981ad418a6061e0a8ef169363d1b018d0e37453cc43fc24535286e8"
+    },
+    "U+0429": {
+      "file": "u0429.svg",
+      "advance": 1850,
+      "bounds": [
+        137,
+        -338,
+        1864,
+        1521
+      ],
+      "sha256": "b2c1d20e53483f32bf37c40f43c9849a59279676d0801ed3db3e458c7174353d"
+    },
+    "U+042A": {
+      "file": "u042a.svg",
+      "advance": 1324,
+      "bounds": [
+        34,
+        -12,
+        1278,
+        1516
+      ],
+      "sha256": "a4e249f6f4e519a94f872f9a727d9af32c8028feae55d9a6cc04c82b37f07fa2"
+    },
+    "U+042B": {
+      "file": "u042b.svg",
+      "advance": 1638,
+      "bounds": [
+        137,
+        -10,
+        1502,
+        1511
+      ],
+      "sha256": "5f8c3e9ee8ef1a5ea0439710264ae1afa61a8aafd8146cf2d5d964d223d152fe"
+    },
+    "U+042C": {
+      "file": "u042c.svg",
+      "advance": 1106,
+      "bounds": [
+        146,
+        -8,
+        1082,
+        1460
+      ],
+      "sha256": "d519751bfde9f450f6c691abadade8d34d4c1d23c2de09e59d40fbd5b03efe4e"
+    },
+    "U+042D": {
+      "file": "u042d.svg",
+      "advance": 1126,
+      "bounds": [
+        53,
+        -38,
+        1053,
+        1589
+      ],
+      "sha256": "93126d8c8350b13b01ae79a0c471cfc70b15a7b38c922fd0be3a5af793aa7eea"
+    },
+    "U+042E": {
+      "file": "u042e.svg",
+      "advance": 1700,
+      "bounds": [
+        162,
+        -32,
+        1636,
+        1572
+      ],
+      "sha256": "7279276fbca6c94075c0f855bcfeb5002d46f379143166d1c46d5d0fca7cf578"
+    },
+    "U+042F": {
+      "file": "u042f.svg",
+      "advance": 1215,
+      "bounds": [
+        31,
+        12,
+        1075,
+        1534
+      ],
+      "sha256": "1dcf4be3725b9da01996d4fbae6cc91913b351abf8692eb5994af576bf7f84f8"
+    },
+    "U+0430": {
+      "file": "u0430.svg",
+      "advance": 983,
+      "bounds": [
+        73,
+        -21,
+        873,
+        1184
+      ],
+      "sha256": "85932aeb1b2338eaa75346ede795d0063543405f9d2d171be1dff7269bd6b0fc"
+    },
+    "U+0431": {
+      "file": "u0431.svg",
+      "advance": 983,
+      "bounds": [
+        75,
+        -38,
+        889,
+        1609
+      ],
+      "sha256": "2f27e8e3f0fd6b9dbb3739c801d8ee6bd172e3366da5ec16ab5dad0e67ca50f7"
+    },
+    "U+0432": {
+      "file": "u0432.svg",
+      "advance": 983,
+      "bounds": [
+        120,
+        6,
+        914,
+        1147
+      ],
+      "sha256": "dde5b8082bd2f989243378ceaaec8a73c8495db2295dc84c74332d08830af129"
+    },
+    "U+0433": {
+      "file": "u0433.svg",
+      "advance": 737,
+      "bounds": [
+        124,
+        10,
+        711,
+        1151
+      ],
+      "sha256": "9b03e2cf36e24b79a59a6e954327d93bd72ca2fbda89c05b61011901c9954792"
+    },
+    "U+0434": {
+      "file": "u0434.svg",
+      "advance": 1147,
+      "bounds": [
+        59,
+        -258,
+        1124,
+        1146
+      ],
+      "sha256": "0ab4ba105486188dbdffc819a5ac2dff6e0f71f4159feba46f99099198a4c8bf"
+    },
+    "U+0435": {
+      "file": "u0435.svg",
+      "advance": 983,
+      "bounds": [
+        90,
+        -29,
+        889,
+        1170
+      ],
+      "sha256": "2cfedd8db4459a8da21dae15fec6e36b78ce47502f7ee203a584784df98b88b2"
+    },
+    "U+0436": {
+      "file": "u0436.svg",
+      "advance": 1352,
+      "bounds": [
+        26,
+        6,
+        1342,
+        1147
+      ],
+      "sha256": "6a261740869510c90a08ac0489e24d25273be5b2e290ff294a85572f34182be0"
+    },
+    "U+0437": {
+      "file": "u0437.svg",
+      "advance": 887,
+      "bounds": [
+        61,
+        -29,
+        812,
+        1170
+      ],
+      "sha256": "f74bbb6899e9c5525d65549d2eba36474f86c886758b7ed2734515cb6e528da4"
+    },
+    "U+0438": {
+      "file": "u0438.svg",
+      "advance": 1044,
+      "bounds": [
+        121,
+        12,
+        924,
+        1148
+      ],
+      "sha256": "be0ef65e1c6073a91d5fb1aad9c1fa87524e32af206d9097794a183d3790cc34"
+    },
+    "U+0439": {
+      "file": "u0439.svg",
+      "advance": 1044,
+      "bounds": [
+        122,
+        6,
+        928,
+        1586
+      ],
+      "sha256": "1420bc6b28441e38642b90fe44f718e88c2b7edd99f20ef210e7c1207db6c0d7"
+    },
+    "U+043A": {
+      "file": "u043a.svg",
+      "advance": 949,
+      "bounds": [
+        123,
+        8,
+        932,
+        1144
+      ],
+      "sha256": "9dbd7389cb770f0e01c5729a28f5585c1273549655238af1882eafcf147acd41"
+    },
+    "U+043B": {
+      "file": "u043b.svg",
+      "advance": 1120,
+      "bounds": [
+        25,
+        -2,
+        1022,
+        1144
+      ],
+      "sha256": "2776de00ce2fd14b74f0501c2e12f2c5e53457fab6a75ec4f07f0486b821b0f4"
+    },
+    "U+043C": {
+      "file": "u043c.svg",
+      "advance": 1365,
+      "bounds": [
+        122,
+        8,
+        1234,
+        1149
+      ],
+      "sha256": "8dbbd904eb458dc250336a030cb054ad4efd69e20e48e0a024269d7b009a5290"
+    },
+    "U+043D": {
+      "file": "u043d.svg",
+      "advance": 1031,
+      "bounds": [
+        124,
+        10,
+        914,
+        1151
+      ],
+      "sha256": "80d38c4064d262edb4b403c6028295a091f7ce7045db79d0108bbe8a218b7f57"
+    },
+    "U+043E": {
+      "file": "u043e.svg",
+      "advance": 983,
+      "bounds": [
+        83,
+        -42,
+        896,
+        1181
+      ],
+      "sha256": "7064ee262d37b3f460ecf4203259ea4a98e2ace70d7c8aa430638ec613012de2"
+    },
+    "U+043F": {
+      "file": "u043f.svg",
+      "advance": 1017,
+      "bounds": [
+        122,
+        10,
+        876,
+        1151
+      ],
+      "sha256": "a3e3248b26df8f5158ba01e3b24df24deed6f43c967db67f38644328581574cb"
+    },
+    "U+0440": {
+      "file": "u0440.svg",
+      "advance": 1017,
+      "bounds": [
+        121,
+        -382,
+        909,
+        1168
+      ],
+      "sha256": "53e75f58bae0dba5c2e463c78b1101149f1a9391501a9a7fa2097d9dc2488ea9"
+    },
+    "U+0441": {
+      "file": "u0441.svg",
+      "advance": 901,
+      "bounds": [
+        82,
+        -29,
+        823,
+        1170
+      ],
+      "sha256": "4a7d51271180c98222212a577aacdf98ed60524262deaab0926adcc7af9aab8f"
+    },
+    "U+0442": {
+      "file": "u0442.svg",
+      "advance": 751,
+      "bounds": [
+        20,
+        8,
+        713,
+        1144
+      ],
+      "sha256": "ec2d645fda5ea066c4720d25cfa863e9978c965ad7f230e3e67f57c053c23f99"
+    },
+    "U+0443": {
+      "file": "u0443.svg",
+      "advance": 887,
+      "bounds": [
+        20,
+        -392,
+        869,
+        1144
+      ],
+      "sha256": "e93441622c86d88520f4b39daf7ca4e82627136502197c2d186466d3dfa777cf"
+    },
+    "U+0444": {
+      "file": "u0444.svg",
+      "advance": 1399,
+      "bounds": [
+        84,
+        -409,
+        1302,
+        1588
+      ],
+      "sha256": "f889f065b480025c2ef337f43a246f8069b94784de5c4218792c0d69541c10cc"
+    },
+    "U+0445": {
+      "file": "u0445.svg",
+      "advance": 908,
+      "bounds": [
+        20,
+        8,
+        892,
+        1144
+      ],
+      "sha256": "ac715363dcaa4e918364eb2afae838ed36ef5224fd526144f71f76b62b27314c"
+    },
+    "U+0446": {
+      "file": "u0446.svg",
+      "advance": 1051,
+      "bounds": [
+        113,
+        -266,
+        993,
+        1146
+      ],
+      "sha256": "0a0afbc3ee746365559da0afb2963187cc9c5a9032a81fcfbdd50064d43f2a18"
+    },
+    "U+0447": {
+      "file": "u0447.svg",
+      "advance": 1004,
+      "bounds": [
+        117,
+        -8,
+        874,
+        1144
+      ],
+      "sha256": "9a43cc4891cb6b87110cad9ecbd2c35cf6cb31f9ab91823b657b9a384292859f"
+    },
+    "U+0448": {
+      "file": "u0448.svg",
+      "advance": 1495,
+      "bounds": [
+        115,
+        -8,
+        1384,
+        1150
+      ],
+      "sha256": "fed4cf84ecf6085858316866c30228468682906a3c9ef1b182d6f22c9e49011e"
+    },
+    "U+0449": {
+      "file": "u0449.svg",
+      "advance": 1522,
+      "bounds": [
+        127,
+        -261,
+        1499,
+        1150
+      ],
+      "sha256": "97eb84d4840b6c4bfc05ff6431aed2ee5e75cfeefef16e1bfd5bd70742a891b0"
+    },
+    "U+044A": {
+      "file": "u044a.svg",
+      "advance": 1106,
+      "bounds": [
+        20,
+        -14,
+        1042,
+        1144
+      ],
+      "sha256": "29944e0a5497afc274b3d65caf09382a32253553ac40fcf00a87bba0acb70e2d"
+    },
+    "U+044B": {
+      "file": "u044b.svg",
+      "advance": 1420,
+      "bounds": [
+        126,
+        -8,
+        1299,
+        1127
+      ],
+      "sha256": "c756eba5a20fb288674ee34945091a25fa1a78cd675ce96ba8e1efac16c60a62"
+    },
+    "U+044C": {
+      "file": "u044c.svg",
+      "advance": 969,
+      "bounds": [
+        115,
+        -2,
+        913,
+        1074
+      ],
+      "sha256": "5d9b2898a798918f99597f8eed3ca7a96e71fa7f34381eeb6260b3a981d9c529"
+    },
+    "U+044D": {
+      "file": "u044d.svg",
+      "advance": 949,
+      "bounds": [
+        53,
+        -34,
+        852,
+        1177
+      ],
+      "sha256": "df84a035703ac06b0db38b2b83cfc754252895ebd49cca06d601bb57daef2b57"
+    },
+    "U+044E": {
+      "file": "u044e.svg",
+      "advance": 1406,
+      "bounds": [
+        124,
+        -29,
+        1338,
+        1182
+      ],
+      "sha256": "f2a50f5bd4e3b54273c41f7c46eb0045f5818a4bc900f07fa470b67559c71ce9"
+    },
+    "U+044F": {
+      "file": "u044f.svg",
+      "advance": 997,
+      "bounds": [
+        76,
+        12,
+        874,
+        1176
+      ],
+      "sha256": "dfc1ed92379c0299202a71086206b2b596c819dc9ff6faabfe2a5743b99cf990"
+    },
+    "U+0451": {
+      "file": "u0451.svg",
+      "advance": 983,
+      "bounds": [
+        78,
+        -3,
+        881,
+        1598
+      ],
+      "sha256": "39da26ce069f7cff70ee509f515f0f8d94e9903c244b04611ca6753be59e8e52"
+    },
+    "U+0454": {
+      "file": "u0454.svg",
+      "advance": 949,
+      "bounds": [
+        75,
+        -29,
+        891,
+        1182
+      ],
+      "sha256": "92541963b15f24866510d67973a7ee174bc1b66ae1a3dad01fe75e6dc059aced"
+    },
+    "U+0456": {
+      "file": "u0456.svg",
+      "advance": 512,
+      "bounds": [
+        112,
+        14,
+        394,
+        1537
+      ],
+      "sha256": "d673d1e3856ef6d648af0ca2e0e45c2e1de5daa07b797cd67684e8e5fa17a429"
+    },
+    "U+0457": {
+      "file": "u0457.svg",
+      "advance": 526,
+      "bounds": [
+        21,
+        10,
+        508,
+        1585
+      ],
+      "sha256": "11f987aa5223829d6a777900e38078ef58f6175a3e4bdb7d52a4cbafa304c163"
+    },
+    "U+0490": {
+      "file": "u0490.svg",
+      "advance": 997,
+      "bounds": [
+        167,
+        12,
+        990,
+        1836
+      ],
+      "sha256": "1397304b3e77829b63e2c198f024c7a0be4531881a532241f1cd9023b8245dec"
+    },
+    "U+0491": {
+      "file": "u0491.svg",
+      "advance": 758,
+      "bounds": [
+        122,
+        41,
+        712,
+        1439
+      ],
+      "sha256": "eb5ae7d4b6f13c7898f36069ed04922e7461cafb0a0c684070dade7a619e6cb3"
+    },
+    "U+2012": {
+      "file": "u2012.svg",
+      "advance": 1080,
+      "bounds": [
+        75,
+        650,
+        1004,
+        888
+      ],
+      "sha256": "3cbeee1b194ae4dbd9ec8c56ee8a027312a9ce157bcf751badb735f0b1011786"
+    },
+    "U+2013": {
+      "file": "u2013.svg",
+      "advance": 1850,
+      "bounds": [
+        348,
+        497,
+        1516,
+        731
+      ],
+      "sha256": "697835336ae483796e7a8cdadd12f79e44527ec2b205d87af8ba5a7b71cd88f2"
+    },
+    "U+2014": {
+      "file": "u2014.svg",
+      "advance": 1850,
+      "bounds": [
+        90,
+        465,
+        1729,
+        669
+      ],
+      "sha256": "787c665f90adc41318f648b371b0bd015f4720f6f39b188755e495f534dd3a50"
+    },
+    "U+2015": {
+      "file": "u2015.svg",
+      "advance": 1850,
+      "bounds": [
+        340,
+        489,
+        1512,
+        719
+      ],
+      "sha256": "a3c090754fae7b378484aad23dcd61f09d1334aa33c0caf70b0e1f22cff4da95"
+    },
+    "U+2016": {
+      "file": "u2016.svg",
+      "advance": 1149,
+      "bounds": [
+        168,
+        -496,
+        978,
+        1640
+      ],
+      "sha256": "6e8bf0f8608b781f23b4998437de4d97b8a06c32c922eb973d274d08079a1472"
+    },
+    "U+2017": {
+      "file": "u2017.svg",
+      "advance": 1017,
+      "bounds": [
+        0,
+        -495,
+        1024,
+        -146
+      ],
+      "sha256": "f9fcbae0fc61339da44a17094fc0bdb9bdd11c0c7502e1b2754ca05f0eaee3d1"
+    },
+    "U+2018": {
+      "file": "u2018.svg",
+      "advance": 601,
+      "bounds": [
+        146,
+        973,
+        440,
+        1568
+      ],
+      "sha256": "ba251382af9d9062ec2a8f65fb507fcff80ff5558d4401b787e6f17d1915921d"
+    },
+    "U+2019": {
+      "file": "u2019.svg",
+      "advance": 601,
+      "bounds": [
+        178,
+        944,
+        473,
+        1530
+      ],
+      "sha256": "c9de6e83147e76ccb87efbc8a6a922c0818c6e7963846bcf67e3a1b520bb8881"
+    },
+    "U+201A": {
+      "file": "u201a.svg",
+      "advance": 601,
+      "bounds": [
+        178,
+        -313,
+        471,
+        264
+      ],
+      "sha256": "e1aa62e2bf9988dccd009b75a08142ff773b9dae76dbd3509ab81c12f82894d5"
+    },
+    "U+201B": {
+      "file": "u201b.svg",
+      "advance": 440,
+      "bounds": [
+        80,
+        1065,
+        392,
+        1620
+      ],
+      "sha256": "b093e697fc615e487dc41fd7ce18f58352eb270d62fa5a7cec960547d57f54db"
+    },
+    "U+201C": {
+      "file": "u201c.svg",
+      "advance": 867,
+      "bounds": [
+        122,
+        970,
+        754,
+        1565
+      ],
+      "sha256": "653656a2fdb46b4747194c736895bd4b496300fd03ad6182025c47116cbffa8e"
+    },
+    "U+201D": {
+      "file": "u201d.svg",
+      "advance": 867,
+      "bounds": [
+        127,
+        942,
+        762,
+        1528
+      ],
+      "sha256": "a71341e0e5f9b70b7cb7390734d70e7965293d4bbd901b62699dd0a820f231a2"
+    },
+    "U+201E": {
+      "file": "u201e.svg",
+      "advance": 867,
+      "bounds": [
+        115,
+        -319,
+        759,
+        258
+      ],
+      "sha256": "8c1726185209d9aded314f543e80eebbf24947c8d62228a179af42e1f5a8099c"
+    },
+    "U+201F": {
+      "file": "u201f.svg",
+      "advance": 959,
+      "bounds": [
+        57,
+        1009,
+        906,
+        1537
+      ],
+      "sha256": "02e9c5350a708f9b4564cbc9dbf6645050e01c843cf40c809b598bf452a9b728"
+    },
+    "U+2020": {
+      "file": "u2020.svg",
+      "advance": 983,
+      "bounds": [
+        61,
+        -324,
+        953,
+        1530
+      ],
+      "sha256": "9530715c06eec5ddb3226bdc0a2f1e8bcc78d10fb3dc2f5d6f36f7db5e419875"
+    },
+    "U+2021": {
+      "file": "u2021.svg",
+      "advance": 983,
+      "bounds": [
+        61,
+        -324,
+        953,
+        1530
+      ],
+      "sha256": "890c581368ef3b7a1e03cdeb48f0c28d075d3e77e975b2b4d11660f0e3652bef"
+    },
+    "U+2022": {
+      "file": "u2022.svg",
+      "advance": 191,
+      "bounds": [
+        -35,
+        697,
+        220,
+        970
+      ],
+      "sha256": "52c422b8cdc190c898ac6b38dcfc07cccc596e5504077184f09823cb89a18b64"
+    },
+    "U+2023": {
+      "file": "u2023.svg",
+      "advance": 828,
+      "bounds": [
+        120,
+        392,
+        795,
+        1210
+      ],
+      "sha256": "47a722c525db1a071d200ee351488b4132f4c567a1ec5c6a33f3a8a65f177694"
+    },
+    "U+2024": {
+      "file": "u2024.svg",
+      "advance": 1076,
+      "bounds": [
+        366,
+        -25,
+        709,
+        330
+      ],
+      "sha256": "3005797be5c46dca1fee6eddb99d0f56ea594973870b3a5290b02f6657f140a9"
+    },
+    "U+2025": {
+      "file": "u2025.svg",
+      "advance": 1017,
+      "bounds": [
+        134,
+        -12,
+        913,
+        314
+      ],
+      "sha256": "f747e04637da8a2d072155ab2aaaeb9bfee49d1f18c1ea3376e4ec36ae177608"
+    },
+    "U+2026": {
+      "file": "u2026.svg",
+      "advance": 1850,
+      "bounds": [
+        186,
+        0,
+        1702,
+        281
+      ],
+      "sha256": "efa2e7a874882311daf5f1eca0f94e455a4e8308ff3f2ea0aea4f6962f3c271b"
+    },
+    "U+2027": {
+      "file": "u2027.svg",
+      "advance": 546,
+      "bounds": [
+        113,
+        502,
+        434,
+        818
+      ],
+      "sha256": "1f938cfd7aa89b851d399966661f6ee472f204e059cc0d7a777609a497e1c549"
+    },
+    "U+2030": {
+      "file": "u2030.svg",
+      "advance": 2608,
+      "bounds": [
+        81,
+        -42,
+        2598,
+        1593
+      ],
+      "sha256": "7ff10afd9132af4de92751ecce51ebfb2c1b30942f5b2a3a80b062da51e8aee3"
+    },
+    "U+2032": {
+      "file": "u2032.svg",
+      "advance": 349,
+      "bounds": [
+        67,
+        1040,
+        290,
+        1620
+      ],
+      "sha256": "3c30ead36d4f9973e6c74e7c4181b5eb6822e8ff9a1dba48d30a55f35a0584d9"
+    },
+    "U+2033": {
+      "file": "u2033.svg",
+      "advance": 693,
+      "bounds": [
+        67,
+        1041,
+        623,
+        1621
+      ],
+      "sha256": "8da610a34f63748a915b951e23ae14afc76b49e4a9362fbcdbea3f84e41ca19c"
+    },
+    "U+2034": {
+      "file": "u2034.svg",
+      "advance": 1493,
+      "bounds": [
+        110,
+        1009,
+        1501,
+        1536
+      ],
+      "sha256": "c4ecbc75592f2a9edc1d1311504ad0af6defef464b57d5419c858035450e0f6c"
+    },
+    "U+2035": {
+      "file": "u2035.svg",
+      "advance": 895,
+      "bounds": [
+        148,
+        1009,
+        652,
+        1536
+      ],
+      "sha256": "b5639589574af09b253f4500d9d6527fc78597464697233e60ec2fa4ad14cf0c"
+    },
+    "U+2036": {
+      "file": "u2036.svg",
+      "advance": 1353,
+      "bounds": [
+        148,
+        1009,
+        1128,
+        1536
+      ],
+      "sha256": "bce7f16348e00daf44c8d3e2fc8753871deec7ab62db48c07982ae0a9e4fcd9f"
+    },
+    "U+2037": {
+      "file": "u2037.svg",
+      "advance": 1831,
+      "bounds": [
+        148,
+        1009,
+        1605,
+        1536
+      ],
+      "sha256": "a824449e116b1bcd0458a82c88207c054f167ad5efa044e15185f89121a6c9f8"
+    },
+    "U+2039": {
+      "file": "u2039.svg",
+      "advance": 492,
+      "bounds": [
+        88,
+        117,
+        429,
+        995
+      ],
+      "sha256": "3f5075d6ead9ed840ecd7798e0bed562e313214e4ae5b05ba06acae8c2697b53"
+    },
+    "U+203A": {
+      "file": "u203a.svg",
+      "advance": 492,
+      "bounds": [
+        121,
+        121,
+        432,
+        1048
+      ],
+      "sha256": "a3698b9771f619ea1de59ee6df19af5551fb9dda941e57eea8dd71717ba9dbba"
+    },
+    "U+203C": {
+      "file": "u203c.svg",
+      "advance": 1133,
+      "bounds": [
+        229,
+        -6,
+        915,
+        1391
+      ],
+      "sha256": "0ba21aa0dcbba8b092ddea0d1891c2734571ef96da5863553597b717ed3e02e8"
+    },
+    "U+203D": {
+      "file": "u203d.svg",
+      "advance": 858,
+      "bounds": [
+        2,
+        -27,
+        815,
+        1558
+      ],
+      "sha256": "4df3b8a6adb08ac4a4755d1ef90ac78c0ffe1ae38d9b53274c27df10fc44d707"
+    },
+    "U+2042": {
+      "file": "u2042.svg",
+      "advance": 2020,
+      "bounds": [
+        35,
+        -133,
+        1967,
+        1566
+      ],
+      "sha256": "231487f32309940832bdcecce7e3271f23c4c5300562c03640672f2154635758"
+    },
+    "U+2044": {
+      "file": "u2044.svg",
+      "advance": 852,
+      "bounds": [
+        42,
+        115,
+        813,
+        1396
+      ],
+      "sha256": "3888d2e57699a882f82259c7b8117ba1b182a50364a941d811dcf07b0c127167"
+    },
+    "U+204E": {
+      "file": "u204e.svg",
+      "advance": 1020,
+      "bounds": [
+        51,
+        -376,
+        968,
+        534
+      ],
+      "sha256": "3cc52b7c7e42d61a009643bb8d2f28815d58d191d211ba27092b1bf85e330556"
+    },
+    "U+2051": {
+      "file": "u2051.svg",
+      "advance": 1020,
+      "bounds": [
+        51,
+        -313,
+        968,
+        1638
+      ],
+      "sha256": "b095df87b7d64029a3fa297f37c44b7ffd1a35a2fc553815550a121045b76fb2"
+    },
+    "U+2052": {
+      "file": "u2052.svg",
+      "advance": 878,
+      "bounds": [
+        10,
+        -33,
+        869,
+        1563
+      ],
+      "sha256": "f524e8ea2f0a3a2ac1cc7b2576d7ccbdd6ff93fafb1596d4bcd43494667266ee"
+    },
+    "U+2053": {
+      "file": "u2053.svg",
+      "advance": 2151,
+      "bounds": [
+        99,
+        436,
+        2062,
+        808
+      ],
+      "sha256": "04099027d2a6f4d1520b070db28d58a37ccb8d21345fe1c7a4929700291bfb35"
+    },
+    "U+2055": {
+      "file": "u2055.svg",
+      "advance": 1190,
+      "bounds": [
+        65,
+        -1,
+        1143,
+        1078
+      ],
+      "sha256": "eb863fa3b413f015ab8a2c6a25e1776086032f6f60c3f3f4175cdf9465855e5d"
+    },
+    "U+20A9": {
+      "file": "u20a9.svg",
+      "advance": 1518,
+      "bounds": [
+        54,
+        0,
+        1464,
+        1536
+      ],
+      "sha256": "7742995dc8f988060d14b41fb7c57717daafc4a6e920e43e1c9172c44a3e4183"
+    },
+    "U+20AA": {
+      "file": "u20aa.svg",
+      "advance": 1563,
+      "bounds": [
+        153,
+        2,
+        1436,
+        1225
+      ],
+      "sha256": "c7c2fd99f8f23a1b1f8f2c742cbde5611ed3849702db1e83e4435830f644a1cb"
+    },
+    "U+20AC": {
+      "file": "u20ac.svg",
+      "advance": 983,
+      "bounds": [
+        -1,
+        -33,
+        972,
+        1554
+      ],
+      "sha256": "721e3741a8f83dbaea20d1fe1a247fee7f6bee03565875b25936a355c7b941f3"
+    },
+    "U+20B4": {
+      "file": "u20b4.svg",
+      "advance": 1076,
+      "bounds": [
+        8,
+        -22,
+        1066,
+        1558
+      ],
+      "sha256": "63b2d66fe66bc45f9b8cd5068a014d9ef4939569e8225b85d538dfe353644fab"
+    },
+    "U+20B9": {
+      "file": "u20b9.svg",
+      "advance": 1022,
+      "bounds": [
+        48,
+        0,
+        970,
+        1536
+      ],
+      "sha256": "ec2f396e5fb6291c5edfd4840474108be1e0f84e7d0761ecf994fe6d2c69fa5a"
+    },
+    "U+20BD": {
+      "file": "u20bd.svg",
+      "advance": 1352,
+      "bounds": [
+        69,
+        0,
+        1269,
+        1536
+      ],
+      "sha256": "a6d1a369daa0b3631ce40213fdce44223d24fabdd620250f1484627395868d87"
+    },
+    "U+20BF": {
+      "file": "u20bf.svg",
+      "advance": 1063,
+      "bounds": [
+        163,
+        -211,
+        1004,
+        1753
+      ],
+      "sha256": "40e04ccc41a5f026d248e33fb84ee992780884bbe0729178d4636357f38a6ca6"
+    },
+    "U+2105": {
+      "file": "u2105.svg",
+      "advance": 1376,
+      "bounds": [
+        108,
+        -21,
+        1284,
+        1558
+      ],
+      "sha256": "16b1b635fba941cb3c66d5e688d2324991b2847324b63c7d648d430f7a1b7dcc"
+    },
+    "U+2113": {
+      "file": "u2113.svg",
+      "advance": 953,
+      "bounds": [
+        54,
+        -22,
+        884,
+        1581
+      ],
+      "sha256": "61cfb75d65e8d4b60fddba4b59fe31c11ae5ad880c6d979492210bad8cb171b9"
+    },
+    "U+2116": {
+      "file": "u2116.svg",
+      "advance": 2150,
+      "bounds": [
+        148,
+        -2,
+        2120,
+        1535
+      ],
+      "sha256": "c4aa29316ee86652e8c251e4312944a4ba4dee978f564e7ce53c89a84866b00e"
+    },
+    "U+2122": {
+      "file": "u2122.svg",
+      "advance": 1249,
+      "bounds": [
+        141,
+        750,
+        1165,
+        1365
+      ],
+      "sha256": "e5e387ba93024ccd944aa3f13cfdbad0337f73a50a3c941583a7625c898a85e8"
+    },
+    "U+2126": {
+      "file": "u2126.svg",
+      "advance": 1271,
+      "bounds": [
+        106,
+        0,
+        1149,
+        1556
+      ],
+      "sha256": "fdaf5a2ec55d1fbc1266532bfb575bdeada43f1b06f1e858d1378ead2d302e3d"
+    },
+    "U+212E": {
+      "file": "u212e.svg",
+      "advance": 1367,
+      "bounds": [
+        157,
+        -21,
+        1232,
+        1163
+      ],
+      "sha256": "c5946239e97cd7588f1d5864761c5eed591f4eb5a14ba341893374675dd808a1"
+    },
+    "U+2190": {
+      "file": "u2190.svg",
+      "advance": 1475,
+      "bounds": [
+        0,
+        236,
+        1477,
+        909
+      ],
+      "sha256": "06934b7d39ef933ee35ce08a9fe88108b1d06012376aaf56978eee404c574cb7"
+    },
+    "U+2191": {
+      "file": "u2191.svg",
+      "advance": 1475,
+      "bounds": [
+        369,
+        -29,
+        1085,
+        1438
+      ],
+      "sha256": "f803a15e7334d0b7722cd340bafb9d0254cd91df23cc2e9dcf03c2758adbaef1"
+    },
+    "U+2192": {
+      "file": "u2192.svg",
+      "advance": 1475,
+      "bounds": [
+        -22,
+        236,
+        1510,
+        909
+      ],
+      "sha256": "febb74133798e281241afb19de04166a2737457e240329e587b4fdb3b25762aa"
+    },
+    "U+2193": {
+      "file": "u2193.svg",
+      "advance": 1475,
+      "bounds": [
+        371,
+        10,
+        1087,
+        1415
+      ],
+      "sha256": "5e72adb4f1fed335e082798b78d511964a171a69b4b236c6403273248f1d4eaa"
+    },
+    "U+2194": {
+      "file": "u2194.svg",
+      "advance": 1475,
+      "bounds": [
+        -33,
+        301,
+        1532,
+        944
+      ],
+      "sha256": "f711db6307b10988dfa32f7fef06ec2467c3e20a9fdf0211ece13efa0000e5c6"
+    },
+    "U+2195": {
+      "file": "u2195.svg",
+      "advance": 1475,
+      "bounds": [
+        410,
+        -5,
+        1065,
+        1402
+      ],
+      "sha256": "a609d0950a9752beb12232fca5bd70b99b7608f799cfc2ca4bff0dfff10a6402"
+    },
+    "U+2202": {
+      "file": "u2202.svg",
+      "advance": 1081,
+      "bounds": [
+        98,
+        -22,
+        1010,
+        1622
+      ],
+      "sha256": "3a306d745f8c5700455786171fc05d4f851381791fc04923d3525c3684bb0ce5"
+    },
+    "U+2205": {
+      "file": "u2205.svg",
+      "advance": 1824,
+      "bounds": [
+        119,
+        -189,
+        1704,
+        1396
+      ],
+      "sha256": "ee3e473cc804755385708e2e94a5378138606c7bb7f33a3472639193f9d9c007"
+    },
+    "U+2206": {
+      "file": "u2206.svg",
+      "advance": 1384,
+      "bounds": [
+        33,
+        0,
+        1360,
+        1536
+      ],
+      "sha256": "fc874facaa8c08abace5382e8e6546be5d18dfdd457f1ee0c666a42728da4fbe"
+    },
+    "U+2208": {
+      "file": "u2208.svg",
+      "advance": 1683,
+      "bounds": [
+        175,
+        -61,
+        1510,
+        1269
+      ],
+      "sha256": "670bce73caa4932111f36f0c21f15c95ea7ccf78e8e5ad9b0100510b6e1edaf6"
+    },
+    "U+2209": {
+      "file": "u2209.svg",
+      "advance": 1683,
+      "bounds": [
+        175,
+        -376,
+        1510,
+        1585
+      ],
+      "sha256": "a7c86d0bbdbd904329f225e8b18ed525acb734de87cdc68104293453d23e7131"
+    },
+    "U+220F": {
+      "file": "u220f.svg",
+      "advance": 1325,
+      "bounds": [
+        164,
+        -268,
+        1171,
+        1536
+      ],
+      "sha256": "b56b26048ca21c7c3115c1940f37c96c453431d0f725af5a7f85453b0f3f7258"
+    },
+    "U+2211": {
+      "file": "u2211.svg",
+      "advance": 1199,
+      "bounds": [
+        72,
+        -284,
+        1130,
+        1536
+      ],
+      "sha256": "81befd10553595d2bf3657e4297c073b08a5d35a919c5425e047ae1a42a178ab"
+    },
+    "U+2212": {
+      "file": "u2212.svg",
+      "advance": 1850,
+      "bounds": [
+        348,
+        506,
+        1516,
+        740
+      ],
+      "sha256": "077e724dd9da2e1f162958ff8863dd2c30e5ff65865ca623feba166b5b9217f7"
+    },
+    "U+2215": {
+      "file": "u2215.svg",
+      "advance": 225,
+      "bounds": [
+        -348,
+        -29,
+        532,
+        1551
+      ],
+      "sha256": "bbe3c6d25e1f983054bb843440079203193eebde67fc6d1bfaa868d15626e792"
+    },
+    "U+2219": {
+      "file": "u2219.svg",
+      "advance": 601,
+      "bounds": [
+        146,
+        624,
+        437,
+        921
+      ],
+      "sha256": "d567ce2a09ad604f41388ea9a89c289e9a2d2c8716dd236afa29758e94d71837"
+    },
+    "U+221A": {
+      "file": "u221a.svg",
+      "advance": 1091,
+      "bounds": [
+        69,
+        0,
+        1059,
+        1536
+      ],
+      "sha256": "6bad0570dac59c16d693c01f6206aedf73cbce3df8726e1c8358e336f7a2f228"
+    },
+    "U+221E": {
+      "file": "u221e.svg",
+      "advance": 1928,
+      "bounds": [
+        97,
+        -21,
+        1831,
+        1163
+      ],
+      "sha256": "3219abd351c83643e75cfb4e6393a5edf1adb14c59bb979c66d72fa6ea27a23b"
+    },
+    "U+2229": {
+      "file": "u2229.svg",
+      "advance": 1487,
+      "bounds": [
+        117,
+        -75,
+        1370,
+        1284
+      ],
+      "sha256": "a364b2271858907c94a8b9066411f3ee4bd25febc15d3267d45b44102f926a42"
+    },
+    "U+222A": {
+      "file": "u222a.svg",
+      "advance": 1487,
+      "bounds": [
+        117,
+        -75,
+        1370,
+        1284
+      ],
+      "sha256": "6bf7651d6998dfd38ccc9231e01a8a0699fc2fb001baf4f7fe4c588170cec4e7"
+    },
+    "U+222B": {
+      "file": "u222b.svg",
+      "advance": 579,
+      "bounds": [
+        -49,
+        -461,
+        661,
+        1643
+      ],
+      "sha256": "1e9c2bd553de951e2291950e4a768fb0bad79f8d8286e5f4f4fe9128ba21ad56"
+    },
+    "U+223C": {
+      "file": "u223c.svg",
+      "advance": 1683,
+      "bounds": [
+        138,
+        353,
+        1548,
+        865
+      ],
+      "sha256": "9cc3684cb3032f5e7617b6e2663e32302d443c258f49b8603c467b416846dfd7"
+    },
+    "U+2248": {
+      "file": "u2248.svg",
+      "advance": 1093,
+      "bounds": [
+        107,
+        255,
+        964,
+        1077.1632653061224
+      ],
+      "sha256": "884894258ddab8e16ff7ee687413a40533230c096aa5f9cdd4f55988b07a408c"
+    },
+    "U+2260": {
+      "file": "u2260.svg",
+      "advance": 1087,
+      "bounds": [
+        141,
+        103,
+        943,
+        1261
+      ],
+      "sha256": "b921a260750490569012ed24adc8610e5da13ad66e10ed067138b660b52ca93e"
+    },
+    "U+2261": {
+      "file": "u2261.svg",
+      "advance": 1683,
+      "bounds": [
+        145,
+        65,
+        1538,
+        1143
+      ],
+      "sha256": "a34c7ee01097617487f756e107dbe2e4d54e5843274e23a21260cd131f030f90"
+    },
+    "U+2264": {
+      "file": "u2264.svg",
+      "advance": 965,
+      "bounds": [
+        65,
+        0,
+        842,
+        1163
+      ],
+      "sha256": "a2a7007efff74cf37dc7cd7abf3500c24e75799f1f14bdf0f66dcd29d12dead3"
+    },
+    "U+2265": {
+      "file": "u2265.svg",
+      "advance": 981,
+      "bounds": [
+        129,
+        0,
+        908,
+        1170
+      ],
+      "sha256": "a618b5c45488fb62c8d9cdb14427328f3cf38e7625a497aebaaab1dca145034f"
+    },
+    "U+2713": {
+      "file": "u2713.svg",
+      "advance": 1807,
+      "bounds": [
+        82,
+        -30,
+        1686,
+        1693
+      ],
+      "sha256": "02f33a650289fe8c6544325c8a3e80afd6a1b0635dee98db4af3229612521d44"
+    },
+    "U+2717": {
+      "file": "u2717.svg",
+      "advance": 1344,
+      "bounds": [
+        64,
+        0,
+        1280,
+        1536
+      ],
+      "sha256": "f5f77a6365718de5822a296b8bc7f8b31cec758a5399def465a61df84ce9bc62"
+    },
+    "U+FB01": {
+      "file": "ufb01.svg",
+      "advance": 1177,
+      "bounds": [
+        32,
+        0,
+        1052,
+        1643
+      ],
+      "sha256": "2c44dbe6b74de1e18c04e4a4dc0638290d3bef358871b69c55eeaa0697db41ea"
+    },
+    "U+FB02": {
+      "file": "ufb02.svg",
+      "advance": 1187,
+      "bounds": [
+        41,
+        0,
+        1061,
+        1643
+      ],
+      "sha256": "e14699c2c8b7b0ba6288ecc403199310ca1ff72a9e9badd35810fa5c46cc043a"
+    }
+  },
+  "unitsPerEm": 2048
+}

@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Measured Labelary Font 0 shapes at Unicode codepoints. These aliases select open-source donor outlines; they do not alter input text or claim Unicode glyph equivalence in other fonts.",
+  "oracle": "tests/golden/font-glyphs/manifest.json",
+  "sourceAliases": {
+    "noto-sans-math": {
+      "U+00B5": {"sourceCodepoint": "U+1D707", "evidence": "Candidate mathematical italic mu for the slanted Labelary micro-sign. This is a donor choice to be scored, not an asserted exact match."}
+    }
+  },
+  "aliases": {
+    "U+0027": {"sourceCodepoint": "U+2019", "evidence": "Identical isolated Labelary glyph rasters at h47/w47: apostrophe and right single quotation mark."},
+    "U+002D": {"sourceCodepoint": "U+2013", "evidence": "Identical isolated Labelary glyph rasters at h47/w47: hyphen-minus and en dash."},
+    "U+005C": {"sourceCodepoint": "U+00A2", "evidence": "font0-semantics-ci28-backslash-cent-h70-w100.zpl: literal and UTF-8 hex spellings all have 1235 ink pixels and zero pairwise differences."},
+    "U+0060": {"sourceCodepoint": "U+2018", "evidence": "Identical isolated Labelary glyph rasters at h47/w47: grave accent and left single quotation mark."},
+    "U+007E": {"sourceCodepoint": "U+02DC", "evidence": "Identical isolated Labelary glyph rasters at h47/w47: tilde and small tilde."},
+    "U+2015": {"sourceCodepoint": "U+2212", "evidence": "Identical isolated Labelary glyph rasters at h47/w47: horizontal bar and minus sign."}
+  }
+}

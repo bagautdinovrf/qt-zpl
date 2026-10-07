@@ -1,0 +1,5 @@
+# This authored source is fingerprinted in the Font Zero source manifest.
+generate_font0_symbols.py -text
+# These sources also have provenance fingerprints in saved research results.
+extend_font0_research.py -text
+font0_probe.cpp -text

@@ -1,0 +1,3710 @@
+{
+  "source": "Labelary Bitonal marker positions",
+  "units": "nominal ^A font-width units, not font-file em units",
+  "method": "Three repeated glyphs followed by |; subtract standalone | bearing. Estimated advances, not exact font metrics.",
+  "glyphs": {
+    "U+0020": {
+      "supported": true,
+      "advanceEm": 0.29333333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 29.333333333333332,
+      "markerDistanceDots": 88,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0021": {
+      "supported": true,
+      "advanceEm": 0.29333333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 29.333333333333332,
+      "markerDistanceDots": 88,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0022": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0023": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0024": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0025": {
+      "supported": true,
+      "advanceEm": 0.9033333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 90.33333333333333,
+      "markerDistanceDots": 271,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0026": {
+      "supported": true,
+      "advanceEm": 0.61,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 61.0,
+      "markerDistanceDots": 183,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0027": {
+      "supported": true,
+      "advanceEm": 0.29333333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 29.333333333333332,
+      "markerDistanceDots": 88,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0028": {
+      "supported": true,
+      "advanceEm": 0.29333333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 29.333333333333332,
+      "markerDistanceDots": 88,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0029": {
+      "supported": true,
+      "advanceEm": 0.29333333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 29.333333333333332,
+      "markerDistanceDots": 88,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+002A": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+002B": {
+      "supported": true,
+      "advanceEm": 0.9033333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 90.33333333333333,
+      "markerDistanceDots": 271,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+002C": {
+      "supported": true,
+      "advanceEm": 0.29333333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 29.333333333333332,
+      "markerDistanceDots": 88,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+002D": {
+      "supported": true,
+      "advanceEm": 0.9033333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 90.33333333333333,
+      "markerDistanceDots": 271,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+002E": {
+      "supported": true,
+      "advanceEm": 0.29333333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 29.333333333333332,
+      "markerDistanceDots": 88,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+002F": {
+      "supported": true,
+      "advanceEm": 0.29333333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 29.333333333333332,
+      "markerDistanceDots": 88,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0030": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0031": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0032": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0033": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0034": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0035": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0036": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0037": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0038": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0039": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+003A": {
+      "supported": true,
+      "advanceEm": 0.29333333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 29.333333333333332,
+      "markerDistanceDots": 88,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+003B": {
+      "supported": true,
+      "advanceEm": 0.29333333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 29.333333333333332,
+      "markerDistanceDots": 88,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+003C": {
+      "supported": true,
+      "advanceEm": 0.9966666666666667,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 99.66666666666667,
+      "markerDistanceDots": 299,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+003D": {
+      "supported": true,
+      "advanceEm": 0.9033333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 90.33333333333333,
+      "markerDistanceDots": 271,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+003E": {
+      "supported": true,
+      "advanceEm": 0.9966666666666667,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 99.66666666666667,
+      "markerDistanceDots": 299,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+003F": {
+      "supported": true,
+      "advanceEm": 0.44333333333333336,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 44.333333333333336,
+      "markerDistanceDots": 133,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0040": {
+      "supported": true,
+      "advanceEm": 0.9033333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 90.33333333333333,
+      "markerDistanceDots": 271,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0041": {
+      "supported": true,
+      "advanceEm": 0.5533333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 55.333333333333336,
+      "markerDistanceDots": 166,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0042": {
+      "supported": true,
+      "advanceEm": 0.5533333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 55.333333333333336,
+      "markerDistanceDots": 166,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0043": {
+      "supported": true,
+      "advanceEm": 0.5333333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 53.333333333333336,
+      "markerDistanceDots": 160,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0044": {
+      "supported": true,
+      "advanceEm": 0.59,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 59.0,
+      "markerDistanceDots": 177,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0045": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0046": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0047": {
+      "supported": true,
+      "advanceEm": 0.59,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 59.0,
+      "markerDistanceDots": 177,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0048": {
+      "supported": true,
+      "advanceEm": 0.61,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 61.0,
+      "markerDistanceDots": 183,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0049": {
+      "supported": true,
+      "advanceEm": 0.27666666666666667,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 27.666666666666668,
+      "markerDistanceDots": 83,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+004A": {
+      "supported": true,
+      "advanceEm": 0.44333333333333336,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 44.333333333333336,
+      "markerDistanceDots": 133,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+004B": {
+      "supported": true,
+      "advanceEm": 0.5533333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 55.333333333333336,
+      "markerDistanceDots": 166,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+004C": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+004D": {
+      "supported": true,
+      "advanceEm": 0.7566666666666667,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 75.66666666666667,
+      "markerDistanceDots": 227,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+004E": {
+      "supported": true,
+      "advanceEm": 0.61,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 61.0,
+      "markerDistanceDots": 183,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+004F": {
+      "supported": true,
+      "advanceEm": 0.5733333333333334,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 57.333333333333336,
+      "markerDistanceDots": 172,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0050": {
+      "supported": true,
+      "advanceEm": 0.5533333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 55.333333333333336,
+      "markerDistanceDots": 166,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0051": {
+      "supported": true,
+      "advanceEm": 0.5733333333333334,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 57.333333333333336,
+      "markerDistanceDots": 172,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0052": {
+      "supported": true,
+      "advanceEm": 0.59,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 59.0,
+      "markerDistanceDots": 177,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0053": {
+      "supported": true,
+      "advanceEm": 0.5333333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 53.333333333333336,
+      "markerDistanceDots": 160,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0054": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0055": {
+      "supported": true,
+      "advanceEm": 0.61,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 61.0,
+      "markerDistanceDots": 183,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0056": {
+      "supported": true,
+      "advanceEm": 0.5333333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 53.333333333333336,
+      "markerDistanceDots": 160,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0057": {
+      "supported": true,
+      "advanceEm": 0.81,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 81.0,
+      "markerDistanceDots": 243,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0058": {
+      "supported": true,
+      "advanceEm": 0.5533333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 55.333333333333336,
+      "markerDistanceDots": 166,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0059": {
+      "supported": true,
+      "advanceEm": 0.5533333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 55.333333333333336,
+      "markerDistanceDots": 166,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+005A": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+005B": {
+      "supported": true,
+      "advanceEm": 0.29333333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 29.333333333333332,
+      "markerDistanceDots": 88,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+005C": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+005D": {
+      "supported": true,
+      "advanceEm": 0.29333333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 29.333333333333332,
+      "markerDistanceDots": 88,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+005E": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+005F": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0060": {
+      "supported": true,
+      "advanceEm": 0.29333333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 29.333333333333332,
+      "markerDistanceDots": 88,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0061": {
+      "supported": true,
+      "advanceEm": 0.46,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 46.0,
+      "markerDistanceDots": 138,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0062": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0063": {
+      "supported": true,
+      "advanceEm": 0.44333333333333336,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 44.333333333333336,
+      "markerDistanceDots": 133,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0064": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0065": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0066": {
+      "supported": true,
+      "advanceEm": 0.27666666666666667,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 27.666666666666668,
+      "markerDistanceDots": 83,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0067": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0068": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0069": {
+      "supported": true,
+      "advanceEm": 0.25666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 25.666666666666668,
+      "markerDistanceDots": 77,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+006A": {
+      "supported": true,
+      "advanceEm": 0.25666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 25.666666666666668,
+      "markerDistanceDots": 77,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+006B": {
+      "supported": true,
+      "advanceEm": 0.44333333333333336,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 44.333333333333336,
+      "markerDistanceDots": 133,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+006C": {
+      "supported": true,
+      "advanceEm": 0.25666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 25.666666666666668,
+      "markerDistanceDots": 77,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+006D": {
+      "supported": true,
+      "advanceEm": 0.7566666666666667,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 75.66666666666667,
+      "markerDistanceDots": 227,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+006E": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+006F": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0070": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0071": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0072": {
+      "supported": true,
+      "advanceEm": 0.3333333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 33.333333333333336,
+      "markerDistanceDots": 100,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0073": {
+      "supported": true,
+      "advanceEm": 0.42333333333333334,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 42.333333333333336,
+      "markerDistanceDots": 127,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0074": {
+      "supported": true,
+      "advanceEm": 0.27666666666666667,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 27.666666666666668,
+      "markerDistanceDots": 83,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0075": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0076": {
+      "supported": true,
+      "advanceEm": 0.44333333333333336,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 44.333333333333336,
+      "markerDistanceDots": 133,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0077": {
+      "supported": true,
+      "advanceEm": 0.6633333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 66.33333333333333,
+      "markerDistanceDots": 199,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0078": {
+      "supported": true,
+      "advanceEm": 0.44333333333333336,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 44.333333333333336,
+      "markerDistanceDots": 133,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0079": {
+      "supported": true,
+      "advanceEm": 0.44333333333333336,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 44.333333333333336,
+      "markerDistanceDots": 133,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+007A": {
+      "supported": true,
+      "advanceEm": 0.38666666666666666,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 38.666666666666664,
+      "markerDistanceDots": 116,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+007B": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+007C": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+007D": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+007E": {
+      "supported": true,
+      "advanceEm": 0.9966666666666667,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 99.66666666666667,
+      "markerDistanceDots": 299,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00A0": {
+      "supported": true,
+      "advanceEm": 0.29333333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 29.333333333333332,
+      "markerDistanceDots": 88,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00A1": {
+      "supported": true,
+      "advanceEm": 0.29333333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 29.333333333333332,
+      "markerDistanceDots": 88,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00A2": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00A3": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00A4": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00A5": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00A6": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00A7": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00A8": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00A9": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00AA": {
+      "supported": true,
+      "advanceEm": 0.37,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 37.0,
+      "markerDistanceDots": 111,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00AB": {
+      "supported": true,
+      "advanceEm": 0.4066666666666667,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 40.666666666666664,
+      "markerDistanceDots": 122,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00AC": {
+      "supported": true,
+      "advanceEm": 0.9033333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 90.33333333333333,
+      "markerDistanceDots": 271,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00AE": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00AF": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00B0": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00B1": {
+      "supported": true,
+      "advanceEm": 0.9033333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 90.33333333333333,
+      "markerDistanceDots": 271,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00B2": {
+      "supported": true,
+      "advanceEm": 0.37,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 37.0,
+      "markerDistanceDots": 111,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00B3": {
+      "supported": true,
+      "advanceEm": 0.37,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 37.0,
+      "markerDistanceDots": 111,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00B4": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00B5": {
+      "supported": true,
+      "advanceEm": 0.59,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 59.0,
+      "markerDistanceDots": 177,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00B6": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00B7": {
+      "supported": true,
+      "advanceEm": 0.09333333333333334,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 9.333333333333334,
+      "markerDistanceDots": 28,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00B8": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00B9": {
+      "supported": true,
+      "advanceEm": 0.37,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 37.0,
+      "markerDistanceDots": 111,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00BA": {
+      "supported": true,
+      "advanceEm": 0.37,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 37.0,
+      "markerDistanceDots": 111,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00BB": {
+      "supported": true,
+      "advanceEm": 0.4066666666666667,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 40.666666666666664,
+      "markerDistanceDots": 122,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00BC": {
+      "supported": true,
+      "advanceEm": 0.9033333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 90.33333333333333,
+      "markerDistanceDots": 271,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00BD": {
+      "supported": true,
+      "advanceEm": 0.9033333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 90.33333333333333,
+      "markerDistanceDots": 271,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00BE": {
+      "supported": true,
+      "advanceEm": 0.9033333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 90.33333333333333,
+      "markerDistanceDots": 271,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00BF": {
+      "supported": true,
+      "advanceEm": 0.44333333333333336,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 44.333333333333336,
+      "markerDistanceDots": 133,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00C0": {
+      "supported": true,
+      "advanceEm": 0.5533333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 55.333333333333336,
+      "markerDistanceDots": 166,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00C1": {
+      "supported": true,
+      "advanceEm": 0.5533333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 55.333333333333336,
+      "markerDistanceDots": 166,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00C2": {
+      "supported": true,
+      "advanceEm": 0.5533333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 55.333333333333336,
+      "markerDistanceDots": 166,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00C3": {
+      "supported": true,
+      "advanceEm": 0.5533333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 55.333333333333336,
+      "markerDistanceDots": 166,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00C4": {
+      "supported": true,
+      "advanceEm": 0.5533333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 55.333333333333336,
+      "markerDistanceDots": 166,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00C5": {
+      "supported": true,
+      "advanceEm": 0.5533333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 55.333333333333336,
+      "markerDistanceDots": 166,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00C6": {
+      "supported": true,
+      "advanceEm": 0.8666666666666667,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 86.66666666666667,
+      "markerDistanceDots": 260,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00C7": {
+      "supported": true,
+      "advanceEm": 0.5333333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 53.333333333333336,
+      "markerDistanceDots": 160,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00C8": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00C9": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00CA": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00CB": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00CC": {
+      "supported": true,
+      "advanceEm": 0.27666666666666667,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 27.666666666666668,
+      "markerDistanceDots": 83,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00CD": {
+      "supported": true,
+      "advanceEm": 0.27666666666666667,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 27.666666666666668,
+      "markerDistanceDots": 83,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00CE": {
+      "supported": true,
+      "advanceEm": 0.27666666666666667,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 27.666666666666668,
+      "markerDistanceDots": 83,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00CF": {
+      "supported": true,
+      "advanceEm": 0.27666666666666667,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 27.666666666666668,
+      "markerDistanceDots": 83,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00D0": {
+      "supported": true,
+      "advanceEm": 0.59,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 59.0,
+      "markerDistanceDots": 177,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00D1": {
+      "supported": true,
+      "advanceEm": 0.61,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 61.0,
+      "markerDistanceDots": 183,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00D2": {
+      "supported": true,
+      "advanceEm": 0.5733333333333334,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 57.333333333333336,
+      "markerDistanceDots": 172,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00D3": {
+      "supported": true,
+      "advanceEm": 0.5733333333333334,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 57.333333333333336,
+      "markerDistanceDots": 172,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00D4": {
+      "supported": true,
+      "advanceEm": 0.5733333333333334,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 57.333333333333336,
+      "markerDistanceDots": 172,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00D5": {
+      "supported": true,
+      "advanceEm": 0.5733333333333334,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 57.333333333333336,
+      "markerDistanceDots": 172,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00D6": {
+      "supported": true,
+      "advanceEm": 0.5733333333333334,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 57.333333333333336,
+      "markerDistanceDots": 172,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00D7": {
+      "supported": true,
+      "advanceEm": 0.9033333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 90.33333333333333,
+      "markerDistanceDots": 271,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00D8": {
+      "supported": true,
+      "advanceEm": 0.5733333333333334,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 57.333333333333336,
+      "markerDistanceDots": 172,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00D9": {
+      "supported": true,
+      "advanceEm": 0.61,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 61.0,
+      "markerDistanceDots": 183,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00DA": {
+      "supported": true,
+      "advanceEm": 0.61,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 61.0,
+      "markerDistanceDots": 183,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00DB": {
+      "supported": true,
+      "advanceEm": 0.61,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 61.0,
+      "markerDistanceDots": 183,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00DC": {
+      "supported": true,
+      "advanceEm": 0.61,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 61.0,
+      "markerDistanceDots": 183,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00DD": {
+      "supported": true,
+      "advanceEm": 0.5533333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 55.333333333333336,
+      "markerDistanceDots": 166,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00DE": {
+      "supported": true,
+      "advanceEm": 0.5533333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 55.333333333333336,
+      "markerDistanceDots": 166,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00DF": {
+      "supported": true,
+      "advanceEm": 0.5166666666666667,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 51.666666666666664,
+      "markerDistanceDots": 155,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00E0": {
+      "supported": true,
+      "advanceEm": 0.46,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 46.0,
+      "markerDistanceDots": 138,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00E1": {
+      "supported": true,
+      "advanceEm": 0.46,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 46.0,
+      "markerDistanceDots": 138,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00E2": {
+      "supported": true,
+      "advanceEm": 0.46,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 46.0,
+      "markerDistanceDots": 138,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00E3": {
+      "supported": true,
+      "advanceEm": 0.46,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 46.0,
+      "markerDistanceDots": 138,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00E4": {
+      "supported": true,
+      "advanceEm": 0.46,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 46.0,
+      "markerDistanceDots": 138,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00E5": {
+      "supported": true,
+      "advanceEm": 0.46,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 46.0,
+      "markerDistanceDots": 138,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00E6": {
+      "supported": true,
+      "advanceEm": 0.72,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 72.0,
+      "markerDistanceDots": 216,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00E7": {
+      "supported": true,
+      "advanceEm": 0.44333333333333336,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 44.333333333333336,
+      "markerDistanceDots": 133,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00E8": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00E9": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00EA": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00EB": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00EC": {
+      "supported": true,
+      "advanceEm": 0.25666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 25.666666666666668,
+      "markerDistanceDots": 77,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00ED": {
+      "supported": true,
+      "advanceEm": 0.25666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 25.666666666666668,
+      "markerDistanceDots": 77,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00EE": {
+      "supported": true,
+      "advanceEm": 0.25666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 25.666666666666668,
+      "markerDistanceDots": 77,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00EF": {
+      "supported": true,
+      "advanceEm": 0.25666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 25.666666666666668,
+      "markerDistanceDots": 77,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00F0": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00F1": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00F2": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00F3": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00F4": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00F5": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00F6": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00F7": {
+      "supported": true,
+      "advanceEm": 0.9033333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 90.33333333333333,
+      "markerDistanceDots": 271,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00F8": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00F9": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00FA": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00FB": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00FC": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00FD": {
+      "supported": true,
+      "advanceEm": 0.44333333333333336,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 44.333333333333336,
+      "markerDistanceDots": 133,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00FE": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+00FF": {
+      "supported": true,
+      "advanceEm": 0.44333333333333336,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 44.333333333333336,
+      "markerDistanceDots": 133,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0131": {
+      "supported": true,
+      "advanceEm": 0.25666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 25.666666666666668,
+      "markerDistanceDots": 77,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0141": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0142": {
+      "supported": true,
+      "advanceEm": 0.25666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 25.666666666666668,
+      "markerDistanceDots": 77,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0152": {
+      "supported": true,
+      "advanceEm": 0.81,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 81.0,
+      "markerDistanceDots": 243,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0153": {
+      "supported": true,
+      "advanceEm": 0.7366666666666667,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 73.66666666666667,
+      "markerDistanceDots": 221,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0160": {
+      "supported": true,
+      "advanceEm": 0.5333333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 53.333333333333336,
+      "markerDistanceDots": 160,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0161": {
+      "supported": true,
+      "advanceEm": 0.42333333333333334,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 42.333333333333336,
+      "markerDistanceDots": 127,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0178": {
+      "supported": true,
+      "advanceEm": 0.5533333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 55.333333333333336,
+      "markerDistanceDots": 166,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+017D": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+017E": {
+      "supported": true,
+      "advanceEm": 0.38666666666666666,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 38.666666666666664,
+      "markerDistanceDots": 116,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0192": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+02C6": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+02C7": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+02C9": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+02D8": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+02D9": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+02DA": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+02DB": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+02DC": {
+      "supported": true,
+      "advanceEm": 0.9966666666666667,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 99.66666666666667,
+      "markerDistanceDots": 299,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+02DD": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+037E": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page1"
+    },
+    "U+03A9": {
+      "supported": true,
+      "advanceEm": 0.5733333333333334,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 57.333333333333336,
+      "markerDistanceDots": 172,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+03BC": {
+      "supported": true,
+      "advanceEm": 0.5033333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 50.333333333333336,
+      "markerDistanceDots": 151,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0401": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0404": {
+      "supported": true,
+      "advanceEm": 0.5333333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 53.333333333333336,
+      "markerDistanceDots": 160,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0406": {
+      "supported": true,
+      "advanceEm": 0.28,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 28.0,
+      "markerDistanceDots": 84,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0407": {
+      "supported": true,
+      "advanceEm": 0.27666666666666667,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 27.666666666666668,
+      "markerDistanceDots": 83,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0410": {
+      "supported": true,
+      "advanceEm": 0.5533333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 55.333333333333336,
+      "markerDistanceDots": 166,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0411": {
+      "supported": true,
+      "advanceEm": 0.54,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 54.0,
+      "markerDistanceDots": 162,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0412": {
+      "supported": true,
+      "advanceEm": 0.55,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 55.0,
+      "markerDistanceDots": 165,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0413": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0414": {
+      "supported": true,
+      "advanceEm": 0.6366666666666667,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 63.666666666666664,
+      "markerDistanceDots": 191,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0415": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0416": {
+      "supported": true,
+      "advanceEm": 0.8333333333333334,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 83.33333333333333,
+      "markerDistanceDots": 250,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0417": {
+      "supported": true,
+      "advanceEm": 0.52,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 52.0,
+      "markerDistanceDots": 156,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0418": {
+      "supported": true,
+      "advanceEm": 0.61,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 61.0,
+      "markerDistanceDots": 183,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0419": {
+      "supported": true,
+      "advanceEm": 0.61,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 61.0,
+      "markerDistanceDots": 183,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+041A": {
+      "supported": true,
+      "advanceEm": 0.58,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 58.0,
+      "markerDistanceDots": 174,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+041B": {
+      "supported": true,
+      "advanceEm": 0.64,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 64.0,
+      "markerDistanceDots": 192,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+041C": {
+      "supported": true,
+      "advanceEm": 0.7633333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 76.33333333333333,
+      "markerDistanceDots": 229,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+041D": {
+      "supported": true,
+      "advanceEm": 0.6133333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 61.333333333333336,
+      "markerDistanceDots": 184,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+041E": {
+      "supported": true,
+      "advanceEm": 0.5733333333333334,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 57.333333333333336,
+      "markerDistanceDots": 172,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+041F": {
+      "supported": true,
+      "advanceEm": 0.6133333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 61.333333333333336,
+      "markerDistanceDots": 184,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0420": {
+      "supported": true,
+      "advanceEm": 0.5533333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 55.333333333333336,
+      "markerDistanceDots": 166,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0421": {
+      "supported": true,
+      "advanceEm": 0.53,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 53.0,
+      "markerDistanceDots": 159,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0422": {
+      "supported": true,
+      "advanceEm": 0.49333333333333335,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.333333333333336,
+      "markerDistanceDots": 148,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0423": {
+      "supported": true,
+      "advanceEm": 0.56,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 56.0,
+      "markerDistanceDots": 168,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0424": {
+      "supported": true,
+      "advanceEm": 0.7333333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 73.33333333333333,
+      "markerDistanceDots": 220,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0425": {
+      "supported": true,
+      "advanceEm": 0.5533333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 55.333333333333336,
+      "markerDistanceDots": 166,
+      "sourceCase": "font0-metrics-h30-w100-page1",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0426": {
+      "supported": true,
+      "advanceEm": 0.63,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 63.0,
+      "markerDistanceDots": 189,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0427": {
+      "supported": true,
+      "advanceEm": 0.6133333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 61.333333333333336,
+      "markerDistanceDots": 184,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0428": {
+      "supported": true,
+      "advanceEm": 0.8933333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 89.33333333333333,
+      "markerDistanceDots": 268,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0429": {
+      "supported": true,
+      "advanceEm": 0.9033333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 90.33333333333333,
+      "markerDistanceDots": 271,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+042A": {
+      "supported": true,
+      "advanceEm": 0.6466666666666666,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 64.66666666666667,
+      "markerDistanceDots": 194,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+042B": {
+      "supported": true,
+      "advanceEm": 0.8,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 80.0,
+      "markerDistanceDots": 240,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+042C": {
+      "supported": true,
+      "advanceEm": 0.54,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 54.0,
+      "markerDistanceDots": 162,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+042D": {
+      "supported": true,
+      "advanceEm": 0.55,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 55.0,
+      "markerDistanceDots": 165,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+042E": {
+      "supported": true,
+      "advanceEm": 0.83,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 83.0,
+      "markerDistanceDots": 249,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+042F": {
+      "supported": true,
+      "advanceEm": 0.5933333333333334,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 59.333333333333336,
+      "markerDistanceDots": 178,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0430": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0431": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0432": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0433": {
+      "supported": true,
+      "advanceEm": 0.36,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 36.0,
+      "markerDistanceDots": 108,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0434": {
+      "supported": true,
+      "advanceEm": 0.56,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 56.0,
+      "markerDistanceDots": 168,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0435": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0436": {
+      "supported": true,
+      "advanceEm": 0.66,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 66.0,
+      "markerDistanceDots": 198,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0437": {
+      "supported": true,
+      "advanceEm": 0.43333333333333335,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 43.333333333333336,
+      "markerDistanceDots": 130,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0438": {
+      "supported": true,
+      "advanceEm": 0.51,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 51.0,
+      "markerDistanceDots": 153,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0439": {
+      "supported": true,
+      "advanceEm": 0.51,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 51.0,
+      "markerDistanceDots": 153,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+043A": {
+      "supported": true,
+      "advanceEm": 0.4633333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 46.333333333333336,
+      "markerDistanceDots": 139,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+043B": {
+      "supported": true,
+      "advanceEm": 0.5466666666666666,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 54.666666666666664,
+      "markerDistanceDots": 164,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+043C": {
+      "supported": true,
+      "advanceEm": 0.6666666666666666,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 66.66666666666667,
+      "markerDistanceDots": 200,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+043D": {
+      "supported": true,
+      "advanceEm": 0.5033333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 50.333333333333336,
+      "markerDistanceDots": 151,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+043E": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+043F": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0440": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0441": {
+      "supported": true,
+      "advanceEm": 0.44,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 44.0,
+      "markerDistanceDots": 132,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0442": {
+      "supported": true,
+      "advanceEm": 0.36666666666666664,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 36.666666666666664,
+      "markerDistanceDots": 110,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0443": {
+      "supported": true,
+      "advanceEm": 0.43333333333333335,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 43.333333333333336,
+      "markerDistanceDots": 130,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0444": {
+      "supported": true,
+      "advanceEm": 0.6833333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 68.33333333333333,
+      "markerDistanceDots": 205,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0445": {
+      "supported": true,
+      "advanceEm": 0.44333333333333336,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 44.333333333333336,
+      "markerDistanceDots": 133,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0446": {
+      "supported": true,
+      "advanceEm": 0.5133333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 51.333333333333336,
+      "markerDistanceDots": 154,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0447": {
+      "supported": true,
+      "advanceEm": 0.49,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.0,
+      "markerDistanceDots": 147,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0448": {
+      "supported": true,
+      "advanceEm": 0.73,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 73.0,
+      "markerDistanceDots": 219,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0449": {
+      "supported": true,
+      "advanceEm": 0.7433333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 74.33333333333333,
+      "markerDistanceDots": 223,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+044A": {
+      "supported": true,
+      "advanceEm": 0.54,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 54.0,
+      "markerDistanceDots": 162,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+044B": {
+      "supported": true,
+      "advanceEm": 0.6933333333333334,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 69.33333333333333,
+      "markerDistanceDots": 208,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+044C": {
+      "supported": true,
+      "advanceEm": 0.47333333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 47.333333333333336,
+      "markerDistanceDots": 142,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+044D": {
+      "supported": true,
+      "advanceEm": 0.4633333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 46.333333333333336,
+      "markerDistanceDots": 139,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+044E": {
+      "supported": true,
+      "advanceEm": 0.6866666666666666,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 68.66666666666667,
+      "markerDistanceDots": 206,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+044F": {
+      "supported": true,
+      "advanceEm": 0.4866666666666667,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.666666666666664,
+      "markerDistanceDots": 146,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0451": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0454": {
+      "supported": true,
+      "advanceEm": 0.4633333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 46.333333333333336,
+      "markerDistanceDots": 139,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0456": {
+      "supported": true,
+      "advanceEm": 0.25,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 25.0,
+      "markerDistanceDots": 75,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0457": {
+      "supported": true,
+      "advanceEm": 0.25666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 25.666666666666668,
+      "markerDistanceDots": 77,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0490": {
+      "supported": true,
+      "advanceEm": 0.4866666666666667,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.666666666666664,
+      "markerDistanceDots": 146,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+0491": {
+      "supported": true,
+      "advanceEm": 0.37,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 37.0,
+      "markerDistanceDots": 111,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+2012": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2013": {
+      "supported": true,
+      "advanceEm": 0.9033333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 90.33333333333333,
+      "markerDistanceDots": 271,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+2014": {
+      "supported": true,
+      "advanceEm": 0.9033333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 90.33333333333333,
+      "markerDistanceDots": 271,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+2015": {
+      "supported": true,
+      "advanceEm": 0.9033333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 90.33333333333333,
+      "markerDistanceDots": 271,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+2016": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2017": {
+      "supported": true,
+      "advanceEm": 0.49666666666666665,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 49.666666666666664,
+      "markerDistanceDots": 149,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+2018": {
+      "supported": true,
+      "advanceEm": 0.29333333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 29.333333333333332,
+      "markerDistanceDots": 88,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+2019": {
+      "supported": true,
+      "advanceEm": 0.29333333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 29.333333333333332,
+      "markerDistanceDots": 88,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+201A": {
+      "supported": true,
+      "advanceEm": 0.29333333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 29.333333333333332,
+      "markerDistanceDots": 88,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+201B": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+201C": {
+      "supported": true,
+      "advanceEm": 0.42333333333333334,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 42.333333333333336,
+      "markerDistanceDots": 127,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+201D": {
+      "supported": true,
+      "advanceEm": 0.42333333333333334,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 42.333333333333336,
+      "markerDistanceDots": 127,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+201E": {
+      "supported": true,
+      "advanceEm": 0.42333333333333334,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 42.333333333333336,
+      "markerDistanceDots": 127,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+201F": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2020": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+2021": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+2022": {
+      "supported": true,
+      "advanceEm": 0.09333333333333334,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 9.333333333333334,
+      "markerDistanceDots": 28,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+2023": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2024": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2025": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2026": {
+      "supported": true,
+      "advanceEm": 0.9033333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 90.33333333333333,
+      "markerDistanceDots": 271,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+2027": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2030": {
+      "supported": true,
+      "advanceEm": 1.2733333333333334,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 127.33333333333333,
+      "markerDistanceDots": 382,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+2032": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2033": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2034": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2035": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2036": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2037": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2039": {
+      "supported": true,
+      "advanceEm": 0.24,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 24.0,
+      "markerDistanceDots": 72,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+203A": {
+      "supported": true,
+      "advanceEm": 0.24,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 24.0,
+      "markerDistanceDots": 72,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+203C": {
+      "supported": true,
+      "advanceEm": 0.5533333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 55.333333333333336,
+      "markerDistanceDots": 166,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+203D": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2042": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2044": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+204E": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2051": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2052": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2053": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2055": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+20A9": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+20AA": {
+      "supported": true,
+      "advanceEm": 0.7633333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 76.33333333333333,
+      "markerDistanceDots": 229,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+20AC": {
+      "supported": true,
+      "advanceEm": 0.48,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 48.0,
+      "markerDistanceDots": 144,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+20B4": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+20B9": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+20BD": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+20BF": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2105": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2113": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2116": {
+      "supported": true,
+      "advanceEm": 1.05,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 105.0,
+      "markerDistanceDots": 315,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+2122": {
+      "supported": true,
+      "advanceEm": 0.61,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 61.0,
+      "markerDistanceDots": 183,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+2126": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+212E": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2190": {
+      "supported": true,
+      "advanceEm": 0.72,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 72.0,
+      "markerDistanceDots": 216,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+2191": {
+      "supported": true,
+      "advanceEm": 0.72,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 72.0,
+      "markerDistanceDots": 216,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+2192": {
+      "supported": true,
+      "advanceEm": 0.72,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 72.0,
+      "markerDistanceDots": 216,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+2193": {
+      "supported": true,
+      "advanceEm": 0.72,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 72.0,
+      "markerDistanceDots": 216,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+2194": {
+      "supported": true,
+      "advanceEm": 0.72,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 72.0,
+      "markerDistanceDots": 216,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+2195": {
+      "supported": true,
+      "advanceEm": 0.72,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 72.0,
+      "markerDistanceDots": 216,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+2202": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2205": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2206": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2208": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2209": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+220F": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2211": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2212": {
+      "supported": true,
+      "advanceEm": 0.9033333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 90.33333333333333,
+      "markerDistanceDots": 271,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+2215": {
+      "supported": true,
+      "advanceEm": 0.11,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 11.0,
+      "markerDistanceDots": 33,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+2219": {
+      "supported": true,
+      "advanceEm": 0.29333333333333333,
+      "uncertaintyEm": 0.0033333333333333335,
+      "advanceDots": 29.333333333333332,
+      "markerDistanceDots": 88,
+      "sourceCase": "font0-metrics-h30-w100-page2",
+      "repeat": 3,
+      "fontHeight": 30,
+      "fontWidth": 100
+    },
+    "U+221A": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+221E": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2229": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+222A": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+222B": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+223C": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2248": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2260": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2261": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2264": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2265": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2713": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+2717": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+FB01": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    },
+    "U+FB02": {
+      "supported": false,
+      "sourceCase": "font0-metrics-h30-w100-page2"
+    }
+  }
+}

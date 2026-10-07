@@ -9,3 +9,7 @@ target_link_libraries(qtzpl_render PRIVATE QtZpl::QtZpl)
 
 add_executable(qtzpl_compare_golden compare_golden.cpp)
 target_link_libraries(qtzpl_compare_golden PRIVATE QtZpl::QtZpl)
+
+# Offline font research only; does not expose another library API or runtime.
+add_executable(qtzpl_font0_probe ../tools/font0_probe.cpp)
+target_link_libraries(qtzpl_font0_probe PRIVATE Qt6::Core Qt6::Gui ${QTZPL_FREETYPE_TARGETS})

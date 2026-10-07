@@ -1,0 +1,78 @@
+{
+  "status": "research; not accepted as pixel-exact Font 0",
+  "fontSha256": "70a8f00ff19bc1230fe83de2c4faa806457508a5ab8415c22e08aa56bc7639e7",
+  "glyphs": 317,
+  "donorFamilies": 13,
+  "sourceHistogram": {
+    "qtzpl-geometric": 11,
+    "archivo-narrow": 17,
+    "archivo": 64,
+    "arimo": 12,
+    "noto-sans": 57,
+    "oswald": 51,
+    "barlow-condensed": 7,
+    "roboto-condensed": 54,
+    "noto-sans-math": 4,
+    "ibm-plex-sans-condensed": 15,
+    "barlow-semi-condensed": 20,
+    "stix-two-math": 2,
+    "roboto": 3
+  },
+  "uncovered": [],
+  "scores": {
+    "legacy-validation": {
+      "differentPixels": 122854,
+      "unionPixels": 917889,
+      "comparisons": 3117,
+      "exact": 216,
+      "missing": 0,
+      "iou": 0.8661559295296054
+    },
+    "validation": {
+      "differentPixels": 120592,
+      "unionPixels": 818922,
+      "comparisons": 2536,
+      "exact": 149,
+      "missing": 0,
+      "iou": 0.852742996280476
+    },
+    "train": {
+      "differentPixels": 92651,
+      "unionPixels": 731914,
+      "comparisons": 2536,
+      "exact": 198,
+      "missing": 0,
+      "iou": 0.8734127233527437
+    }
+  },
+  "refined": {
+    "fontSha256": "675c60950daf59085b4efc43c59ba3857ca7a1fcafbd05402201463c2e7e4de5",
+    "changedGlyphs": 289,
+    "scores": {
+      "legacy-validation": {
+        "differentPixels": 107020,
+        "unionPixels": 910160,
+        "comparisons": 3117,
+        "exact": 245,
+        "missing": 0,
+        "iou": 0.8824162784565351
+      },
+      "validation": {
+        "differentPixels": 108985,
+        "unionPixels": 813418,
+        "comparisons": 2536,
+        "exact": 164,
+        "missing": 0,
+        "iou": 0.866015996695426
+      },
+      "train": {
+        "differentPixels": 80235,
+        "unionPixels": 725607,
+        "comparisons": 2536,
+        "exact": 220,
+        "missing": 0,
+        "iou": 0.8894236136090198
+      }
+    }
+  }
+}
