@@ -202,7 +202,7 @@ std::optional<QPair<int,int>> resolveDimensions(int dataWords,int ecWords,int co
   if(columns==0&&rows==0){
     double bestRatio=0.0;int bestColumns=0,bestRows=0;
     for(int c=minColumns;c<=maxColumns;++c){
-      const int r=calculatedRows(c);if(r<minRows)break;if(r>maxRows)continue;
+      const int r=calculatedRows(c);if(r<minRows)break;if(r>maxRows||c*r>928)continue;
       const double ratio=static_cast<double>(17*c+69)/static_cast<double>(r*2);
       if(bestRows!=0&&std::abs(ratio-3.0)>std::abs(bestRatio-3.0))continue;
       bestRatio=ratio;bestColumns=c;bestRows=r;
@@ -214,7 +214,7 @@ std::optional<QPair<int,int>> resolveDimensions(int dataWords,int ecWords,int co
   const int total=dataWords+ecWords+1;
   if(columns>0&&rows==0)rows=(total+columns-1)/columns;
   else if(columns==0&&rows>0)columns=(total+rows-1)/rows;
-  if(columns<minColumns||columns>maxColumns||rows<minRows||rows>maxRows||columns*rows<total)return std::nullopt;
+  if(columns<minColumns||columns>maxColumns||rows<minRows||rows>maxRows||columns*rows<total||columns*rows>928)return std::nullopt;
   return QPair{columns,rows};
 }
 
@@ -269,10 +269,17 @@ QVector<int> errorCorrection(const QVector<int>& data,int securityLevel) {
   return words;
 }
 
-std::expected<Symbol,QString> encode(const QByteArray& data,int securityLevel,int columns,int rows) {
+std::expected<Symbol,QString> encode(const QByteArray& data,int securityLevel,int columns,int rows,bool truncated) {
   if(securityLevel<0||securityLevel>8)return std::unexpected(QStringLiteral("PDF417 security level must be between 0 and 8"));
+  if(columns<0||columns>30||rows<0||rows>90||(rows>0&&rows<3))
+    return std::unexpected(QStringLiteral("PDF417 requires 1-30 columns and 3-90 rows, or zero for automatic dimensions"));
+  // Numeric compaction is the densest mode: no symbol can hold more than
+  // 2710 input bytes. Bound compaction before allocating intermediate words.
+  if(data.size()>2710)return std::unexpected(QStringLiteral("PDF417 data exceeds the maximum capacity"));
   auto highLevel=highLevelCodewords(data);if(!highLevel)return std::unexpected(highLevel.error());
-  const int ecCount=errorWordCount(securityLevel);const auto dimensions=resolveDimensions(highLevel->size(),ecCount,columns,rows);
+  const int ecCount=errorWordCount(securityLevel);
+  if(highLevel->size()+ecCount+1>928)return std::unexpected(QStringLiteral("PDF417 data and error correction exceed 928 codewords"));
+  const auto dimensions=resolveDimensions(static_cast<int>(highLevel->size()),ecCount,columns,rows);
   if(!dimensions)return std::unexpected(QStringLiteral("PDF417 data does not fit the requested dimensions"));
   columns=dimensions->first;rows=dimensions->second;
   QVector<int> dataWords=*highLevel;
@@ -280,13 +287,19 @@ std::expected<Symbol,QString> encode(const QByteArray& data,int securityLevel,in
   for(int i=0;i<padding;++i)dataWords.append(paddingCodeword);
   dataWords.prepend(dataWords.size()+1);
   QVector<int> all=dataWords;all+=errorCorrection(dataWords,securityLevel);
-  Matrix matrix{(columns+4)*17+1,rows,QVector<bool>(((columns+4)*17+1)*rows)};
+  // Compact (truncated) PDF417 keeps the start/left row indicator and terminates
+  // each row with one bar instead of the right row indicator/full stop pattern.
+  const int width=(columns+(truncated?2:4))*17+1;
+  Matrix matrix{width,rows,QVector<bool>(width*rows)};
   for(int row=0;row<rows;++row){
     const int cluster=row%3;int x=0;appendPattern(matrix,row,x,startWord,17);
     appendPattern(matrix,row,x,pdf417CodewordPatterns[cluster][leftCodeword(row,rows,columns,securityLevel)],17);
     for(int column=0;column<columns;++column)appendPattern(matrix,row,x,pdf417CodewordPatterns[cluster][all[row*columns+column]],17);
-    appendPattern(matrix,row,x,pdf417CodewordPatterns[cluster][rightCodeword(row,rows,columns,securityLevel)],17);
-    appendPattern(matrix,row,x,stopWord,18);
+    if(truncated)appendPattern(matrix,row,x,1,1);
+    else{
+      appendPattern(matrix,row,x,pdf417CodewordPatterns[cluster][rightCodeword(row,rows,columns,securityLevel)],17);
+      appendPattern(matrix,row,x,stopWord,18);
+    }
   }
   return Symbol{std::move(matrix),std::move(dataWords),std::move(all),columns,rows};
 }

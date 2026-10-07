@@ -13,7 +13,7 @@ struct Symbol {
 };
 
 [[nodiscard]] QTZPL_EXPORT std::expected<Symbol,QString> encode(
-  const QByteArray& data,int securityLevel,int columns=0,int rows=0);
+  const QByteArray& data,int securityLevel,int columns=0,int rows=0,bool truncated=false);
 [[nodiscard]] QTZPL_EXPORT std::expected<QVector<int>,QString> highLevelCodewords(const QByteArray& data);
 [[nodiscard]] QTZPL_EXPORT QVector<int> errorCorrection(const QVector<int>& data,int securityLevel);
 

@@ -632,19 +632,16 @@ private slots:
     QCOMPARE(inkBounds(result->labels[0]),QRect(10,10,202,60));
   }
   void code128InterpretationIsNotVerticallyClipped() {
-    const auto barcode=QtZpl::render(
-      u"^XA^PW650^LL400^BY5,2,250^FO50,50^BC^FD{{00}}^FS^XZ");
-    const auto standalone=QtZpl::render(
-      u"^XA^PW650^LL120^FO50,20^AAN,50,50^FD{{00}}^FS^XZ");
-    QVERIFY(barcode.has_value());QVERIFY(standalone.has_value());
-    qsizetype captionInk=0;
-    for(int y=305;y<barcode->labels.front().height();++y)for(int x=0;x<barcode->labels.front().width();++x)
-      captionInk+=barcode->labels.front().pixelColor(x,y).value()<128;
-    qsizetype standaloneInk=0;
-    for(int y=0;y<standalone->labels.front().height();++y)for(int x=0;x<standalone->labels.front().width();++x)
-      standaloneInk+=standalone->labels.front().pixelColor(x,y).value()<128;
-    QCOMPARE(captionInk,standaloneInk);
-    QCOMPARE(inkBounds(barcode->labels.front()).top(),50);
+    const auto actual=QtZpl::render(goldenZpl(u"code128-extended/code128-font-a-caption"));
+    const auto expected=goldenImage(u"code128-extended/code128-font-a-caption");
+    QVERIFY(actual.has_value());QVERIFY(!expected.isNull());
+    QVERIFY(actual->diagnostics.isEmpty());
+    // ^BY5's default HRI and ^AAN,50,50 have different glyph dimensions.
+    // Their ink counts are not interchangeable; check the complete HRI raster.
+    const QRect captionRegion(0,300,812,100);
+    QCOMPARE(actual->labels.front().copy(captionRegion).convertToFormat(QImage::Format_RGB32),
+             expected.copy(captionRegion).convertToFormat(QImage::Format_RGB32));
+    QCOMPARE(inkBounds(actual->labels.front()).top(),50);
   }
   void code128InterpretationDoesNotReusePreviousFieldFont() {
     const auto afterText=QtZpl::render(goldenZpl(u"code128-caption-after-field"));
@@ -669,8 +666,9 @@ private slots:
   void doesNotIgnoreCode128UccCheckDigit() {
     auto result=QtZpl::render(u"^XA^FO0,0^BCN,50,N,N,Y,N^FD0012345678901234567^FS^XZ");
     QVERIFY(result.has_value());
-    QVERIFY(std::any_of(result->diagnostics.cbegin(),result->diagnostics.cend(),[](const auto& d){return d.code==u"code128-ucc-check-digit"_s&&d.severity==QtZpl::Severity::Error;}));
-    QVERIFY(inkBounds(result->labels[0]).isEmpty());
+    QVERIFY(result->diagnostics.isEmpty());
+    const auto explicitDigit=QtZpl::render(u"^XA^FO0,0^BCN,50,N,N,N,N^FD00123456789012345675^FS^XZ");
+    QVERIFY(explicitDigit);QCOMPARE(result->labels.front(),explicitDigit->labels.front());
   }
   void laysOutEan13InterpretationByDigitGroups() {
     auto result=QtZpl::render(u"^XA^PW260^LL180^BY2,3,100^FO30,10^BEN,100,Y,N^FD5901234123457^FS^XZ");
@@ -736,6 +734,31 @@ private slots:
     auto result=QtZpl::render(u"^XA^FO0,0^BEN,50,N^FD5901234123458^FS^XZ");
     QVERIFY(result.has_value());
     QVERIFY(std::any_of(result->diagnostics.cbegin(),result->diagnostics.cend(),[](const auto& d){return d.code==u"ean13-encode"_s;}));
+  }
+  void dataMatrixTextCompactionMatchesReference() {
+    const auto matrix=QtZpl::BarcodeEncoders::dataMatrix("DataMatrix 123",false);
+    QVERIFY(matrix);QCOMPARE(matrix->width,16);QCOMPARE(matrix->height,16);
+    // Labelary ECC200: Text data 239,13,47,208,115,83,146,197,86,19,143,52.
+    // The final ASCII '3' uses the implicit one-codeword terminal unlatch.
+    const auto expected=QByteArrayLiteral(
+      "#.#.#.#.#.#.#.#."
+      "#..###.#..#..#.#"
+      "#..#.#....##..#."
+      "##.###...##.#..#"
+      "##.#.####.#.#.#."
+      "##.#.#.#.....###"
+      "#..##..#..#.##.."
+      "##...###.###.###"
+      "##..#.##.##.#.#."
+      "#.#.##.....###.#"
+      "#.#....#.#.###.."
+      "###.#####.#.#..#"
+      "###.#.#..####..."
+      "####......##.#.#"
+      "#.#..#.###....#."
+      "################");
+    for(int y=0;y<16;++y)for(int x=0;x<16;++x)
+      QCOMPARE(matrix->at(x,y),expected[y*16+x]=='#');
   }
   void dataMatrixMatchesReference() {
     const auto matrix=QtZpl::BarcodeEncoders::dataMatrix(R"({"po":12,"batchAction":"start_end"})",false);

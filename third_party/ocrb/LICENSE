@@ -1,0 +1,41 @@
+OCR B by Matthew Skala and Norbert Schwarz
+
+Licensing and attribution from ocr-0.3.1/ocr.tex:
+
+The version in this package descends from a set of Metafont definitions by
+Norbert Schwarz of Ruhr-Universitaet Bochum, bearing dates ranging from 1986
+to 2010.  He originally distributed it under a "non-commercial use only"
+restriction but has since released it for unrestricted use and distribution.
+See the README file in Norbert Schwarz's package, available from the
+URL below, for more details.
+
+I frequently receive email asking me to ``confirm'' or ``clarify'' the
+copyright status of the OCR B fonts.  Usually, the authors of such messages
+give no indication that they have read this documentation file.  I make no
+copyright claim on these fonts myself.  I do not believe anyone else makes a
+copyright claim that would conflict with the use of these fonts in a
+commercial project, but I cannot speak for any party other than myself.  I
+cannot give any kind of binding legal opinion on the status of these fonts,
+and I don't want to open myself to liability by giving permission to use
+something I don't own.  This documentation file already explains the origin
+of the fonts clearly, and contains pointers to other relevant documents.  If
+you require authoritative legal advice about your proposed use of these
+fonts, then you must retain a lawyer.  I will no longer answer email queries
+on this subject.
+
+The Metafont definitions include a number of variants for things like
+"sharp ends" and "reverse video." It's not clear how valuable those
+alternate fonts are; they aren't suitable for actual OCR use, and there are
+some problems in the outlines (for instance, with poor overlapping of
+sharp-ended strokes) that make them less than optimal for human use too.
+Making the alternate versions work with MetaType1 is going to require a fair
+bit of effort working around bugs in MetaType1 and Fontforge, as well as
+correcting the problems in the originals; I plan to do that eventually, but
+it's not done in this version.
+
+Just as with the OCR A font, there are alternate glyphs for a
+few characters.  In the OpenType version, these are available through the
+"stylistic set" and "all alternates" features.
+
+
+Source: https://tsukurimashou.org/files/ocr-0.3.1.zip

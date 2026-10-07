@@ -1,0 +1,14 @@
+QtZpl DataMatrix C40/Text compaction
+
+The C40/Text character mappings and terminal-triplet rules in
+src/barcode_encoders.cpp follow ZXing's C40Encoder and TextEncoder:
+https://github.com/zxing/zxing/tree/master/core/src/main/java/com/google/zxing/datamatrix/encoder
+
+Copyright 2006-2007 Jeremias Maerki.
+Licensed under the Apache License, Version 2.0; see LICENSE.
+
+QtZpl implements a bounded native candidate-size search. Proven ASCII and GS1
+module vectors are retained when ASCII fits the selected symbol; C40 or Text
+can select a smaller symbol or satisfy an explicit capacity constraint.
+This is not a full implementation of mixed-mode ECC200 optimization: X12,
+EDIFACT and Base256 choices remain outside this compaction extension.

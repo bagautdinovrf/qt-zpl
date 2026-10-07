@@ -1,0 +1,1 @@
+^XA^PW203^LL203^FO10,10^BON,3,N,103,N^FH_^FDThis is an example Aztec symbol for Wikipedia.^FS^XZ

@@ -2,4 +2,12 @@
 
 include(CMakeFindDependencyMacro)
 find_dependency(Qt6 6.11 COMPONENTS Core Gui)
+if(NOT @QTZPL_BUILD_SHARED@)
+  if(@QTZPL_FREETYPE_BUNDLED@)
+    find_dependency(Qt6FreetypePrivate 6.11)
+    find_dependency(Qt6BundledFreetype 6.11)
+  else()
+    find_dependency(Freetype)
+  endif()
+endif()
 include("${CMAKE_CURRENT_LIST_DIR}/QtZplTargets.cmake")

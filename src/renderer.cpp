@@ -2,6 +2,14 @@
 #include "barcode_encoders.hpp"
 #include "pdf417_encoder.hpp"
 #include "maxicode_encoder.hpp"
+#include "linear_encoders.hpp"
+#include "aztec_encoder.hpp"
+#include "databar_encoder.hpp"
+#include "micropdf417_encoder.hpp"
+#include "printer_font_metrics.hpp"
+#include "printer_font_raster.hpp"
+#include "retail_font.hpp"
+#include "graphic_geometry.hpp"
 
 #include <QtCore/QByteArray>
 #include <QtCore/QFile>
@@ -15,6 +23,8 @@
 #include <QtGui/QRawFont>
 #include <algorithm>
 #include <cmath>
+#include <initializer_list>
+#include <limits>
 #include <optional>
 #include <utility>
 
@@ -26,17 +36,33 @@ namespace QtZpl {
 namespace {
 using namespace Qt::StringLiterals;
 
+QPoint printerPosition(qint64 x,qint64 y) {
+  // Off-canvas coordinates remain off canvas without signed overflow during
+  // later baseline, bearing, or orientation arithmetic.
+  constexpr qint64 limit=std::numeric_limits<int>::max()/4;
+  return {int(std::clamp(x,-limit,limit)),int(std::clamp(y,-limit,limit))};
+}
+
 struct State {
   QPoint position;
+  QPoint nextTypeset;
   int labelShift = 0;
   bool baseline = false;
   bool reverse = false;
+  bool fieldReverse = false;
+  bool labelReverse = false;
+  FieldParameter parameter;
+  Justification justification = Justification::Left;
+  Justification defaultJustification = Justification::Left;
   Orientation fieldDirection = Orientation::Normal;
-  ScalableFont font;
+  ScalableFont font{u'A',Orientation::Normal,9,5};
+  ScalableFont defaultFont{u'A',Orientation::Normal,9,5};
   std::optional<ScalableFont> barcodeInterpretationFont;
   std::optional<FieldBlock> block;
   BarcodeDefault barcodeDefaults;
   std::optional<Barcode> pendingBarcode;
+  qsizetype barcodeOffset = -1;
+  QString barcodeSource;
   Orientation printOrientation = Orientation::Normal;
 };
 
@@ -90,7 +116,7 @@ QFont zebraFont(int pixelHeight, int stretch=75) {
 QFont builtInFont(QChar name,int pixelHeight,int requestedWidth=0) {
   if(name.toUpper()==u'A') {
     const int stretch=requestedWidth>0
-      ? std::clamp(qRound(100.0*requestedWidth/pixelHeight),1,400)
+      ? std::clamp(qRound(180.0*requestedWidth/pixelHeight),1,400)
       : 100;
     return printerFont(fontAFamily(),pixelHeight,stretch);
   }
@@ -161,6 +187,16 @@ public:
     if(found!=font0Glyphs_.cend())return found.value();
     return font0Glyphs_.insert(glyph,font0().pathForGlyph(glyph)).value();
   }
+  PrinterFontRaster& fontARaster() {
+    if(!fontARaster_){
+      static const QByteArray bytes=[] {
+        initializeQtZplResources();QFile file(u":/qtzpl/fonts/font_a_native.ttf"_s);
+        return file.open(QIODevice::ReadOnly)?file.readAll():QByteArray{};
+      }();
+      fontARaster_.emplace(bytes);
+    }
+    return *fontARaster_;
+  }
 private:
   static const QByteArray& font0Bytes() {
     static const QByteArray bytes=[] {
@@ -171,6 +207,7 @@ private:
     return bytes;
   }
   std::optional<QRawFont> font0_;
+  std::optional<PrinterFontRaster> fontARaster_;
   // Keys come only from the embedded face, bounding this cache by its glyph
   // count. Store design-space paths so all requested sizes share exact data.
   QHash<quint32,QPainterPath> font0Glyphs_;
@@ -182,10 +219,10 @@ private:
 // 750-unit cap height; independent ZPL height/width scale that same design grid.
 class Font0Metrics {
 public:
-  Font0Metrics(int height,int width,RenderFonts& fontContext)
+  Font0Metrics(int height,int width,RenderFonts& fontContext,FieldParameter parameter={})
     : font(fontContext.font0()),fonts(fontContext),
       scaleX(static_cast<qreal>(width>0?width:height)/1000.0),
-      scaleY(static_cast<qreal>(height)/1000.0),fontHeight(height) {}
+      scaleY(static_cast<qreal>(height)/1000.0),fontHeight(height),parameter(parameter) {}
 
   [[nodiscard]] int ascent() const {return qFloor(font.capHeight()*scaleY);}
   [[nodiscard]] int height() const {return std::max(1,fontHeight);}
@@ -193,17 +230,18 @@ public:
     const auto glyphs=font.glyphIndexesForString(text);
     const auto advances=font.advancesForGlyphIndexes(glyphs,QRawFont::UseDesignMetrics);
     qreal width=0;for(const auto& advance:advances)width+=advance.x()*scaleX;
-    return width;
+    return width+std::max<qsizetype>(0,glyphs.size()-1)*parameter.spacing;
   }
   [[nodiscard]] int horizontalAdvance(const QString& text) const {return qRound(designAdvance(text));}
   [[nodiscard]] QPainterPath outline(const QString& text) const {
     const auto glyphs=font.glyphIndexesForString(text);
     const auto advances=font.advancesForGlyphIndexes(glyphs,QRawFont::UseDesignMetrics);
-    QPainterPath result;qreal x=0;
+    QPainterPath result;qreal x=parameter.direction==u'R'?-parameter.spacing:0,y=0;
     for(qsizetype i=0;i<glyphs.size();++i){
-      QTransform transform;transform.translate(x,0);transform.scale(scaleX,scaleY);
+      QTransform transform;transform.translate(x,y);transform.scale(scaleX,scaleY);
       result.addPath(transform.map(fonts.font0Glyph(glyphs[i])));
-      x+=advances[i].x()*scaleX;
+      if(parameter.direction==u'V')y+=fontHeight;
+      else x+=(parameter.direction==u'R'?-1:1)*(advances[i].x()*scaleX+parameter.spacing);
     }
     return result;
   }
@@ -217,6 +255,7 @@ private:
   qreal scaleX;
   qreal scaleY;
   int fontHeight;
+  FieldParameter parameter;
 };
 
 template<typename Metrics>
@@ -291,6 +330,19 @@ QPoint rotatedAnchor(QPoint anchor,QSize source,Orientation orientation) {
   }
 }
 
+// Barcode/graphic anchors lie on cell edges; glyph baseline coordinates above
+// instead refer to individual raster dots.
+QPoint rotatedEdge(QPoint anchor,QSize source,Orientation orientation) {
+  switch(orientation){
+    case Orientation::Rotated90:return {source.height()-anchor.y(),anchor.x()};
+    case Orientation::Inverted:return {source.width()-anchor.x(),source.height()-anchor.y()};
+    case Orientation::BottomUp:return {anchor.y(),source.width()-anchor.x()};
+    default:return anchor;
+  }
+}
+
+void placeNewSymbol(QImage& image,const QImage& original,const State& state,Orientation orientation);
+
 template<typename Metrics,typename PaintText>
 void drawBlockTextLayout(QImage& image,State& state,const QString& text,const RenderOptions& options,
                         const Metrics& metrics,Orientation orientation,PaintText paintText) {
@@ -349,7 +401,7 @@ void drawBlockText(QImage& image,State& state,const QString& text,const RenderOp
 
 void drawFont0Text(QImage& image,State& state,const QString& text,const RenderOptions& options,
                    int height,int width,Orientation orientation,RenderFonts& fonts) {
-  const Font0Metrics metrics(height,width,fonts);
+  const Font0Metrics metrics(height,width,fonts,state.parameter);
   const QColor color=state.reverse?options.background:options.foreground;
   if(state.block&&state.block->width>0){
     drawBlockTextLayout(image,state,text,options,metrics,orientation,
@@ -388,39 +440,126 @@ void drawFont0Text(QImage& image,State& state,const QString& text,const RenderOp
   state.reverse=false;state.block.reset();
 }
 
-void drawText(QImage& image, State& state, const QString& text, const RenderOptions& options,RenderFonts& fonts) {
+QPoint orientedVector(QPoint vector,Orientation orientation) {
+  switch(orientation){
+    case Orientation::Rotated90:return {-vector.y(),vector.x()};
+    case Orientation::Inverted:return {-vector.x(),-vector.y()};
+    case Orientation::BottomUp:return {vector.y(),-vector.x()};
+    default:return vector;
+  }
+}
+
+void paintPrinterGlyph(QPainter& painter,QPoint baseline,const PrinterGlyph& glyph,const QColor& ink) {
+  if(glyph.alpha.isNull())return;
+  QImage colored(glyph.alpha.size(),QImage::Format_ARGB32_Premultiplied);
+  if(colored.isNull())return;
+  const QRgb foreground=qPremultiply(ink.rgba());
+  for(int y=0;y<colored.height();++y){
+    const auto* alpha=glyph.alpha.constScanLine(y);
+    auto* pixels=reinterpret_cast<QRgb*>(colored.scanLine(y));
+    for(int x=0;x<colored.width();++x)pixels[x]=alpha[x]?foreground:0;
+  }
+  painter.drawImage(baseline+glyph.bearing,colored);
+}
+
+void paintPrinterFontAGlyph(QPainter& painter,QPoint baseline,QChar character,int height,int width,
+                           const QColor& ink,RenderFonts& fonts,Orientation orientation=Orientation::Normal) {
+  const int fontWidth=std::max(1,qRound(width/5.0))*9;
+  const int fontHeight=std::max(1,qRound(height/9.0))*9;
+  const int turns=orientation==Orientation::Rotated90?1:orientation==Orientation::Inverted?2:orientation==Orientation::BottomUp?3:0;
+  const auto glyph=fonts.fontARaster().glyph(PrinterFontMetrics::fontACharacter(character.unicode()),fontWidth,fontHeight,turns);
+  if(glyph)paintPrinterGlyph(painter,baseline,*glyph,ink);
+}
+
+void drawFontAText(QImage& image,State& state,const QString& text,const RenderOptions& options,
+                   int height,int width,Orientation orientation,RenderFonts& fonts,
+                   QList<Diagnostic>& diagnostics,qsizetype offset) {
+  const int fontWidth=std::max(1,qRound(width/5.0))*9;
+  const int fontHeight=std::max(1,qRound(height/9.0))*9;
+  const qreal advance=fontWidth*1365.0/2048;
+  const int ascent=qRound(fontHeight*1583.0/2048);
+  const int turns=orientation==Orientation::Rotated90?1:orientation==Orientation::Inverted?2:orientation==Orientation::BottomUp?3:0;
+  struct PositionedGlyph { PrinterGlyph glyph;QPoint baseline; };
+  QList<PositionedGlyph> glyphs;
+  QRect bounds;qreal x=state.parameter.direction==u'R'?-state.parameter.spacing:0,y=0;
+  for(const char32_t character:text.toUcs4()){
+    const auto glyph=fonts.fontARaster().glyph(PrinterFontMetrics::fontACharacter(character),fontWidth,fontHeight,turns);
+    if(!glyph){
+      diagnostics.append({Severity::Warning,u"font-glyph-missing"_s,glyph.error(),offset,u"^FD"_s});
+      continue;
+    }
+    const QPoint baseline(qRound(x),qRound(y)+(state.baseline?0:ascent));
+    bounds|=QRect(baseline+glyph->bearing,glyph->alpha.size());
+    glyphs.append({*glyph,baseline});
+    if(state.parameter.direction==u'V')y+=height;
+    else x+=(state.parameter.direction==u'R'?-1:1)*(advance+state.parameter.spacing);
+  }
+  if(bounds.isEmpty())return;
+  QImage field(bounds.size(),QImage::Format_ARGB32_Premultiplied);field.fill(Qt::transparent);
+  QPainter painter(&field);painter.setRenderHint(QPainter::Antialiasing,false);
+  for(const auto& glyph:glyphs)
+    paintPrinterGlyph(painter,glyph.baseline-bounds.topLeft(),glyph.glyph,state.reverse?Qt::white:options.foreground);
+  painter.end();
+  const int span=qFloor(fontWidth*1365.0/2048*text.size()+state.parameter.spacing*std::max(0,int(text.size())-1));
+  QPoint position=state.position;
+  if(state.baseline)position-=rotatedEdge(-bounds.topLeft(),field.size(),orientation);
+  else switch(orientation){
+    case Orientation::Normal:position+=bounds.topLeft();break;
+    case Orientation::Rotated90:position+=QPoint(height-bounds.bottom()-1,bounds.left());break;
+    case Orientation::Inverted:position+=QPoint(span-bounds.right()-1,height-bounds.bottom()-1);break;
+    case Orientation::BottomUp:position+=QPoint(bounds.top(),span-bounds.right()-1);break;
+  }
+  QPainter target(&image);if(state.reverse)target.setCompositionMode(QPainter::CompositionMode_Difference);
+  target.drawImage(position,rotateImage(field,orientation));
+}
+
+void drawTextField(QImage& image, State& state, const QString& text, const RenderOptions& options,RenderFonts& fonts,
+                   QList<Diagnostic>& diagnostics,qsizetype offset) {
   if (text.isEmpty()) { state.reverse=false; state.block.reset(); return; }
   const QSize defaults=builtInFontDefaults(state.font.font);
   const int height = state.font.height>0?state.font.height:defaults.height();
-  const int width = state.font.width>0?state.font.width:defaults.width();
+  const int width = state.font.width>0?state.font.width:
+    state.font.font.toUpper()==u'A'?std::max(1,qRound(height/9.0))*5:defaults.width();
   const auto orientation=state.font.orientation==Orientation::Normal?state.fieldDirection:state.font.orientation;
   if(state.font.font==u'0'){
     drawFont0Text(image,state,text,options,height,width,orientation,fonts);
     return;
   }
   const bool fontA=state.font.font.toUpper()==u'A';
-  // Zebra Font A is a small bitmap face. Labelary keeps its glyph cell near
-  // 20 dots even when ^CF requests a smaller height.
-  const int pixelHeight=fontA?std::max(height,20):std::max(1,height-1);
+  if(fontA&&!state.block){drawFontAText(image,state,text,options,height,width,orientation,fonts,diagnostics,offset);return;}
+  // Font A dimensions select integer multiples of its nominal 5 x 9 cell.
+  const int pixelHeight=fontA?std::max(1,qRound(height/9.0))*10:std::max(1,height-1);
   constexpr int zebraFont0NaturalStretch=77;
   const int requestedStretch=width>0
     ? zebraFont0NaturalStretch*width/height
     : zebraFont0NaturalStretch;
   QFont font=fontA
-    ? builtInFont(state.font.font,pixelHeight,state.font.width>0?width:0)
+    ? printerFont(fontAFamily(),pixelHeight,std::clamp(qRound(1000.0*std::max(1,qRound(width/5.0))/pixelHeight),1,400))
     : zebraFont(pixelHeight,requestedStretch);
+  if(state.parameter.direction==u'H'&&state.parameter.spacing!=0)
+    font.setLetterSpacing(QFont::AbsoluteSpacing,state.parameter.spacing);
 
   if(state.block&&state.block->width>0){drawBlockText(image,state,text,options,font,orientation);return;}
 
   QFontMetrics metrics(font);
-  const auto bounds = metrics.boundingRect(text).adjusted(-1,-1,1,1);
+  QPainterPath directedText;
+  if(state.parameter.direction!=u'H'){
+    qreal x=state.parameter.direction==u'R'?-state.parameter.spacing:0,y=0;
+    for(QChar c:text){
+      directedText.addText(QPointF(x,y),font,QString(c));
+      if(state.parameter.direction==u'V')y+=height;
+      else x-=metrics.horizontalAdvance(c)+state.parameter.spacing;
+    }
+  }
+  const auto bounds = (directedText.isEmpty()?metrics.boundingRect(text):directedText.boundingRect().toAlignedRect()).adjusted(-1,-1,1,1);
   QImage field(std::max(1,bounds.width()), std::max(1,bounds.height()), QImage::Format_ARGB32_Premultiplied);
   field.fill(Qt::transparent);
   QPainter fp(&field);
   fp.setRenderHint(QPainter::TextAntialiasing, false);
   fp.setFont(font);
   fp.setPen(state.reverse ? options.background : options.foreground);
-  fp.drawText(-bounds.left(), -bounds.top(), text);
+  if(directedText.isEmpty())fp.drawText(-bounds.left(), -bounds.top(), text);
+  else fp.fillPath(directedText.translated(-bounds.left(),-bounds.top()),state.reverse?options.background:options.foreground);
   fp.end();
 
   const QRect ink=alphaBounds(field);
@@ -429,7 +568,10 @@ void drawText(QImage& image, State& state, const QString& text, const RenderOpti
   const int baselineY = -bounds.top();
   field = rotateImage(field, orientation);
   QPoint pos = state.position;
-  if(fontA&&!state.baseline&&orientation==Orientation::Normal&&!ink.isEmpty())pos.ry()-=ink.top()+1;
+  if(fontA&&!state.baseline&&orientation==Orientation::Normal&&!ink.isEmpty()){
+    pos.ry()-=ink.top();
+    if(state.parameter.direction!=u'H')pos.rx()+=bounds.left();
+  }
   else if(!state.baseline&&orientation==Orientation::Normal)pos.rx()+=bounds.left();
   if (state.baseline) {
     // ^FT names the baseline origin. Rotate that point with the glyph raster so
@@ -454,6 +596,53 @@ void drawText(QImage& image, State& state, const QString& text, const RenderOpti
   painter.setCompositionMode(state.reverse ? QPainter::CompositionMode_Difference : QPainter::CompositionMode_SourceOver);
   painter.drawImage(pos, field);
   state.reverse=false; state.block.reset();
+}
+
+void drawText(QImage& image,State& state,const QString& text,const RenderOptions& options,RenderFonts& fonts,
+              QList<Diagnostic>& diagnostics,qsizetype offset) {
+  const auto defaults=builtInFontDefaults(state.font.font);
+  const int height=state.font.height>0?state.font.height:defaults.height();
+  const int width=state.font.width>0?state.font.width:
+    state.font.font.toUpper()==u'A'?std::max(1,qRound(height/9.0))*5:defaults.width();
+  const qint64 nominalAdvance=2*qint64(std::max({std::min(height,32000),std::min(width,32000),1}))+std::abs(state.parameter.spacing);
+  const qint64 maximumArea=nominalAdvance*std::clamp(height,1,32000)*std::min<qsizetype>(text.size(),64*1024*1024);
+  bool unsafeBlock=false;
+  if(state.block){
+    const auto& block=*state.block;
+    const qint64 lineHeight=std::max<qint64>(1,qint64(height)+block.lineSpacing);
+    const qint64 blockHeight=qint64(height)+std::max<qint64>(0,qint64(block.maxLines)-1)*lineHeight;
+    unsafeBlock=block.width>32000||block.maxLines>32000||blockHeight>32000||
+      qint64(std::clamp(block.width,1,32000))*std::clamp<qint64>(blockHeight,1,32000)>64*1024*1024;
+  }
+  if(height>32000||width>32000||maximumArea>64*1024*1024||unsafeBlock){
+    diagnostics.append({Severity::Error,u"text-size"_s,u"Text field exceeds the safe raster allocation limit."_s,offset,u"^FD"_s});return;
+  }
+  const auto orientation=state.font.orientation==Orientation::Normal?state.fieldDirection:state.font.orientation;
+  int advance=0,ascent=height;
+  if(state.font.font==u'0'){
+    Font0Metrics metrics(height,width,fonts,state.parameter);advance=metrics.horizontalAdvance(text);ascent=metrics.ascent();
+  }else if(state.font.font.toUpper()==u'A'){
+    advance=std::max(1,qRound(width/5.0))*6*int(text.size())+state.parameter.spacing*std::max(0,int(text.size())-1);
+    if(orientation==Orientation::Inverted||orientation==Orientation::BottomUp)
+      advance=qFloor(std::max(1,qRound(width/5.0))*9.0*1365.0/2048*text.size()+state.parameter.spacing*std::max(0,int(text.size())-1));
+    ascent=qRound(std::max(1,qRound(height/9.0))*9.0*1583.0/2048);
+  }else{
+    QFontMetrics metrics(builtInFont(state.font.font,height,width));advance=metrics.horizontalAdvance(text);ascent=metrics.ascent();
+  }
+  State placed=state;
+  const bool right=state.justification==Justification::Right||(state.justification==Justification::Auto&&text.isRightToLeft());
+  if(right){
+    if(state.baseline)placed.position-=orientedVector(QPoint(advance,0),orientation);
+    else placed.position.rx()-=(orientation==Orientation::Rotated90||orientation==Orientation::BottomUp?height:advance);
+  }
+  const int cursorAdvance=state.font.font.toUpper()==u'A'
+    ?qFloor(std::max(1,qRound(width/5.0))*9.0*1365.0/2048*text.size()+state.parameter.spacing*std::max(0,int(text.size())-1))
+    :advance;
+  const QPoint end=state.parameter.direction==u'V'?QPoint(0,height*int(text.size()))
+    :QPoint(state.parameter.direction==u'R'?-cursorAdvance:cursorAdvance,0);
+  state.nextTypeset=placed.position+orientedVector(end+QPoint(0,state.baseline?0:ascent),orientation);
+  drawTextField(image,placed,text,options,fonts,diagnostics,offset);
+  state.reverse=false;state.block.reset();
 }
 
 quint16 z64Crc(QByteArrayView encoded) {
@@ -669,14 +858,29 @@ QString code39Pattern(QChar c) {
 void drawCode39(QImage& image, State& state, const Barcode& barcode, const QString& data, const RenderOptions& options) {
   const int narrow=std::max(1,state.barcodeDefaults.moduleWidth);
   const int wide=std::max(narrow+1,qRound(narrow*state.barcodeDefaults.wideToNarrowRatio));
-  const int height=barcode.parameters.size()>1 && !barcode.parameters[1].isEmpty() ? barcode.parameters[1].toInt() : state.barcodeDefaults.height;
-  int x=state.position.x();
-  QPainter painter(&image); painter.setBrush(options.foreground); painter.setPen(Qt::NoPen);
+  const int height=std::max(1,barcode.parameters.size()>2 && !barcode.parameters[2].isEmpty() ? barcode.parameters[2].toInt() : state.barcodeDefaults.height);
   const QString encoded=u'*'+data.toUpper()+u'*';
+  int width=-narrow;
+  for(const auto c:encoded)for(const auto element:code39Pattern(c))width+=element==u'w'?wide:narrow;
+  width+=static_cast<int>(encoded.size())*narrow;
+  if(width<=0)return;
+  QImage symbol(width,height,QImage::Format_ARGB32_Premultiplied);symbol.fill(options.background);
+  int x=0;
+  QPainter painter(&symbol); painter.setBrush(options.foreground); painter.setPen(Qt::NoPen);
   for(const auto c:encoded){
     const auto pattern=code39Pattern(c); if(pattern.isEmpty()) continue;
-    for(int i=0;i<pattern.size();++i){const int w=pattern[i]==u'w'?wide:narrow;if(i%2==0)painter.drawRect(x,state.position.y(),w,height);x+=w;}x+=narrow;
+    for(int i=0;i<pattern.size();++i){const int w=pattern[i]==u'w'?wide:narrow;if(i%2==0)painter.drawRect(x,0,w,height);x+=w;}x+=narrow;
   }
+  painter.end();
+  QPoint position=state.position;
+  if(state.baseline)switch(barcode.orientation){
+    case Orientation::Normal:position.ry()-=height;break;
+    case Orientation::Rotated90:break;
+    case Orientation::Inverted:position.rx()-=width;break;
+    case Orientation::BottomUp:position-=QPoint(height,width);break;
+  }
+  symbol=rotateImage(symbol,barcode.orientation);
+  QPainter target(&image);target.drawImage(position,symbol);
 }
 
 QByteArray decodeDataMatrixData(const QString& text, QChar escape, bool gs1) {
@@ -694,25 +898,53 @@ QByteArray decodeDataMatrixData(const QString& text, QChar escape, bool gs1) {
   return output;
 }
 
+bool validateBarcodeNumbers(const Barcode& barcode,std::initializer_list<int> indices,QList<Diagnostic>& diagnostics) {
+  for(const int index:indices){
+    if(index>=barcode.parameters.size()||barcode.parameters[index].isEmpty())continue;
+    bool ok=false;(void)barcode.parameters[index].toInt(&ok);
+    if(!ok){diagnostics.append({Severity::Error,u"barcode-parameter"_s,
+      u"Barcode parameter %1 must be an integer."_s.arg(index+1),-1,u'^'+barcode.symbology});return false;}
+  }
+  return true;
+}
+
 void drawDataMatrix(QImage& image,State& state,const Barcode& barcode,const QString& text,const RenderOptions& options,QList<Diagnostic>& diagnostics) {
-  const int module=std::max(1,barcode.parameters.size()>1?barcode.parameters[1].toInt():3);
+  if(!validateBarcodeNumbers(barcode,{1,2,3,4,5,7},diagnostics))return;
+  if(barcode.parameters.size()>2&&!barcode.parameters[2].isEmpty()&&barcode.parameters[2].toInt()!=200){
+    diagnostics.append({Severity::Error,u"datamatrix-quality"_s,u"Only DataMatrix ECC 200 is implemented; no symbol was rendered."_s,-1,u"^BX"_s});return;
+  }
+  const int module=barcode.parameters.size()>1&&!barcode.parameters[1].isEmpty()?barcode.parameters[1].toInt():3;
   const bool gs1=barcode.parameters.size()>5&&barcode.parameters[5].toInt()==1;
   const QChar escape=barcode.parameters.size()>6&&!barcode.parameters[6].isEmpty()?barcode.parameters[6].front():u'~';
   const int columns=barcode.parameters.size()>3?barcode.parameters[3].toInt():0;
   const int rows=barcode.parameters.size()>4?barcode.parameters[4].toInt():0;
-  const int requestedSize=columns>0&&columns==rows?columns:0;
+  const int ratio=barcode.parameters.size()>7&&!barcode.parameters[7].isEmpty()?barcode.parameters[7].toInt():1;
+  if(ratio!=1&&ratio!=2){diagnostics.append({Severity::Error,u"datamatrix-ratio"_s,u"DataMatrix aspect ratio must be 1 (square) or 2 (rectangular)."_s,-1,u"^BX"_s});return;}
+  const bool rectangular=ratio==2;
+  if(text.size()>16384){diagnostics.append({Severity::Error,u"datamatrix-encode"_s,u"DataMatrix field exceeds the maximum capacity, including control escapes."_s,-1,u"^BX"_s});return;}
+  if(std::ranges::any_of(text,[](QChar c){return c.unicode()>255;})||escape.unicode()>255){
+    diagnostics.append({Severity::Error,u"datamatrix-encoding"_s,u"DataMatrix requires explicit byte data; use ^FH for binary fields."_s,-1,u"^BX"_s});return;
+  }
   const auto decoded=decodeDataMatrixData(text,escape,gs1);
   if(gs1&&!decoded.contains(char(0x1d))&&(text.contains(u"\\u001D"_s,Qt::CaseInsensitive)||text.contains(u"\\x1D"_s,Qt::CaseInsensitive)))
     diagnostics.append({Severity::Warning,u"gs1-datamatrix-separator"_s,
       u"GS1 DataMatrix field data contains a literal \\\\u001D or \\\\x1D text sequence; use byte 0x1D, |d029, or ^FH hex instead of an escape spelling."_s,-1,u"^BX"_s});
-  auto matrix=BarcodeEncoders::dataMatrix(decoded,gs1,requestedSize);
+  auto matrix=BarcodeEncoders::dataMatrix(decoded,gs1,rows,columns,rectangular);
   if(!matrix){diagnostics.append({Severity::Error,u"datamatrix-encode"_s,matrix.error(),-1,u"^BX"_s});return;}
+  // Validate in 64 bits before multiplying dimensions for QImage.
+  if(module<1||module>32000||qint64(matrix->width)*matrix->height*module*module>64*1024*1024){
+    diagnostics.append({Severity::Error,u"barcode-size"_s,u"Invalid or unsafe DataMatrix module size."_s,-1,u"^BX"_s});return;
+  }
   QImage symbol(matrix->width*module,matrix->height*module,QImage::Format_ARGB32_Premultiplied);symbol.fill(options.background);
   QPainter p(&symbol);p.setPen(Qt::NoPen);p.setBrush(options.foreground);
   for(int y=0;y<matrix->height;++y)for(int x=0;x<matrix->width;++x)if(matrix->at(x,y))p.drawRect(x*module,y*module,module,module);
-  p.end(); symbol=rotateImage(symbol,barcode.orientation);
-  QPoint position=state.position;if(state.baseline)position.ry()-=symbol.height();
-  QPainter target(&image);target.drawImage(position,symbol);
+  p.end();placeNewSymbol(image,symbol,state,barcode.orientation);
+}
+
+int qrMagnification(const Barcode& barcode) {
+  bool valid=false;
+  const int requested=barcode.parameters.size()>2?barcode.parameters[2].toInt(&valid):0;
+  return valid&&requested>0?std::min(requested,100):2;
 }
 
 void drawQrCode(QImage& image,State& state,const Barcode& barcode,const QString& fieldData,const RenderOptions& options,QList<Diagnostic>& diagnostics) {
@@ -748,17 +980,19 @@ void drawQrCode(QImage& image,State& state,const Barcode& barcode,const QString&
       }
     }
   }
-  const int module=std::clamp(barcode.parameters.size()>2?barcode.parameters[2].toInt():2,1,100);
+  const int module=qrMagnification(barcode);
   auto matrix=BarcodeEncoders::qrCode(data.toUtf8(),errorCorrection);
   if(!matrix){diagnostics.append({Severity::Error,u"qrcode-encode"_s,matrix.error(),-1,u"^BQ"_s});return;}
   QImage symbol(matrix->width*module,matrix->height*module,QImage::Format_ARGB32_Premultiplied);symbol.fill(options.background);
   QPainter painter(&symbol);painter.setPen(Qt::NoPen);painter.setBrush(options.foreground);
   for(int y=0;y<matrix->height;++y)for(int x=0;x<matrix->width;++x)if(matrix->at(x,y))painter.drawRect(x*module,y*module,module,module);
-  painter.end();symbol=rotateImage(symbol,barcode.orientation);
-  QPoint position=state.position;
-  if(state.baseline)position.ry()-=symbol.height();
-  else position.ry()+=std::max(0,state.barcodeDefaults.height);
-  QPainter target(&image);target.drawImage(position,symbol);
+  painter.end();
+  State placed=state;
+  if(state.baseline)placed.position.ry()-=3*module;
+  else placed.position.ry()+=std::max(0,state.barcodeDefaults.height);
+  // ^BQ defines only normal orientation; ^FW and the orientation slot do not
+  // rotate QR. Its typeset anchor also includes the lower quiet-zone margin.
+  placeNewSymbol(image,symbol,placed,Orientation::Normal);
 }
 
 void drawEan13(QImage& image,State& state,const Barcode& barcode,const QString& text,const RenderOptions& options,QList<Diagnostic>& diagnostics) {
@@ -769,7 +1003,7 @@ void drawEan13(QImage& image,State& state,const Barcode& barcode,const QString& 
   if(barcode.parameters.size()>1&&!barcode.parameters[1].isEmpty())height=std::max(1,barcode.parameters[1].toInt());
   const bool interpretation=barcode.parameters.size()<=2||barcode.parameters[2].compare(u"N",Qt::CaseInsensitive)!=0;
   const bool interpretationAbove=barcode.parameters.size()>3&&barcode.parameters[3].compare(u"Y",Qt::CaseInsensitive)==0;
-  const int guardExtra=std::max(1,5*module-2);
+  const int guardExtra=interpretation?std::max(1,5*module-2):13;
   const int textHeight=interpretation?std::max(12,12*module):0;
   const int leftPad=interpretation?14*module:0;
   const int barsTop=interpretation&&interpretationAbove?textHeight:0;
@@ -791,9 +1025,20 @@ void drawEan13(QImage& image,State& state,const Barcode& barcode,const QString& 
     }
   }
   p.end();
+  const QSize sourceSize=symbol.size();
   symbol=rotateImage(symbol,barcode.orientation);
   QPoint position=state.position;
-  switch(barcode.orientation){
+  if(state.baseline){
+    // ^FT fixes the first bar's lower edge, excluding guard extensions and
+    // interpretation. Rotate this geometric edge (not a pixel index).
+    const QPoint anchor(leftPad,barsTop+height);
+    switch(barcode.orientation){
+      case Orientation::Normal:position-=anchor;break;
+      case Orientation::Rotated90:position-=QPoint(sourceSize.height()-anchor.y(),anchor.x());break;
+      case Orientation::Inverted:position-=QPoint(sourceSize.width()-anchor.x(),sourceSize.height()-anchor.y());break;
+      case Orientation::BottomUp:position-=QPoint(anchor.y(),sourceSize.width()-anchor.x());break;
+    }
+  }else switch(barcode.orientation){
     case Orientation::Normal:
       position.rx()-=leftPad;
       if(interpretationAbove)position.ry()-=textHeight;
@@ -824,32 +1069,80 @@ QString code128Interpretation(QStringView data) {
 }
 
 void drawCode128(QImage& image,State& state,const Barcode& barcode,const QString& text,const RenderOptions& options,QList<Diagnostic>& diagnostics,RenderFonts& fonts) {
-  if(barcode.parameters.size()>4&&barcode.parameters[4].compare(u"Y",Qt::CaseInsensitive)==0){
-    diagnostics.append({Severity::Error,u"code128-ucc-check-digit"_s,
-      u"The optional UCC Mod 10 check digit is not implemented; no Code 128 symbol was rendered."_s,-1,u"^BC"_s});
-    return;
-  }
+  if(text.size()>4096){diagnostics.append({Severity::Error,u"code128-encode"_s,u"Code 128 rendered field data exceeds 4096 characters."_s,state.barcodeOffset,state.barcodeSource});return;}
+  const auto rasterAllowed=[&](qint64 width,qint64 height){
+    if(width>0&&height>0&&width<=32000&&height<=32000&&width*height<=64*1024*1024)return true;
+    diagnostics.append({Severity::Error,u"barcode-dimensions"_s,u"Code 128 raster exceeds the supported dimensions or 64 megapixels."_s,state.barcodeOffset,state.barcodeSource});return false;
+  };
   const QChar mode=barcode.parameters.size()>5&&!barcode.parameters[5].isEmpty()?barcode.parameters[5].front():u'N';
-  auto modules=BarcodeEncoders::code128(text,mode);
+  const bool uccCheck=barcode.parameters.size()>4&&barcode.parameters[4].compare(u"Y",Qt::CaseInsensitive)==0;
+  auto modules=BarcodeEncoders::code128(text,mode,uccCheck);
   if(!modules){diagnostics.append({Severity::Error,u"code128-encode"_s,modules.error(),-1,u"^BC"_s});return;}
   const int module=std::clamp(state.barcodeDefaults.moduleWidth,1,10);
   int height=state.barcodeDefaults.height>0?state.barcodeDefaults.height:100;
   if(barcode.parameters.size()>1&&!barcode.parameters[1].isEmpty())height=std::max(1,barcode.parameters[1].toInt());
+  if(!rasterAllowed(qint64(modules->size())*module,height))return;
   const bool interpretation=barcode.parameters.size()<=2||barcode.parameters[2].compare(u"N",Qt::CaseInsensitive)!=0;
-  const bool interpretationAbove=barcode.parameters.size()>3&&barcode.parameters[3].compare(u"Y",Qt::CaseInsensitive)==0;
+  const bool interpretationAbove=barcode.parameters.size()>3&&!barcode.parameters[3].isEmpty()
+    ?barcode.parameters[3].compare(u"Y",Qt::CaseInsensitive)==0:mode.toUpper()==u'U';
+  if(interpretation&&!state.barcodeInterpretationFont){
+    const auto captionData=BarcodeEncoders::Detail::code128UccData(text,mode,uccCheck);
+    const QString captionText=code128Interpretation(captionData?*captionData:text);
+    const qreal fontSize=module*9.0;
+    const qreal advance=fontSize*1365.0/2048;
+    const int barsWidth=int(modules->size())*module;
+    const int baseline=interpretationAbove?-(2*module+8):height+7*module+6;
+    const int turns=barcode.orientation==Orientation::Rotated90?1:barcode.orientation==Orientation::Inverted?2:barcode.orientation==Orientation::BottomUp?3:0;
+    qreal cursor=(barsWidth-advance*captionText.size())/2;
+    struct PositionedGlyph {PrinterGlyph glyph;QPoint baseline;};
+    QList<PositionedGlyph> glyphs;
+    QRect bounds(0,0,barsWidth,height);
+    for(const QChar character:captionText){
+      const auto glyph=fonts.fontARaster().glyph(PrinterFontMetrics::fontACharacter(character.unicode()),int(fontSize),int(fontSize),turns);
+      if(!glyph){diagnostics.append({Severity::Error,u"font-raster"_s,glyph.error(),state.barcodeOffset,state.barcodeSource});return;}
+      // Round the physical position after the field rotation. A centered
+      // caption can land on half-dots; reflecting a rounded normal position
+      // selects the opposite tie at 180 and 270 degrees.
+      const int glyphX=turns>=2?barsWidth-qRound(barsWidth-cursor):qRound(cursor);
+      const QPoint position(glyphX,baseline);
+      bounds|=QRect(position+glyph->bearing,glyph->alpha.size());
+      glyphs.append({*glyph,position});
+      cursor+=advance;
+    }
+    if(!rasterAllowed(bounds.width(),bounds.height()))return;
+    QImage symbol(bounds.size(),QImage::Format_ARGB32_Premultiplied);symbol.fill(options.background);
+    QPainter painter(&symbol);painter.setRenderHint(QPainter::Antialiasing,false);painter.setPen(Qt::NoPen);painter.setBrush(options.foreground);
+    for(qsizetype i=0;i<modules->size();++i)
+      if((*modules)[i])painter.drawRect(int(i)*module-bounds.left(),-bounds.top(),module,height);
+    for(const auto& glyph:glyphs)paintPrinterGlyph(painter,glyph.baseline-bounds.topLeft(),glyph.glyph,options.foreground);
+    painter.end();
+    QPoint position=state.position;
+    if(state.baseline)position-=rotatedEdge(QPoint(-bounds.left(),height-bounds.top()),symbol.size(),barcode.orientation);
+    else switch(barcode.orientation){
+      case Orientation::Normal:position+=bounds.topLeft();break;
+      case Orientation::Rotated90:position+=QPoint(height-bounds.bottom()-1,bounds.left());break;
+      case Orientation::Inverted:position+=QPoint(barsWidth-bounds.right()-1,height-bounds.bottom()-1);break;
+      case Orientation::BottomUp:position+=QPoint(bounds.top(),barsWidth-bounds.right()-1);break;
+    }
+    QPainter target(&image);target.drawImage(position,rotateImage(symbol,barcode.orientation));
+    return;
+  }
   const int gap=interpretation?5:0;
   QImage caption;
   if(interpretation){
-    const QString interpretationText=code128Interpretation(text);
+    const auto captionData=BarcodeEncoders::Detail::code128UccData(text,mode,uccCheck);
+    const QString interpretationText=code128Interpretation(captionData?*captionData:text);
     // The default interpretation scales with ^BY's module width. An ^A in
     // this field may override it; an ^A belonging to a previous ^FS field may
     // not leak into the barcode caption.
     const auto captionFont=state.barcodeInterpretationFont;
+    if(captionFont&&(captionFont->height>32000||captionFont->width>32000)){rasterAllowed(32001,1);return;}
     QImage field;
     if(captionFont&&captionFont->font==u'0'){
       const Font0Metrics metrics(std::max(1,captionFont->height),captionFont->width,fonts);
       const auto outline=metrics.outline(interpretationText);
       const QRect bounds=outline.boundingRect().toAlignedRect();
+      if(!rasterAllowed(std::max(1,bounds.width()),std::max(1,bounds.height())))return;
       field=QImage(std::max(1,bounds.width()),std::max(1,bounds.height()),QImage::Format_ARGB32_Premultiplied);
       field.fill(Qt::transparent);
       QPainter painter(&field);painter.setRenderHint(QPainter::Antialiasing,false);
@@ -857,8 +1150,9 @@ void drawCode128(QImage& image,State& state,const Barcode& barcode,const QString
     }else{
       const QFont font=captionFont
         ? builtInFont(captionFont->font,captionFont->height,captionFont->width)
-        : builtInFont(u'A',module*10,module*10);
+        : builtInFont(u'A',module*10);
       const QRect bounds=QFontMetrics(font).boundingRect(interpretationText).adjusted(-1,-1,1,1);
+      if(!rasterAllowed(std::max(1,bounds.width()),std::max(1,bounds.height())))return;
       field=QImage(std::max(1,bounds.width()),std::max(1,bounds.height()),QImage::Format_ARGB32_Premultiplied);
       field.fill(Qt::transparent);
       QPainter painter(&field);painter.setRenderHint(QPainter::TextAntialiasing,false);
@@ -871,6 +1165,7 @@ void drawCode128(QImage& image,State& state,const Barcode& barcode,const QString
   const int captionHeight=caption.height();
   const int barsTop=interpretationAbove?captionHeight+gap:0;
   const int symbolHeight=height+captionHeight+gap;
+  if(!rasterAllowed(qint64(modules->size())*module,symbolHeight))return;
   QImage symbol(modules->size()*module,symbolHeight,QImage::Format_ARGB32_Premultiplied);symbol.fill(options.background);
   QPainter painter(&symbol);painter.setRenderHint(QPainter::Antialiasing,false);painter.setPen(Qt::NoPen);painter.setBrush(options.foreground);
   for(qsizetype i=0;i<modules->size();++i)if((*modules)[i])painter.drawRect(static_cast<int>(i)*module,barsTop,module,height);
@@ -879,10 +1174,19 @@ void drawCode128(QImage& image,State& state,const Barcode& barcode,const QString
     const int textLeft=state.barcodeInterpretationFont?0:(symbol.width()-caption.width())/2;
     painter.drawImage(textLeft,textTop,caption);
   }
-  painter.end();symbol=rotateImage(symbol,barcode.orientation);
+  painter.end();
+  const QSize sourceSize=symbol.size();
+  symbol=rotateImage(symbol,barcode.orientation);
   QPoint position=state.position;
-  if(state.baseline)position.ry()-=symbol.height();
-  else if(barcode.orientation==Orientation::Normal)position.ry()-=barsTop;
+  if(state.baseline){
+    const int base=barsTop+height;
+    switch(barcode.orientation){
+      case Orientation::Normal:position.ry()-=base;break;
+      case Orientation::Rotated90:position.rx()-=sourceSize.height()-base;break;
+      case Orientation::Inverted:position-=QPoint(sourceSize.width(),sourceSize.height()-base);break;
+      case Orientation::BottomUp:position-=QPoint(base,sourceSize.width());break;
+    }
+  }else if(barcode.orientation==Orientation::Normal)position.ry()-=barsTop;
   QPainter target(&image);target.drawImage(position,symbol);
 }
 
@@ -895,144 +1199,278 @@ void drawCodabar(QImage& image,State& state,const Barcode& barcode,const QString
   QImage symbol(modules->size()*module,height,QImage::Format_ARGB32_Premultiplied);symbol.fill(options.background);
   QPainter painter(&symbol);painter.setPen(Qt::NoPen);painter.setBrush(options.foreground);
   for(qsizetype i=0;i<modules->size();++i)if((*modules)[i])painter.drawRect(static_cast<int>(i)*module,0,module,height);
-  painter.end();symbol=rotateImage(symbol,barcode.orientation);
-  QPoint position=state.position;if(state.baseline)position.ry()-=symbol.height();
-  QPainter target(&image);target.drawImage(position,symbol);
+  painter.end();placeNewSymbol(image,symbol,state,barcode.orientation);
 }
 
 void drawPdf417(QImage& image,State& state,const Barcode& barcode,const QString& text,const RenderOptions& options,QList<Diagnostic>& diagnostics) {
-  const int rowHeight=barcode.parameters.size()>1&&!barcode.parameters[1].isEmpty()?std::max(1,barcode.parameters[1].toInt()):std::max(1,state.barcodeDefaults.moduleWidth*3);
+  if(!validateBarcodeNumbers(barcode,{1,2,3,4},diagnostics))return;
+  const int module=std::clamp(state.barcodeDefaults.moduleWidth,1,100);
+  const int rowHeight=barcode.parameters.size()>1&&!barcode.parameters[1].isEmpty()?barcode.parameters[1].toInt():module*3;
   const int security=barcode.parameters.size()>2&&!barcode.parameters[2].isEmpty()?barcode.parameters[2].toInt():0;
   const int columns=barcode.parameters.size()>3&&!barcode.parameters[3].isEmpty()?barcode.parameters[3].toInt():0;
   const int rows=barcode.parameters.size()>4&&!barcode.parameters[4].isEmpty()?barcode.parameters[4].toInt():0;
   const bool truncated=barcode.parameters.size()>5&&barcode.parameters[5].compare(u"Y",Qt::CaseInsensitive)==0;
-  if(truncated){diagnostics.append({Severity::Error,u"pdf417-truncated"_s,u"Truncated PDF417 is not implemented; no symbol was rendered."_s,-1,u"^B7"_s});return;}
-  auto symbolData=BarcodeEncoders::Pdf417::encode(text.toLatin1(),security,columns,rows);
+  if(barcode.parameters.size()>5&&!barcode.parameters[5].isEmpty()&&!truncated&&barcode.parameters[5].compare(u"N",Qt::CaseInsensitive)!=0){
+    diagnostics.append({Severity::Error,u"barcode-parameter"_s,u"PDF417 truncation must be Y or N."_s,-1,u"^B7"_s});return;
+  }
+  if(text.size()>2710){diagnostics.append({Severity::Error,u"pdf417-encode"_s,u"PDF417 data exceeds the maximum capacity."_s,-1,u"^B7"_s});return;}
+  if(std::ranges::any_of(text,[](QChar c){return c.unicode()>255;})){
+    diagnostics.append({Severity::Error,u"pdf417-encoding"_s,u"PDF417 requires explicit byte data; use ^FH for binary fields."_s,-1,u"^B7"_s});return;
+  }
+  auto symbolData=BarcodeEncoders::Pdf417::encode(text.toLatin1(),security,columns,rows,truncated);
   if(!symbolData){diagnostics.append({Severity::Error,u"pdf417-encode"_s,symbolData.error(),-1,u"^B7"_s});return;}
-  const int module=std::clamp(state.barcodeDefaults.moduleWidth,1,10);
   const auto& matrix=symbolData->matrix;
+  if(rowHeight<1||qint64(matrix.width)*module*matrix.height*rowHeight>64*1024*1024){
+    diagnostics.append({Severity::Error,u"barcode-size"_s,u"Invalid or unsafe PDF417 row height."_s,-1,u"^B7"_s});return;
+  }
   QImage symbol(matrix.width*module,matrix.height*rowHeight,QImage::Format_ARGB32_Premultiplied);symbol.fill(options.background);
   QPainter painter(&symbol);painter.setPen(Qt::NoPen);painter.setBrush(options.foreground);
   for(int y=0;y<matrix.height;++y)for(int x=0;x<matrix.width;++x)if(matrix.at(x,y))painter.drawRect(x*module,y*rowHeight,module,rowHeight);
-  painter.end();symbol=rotateImage(symbol,barcode.orientation);
+  painter.end();placeNewSymbol(image,symbol,state,barcode.orientation);
+}
+
+// MaxiCode geometry follows OkapiBarcode's MaxiCode/Hexagon plot elements.
+// Copyright 2014-2015 Robin Stuart, Daniel Gredler and Robert Elliott.
+// Apache-2.0; see third_party/okapi-maxicode/NOTICE and LICENSE.
+// Raster conversion is native, deterministic and expressed in printer dots.
+void fillMaxiCodePolygon(QImage& image,const QVector<QPointF>& points,QRgb colour,bool subpixel=false) {
+  double minimumY=points.front().y(),maximumY=minimumY;
+  for(const auto& point:points){minimumY=std::min(minimumY,point.y());maximumY=std::max(maximumY,point.y());}
+  const int firstY=std::max(0,static_cast<int>(std::ceil(minimumY)));
+  const int lastY=std::min(image.height(),static_cast<int>(std::ceil(maximumY)));
+  for(int y=firstY;y<lastY;++y){
+    double left=std::numeric_limits<double>::max(),right=std::numeric_limits<double>::lowest();
+    for(qsizetype i=0;i<points.size();++i){
+      const auto& a=points[i];const auto& b=points[(i+1)%points.size()];
+      if(y<std::min(a.y(),b.y())||y>=std::max(a.y(),b.y()))continue;
+      const double x=a.x()+(b.x()-a.x())*(y-a.y())/(b.y()-a.y());
+      left=std::min(left,x);right=std::max(right,x);
+    }
+    if(left>right)continue;
+    // The finder uses 8-bit subpixel scanline boundaries. Hexagon vertices
+    // have already been snapped to integer dots, before scan conversion.
+    if(subpixel){left=std::floor(left*256.0)/256.0;right=std::floor(right*256.0)/256.0;}
+    const int firstX=std::max(0,static_cast<int>(std::ceil(left)));
+    const int lastX=std::min(image.width(),static_cast<int>(std::ceil(right)));
+    auto* scanline=reinterpret_cast<QRgb*>(image.scanLine(y));
+    std::fill(scanline+firstX,scanline+lastX,colour);
+  }
+}
+
+QVector<QPointF> maxiCodeFinderCircle(double centerX,double centerY,double radius) {
+  // Standard four-cubic circle, eight line segments per quadrant at this
+  // fixed dot size. Sampling the analytic circle changes boundary pixels.
+  constexpr double control=0.5522847498307933;
+  QVector<QPointF> points;points.reserve(32);
+  for(int quadrant=0;quadrant<4;++quadrant)for(int step=0;step<8;++step){
+    const double t=step/8.0,u=1.0-t;
+    double x=u*u*u+3.0*u*u*t+3.0*u*t*t*control;
+    double y=3.0*u*u*t*control+3.0*u*t*t+t*t*t;
+    for(int turn=0;turn<quadrant;++turn){const double previousX=x;x=-y;y=previousX;}
+    points.append(QPointF(centerX+radius*x,centerY+radius*y));
+  }
+  return points;
+}
+
+QImage rasterizeMaxiCode(const BarcodeEncoders::Matrix& grid,const RenderOptions& options) {
+  // The fixed MaxiCode pitch is independent of display/printer DPI, matching
+  // the 203-DPI dot geometry used by Labelary's ^BD command at every density.
+  constexpr double scale=2.72;
+  constexpr int width=static_cast<int>(74*scale),height=static_cast<int>(72*scale);
+  QImage symbol(width,height,QImage::Format_ARGB32_Premultiplied);symbol.fill(options.background);
+  const QRgb ink=qPremultiply(options.foreground.rgba()),paper=qPremultiply(options.background.rgba());
+  constexpr double offsetX[]{0.0,0.86,0.86,0.0,-0.86,-0.86};
+  constexpr double offsetY[]{1.0,0.5,-0.5,-1.0,-0.5,0.5};
+  QVector<QPointF> points;points.reserve(6);
+  for(int row=0;row<33;++row)for(int column=0;column<30-(row&1);++column){
+    if(!grid.at(column,row))continue;
+    const double centerX=(2.46*column+1.23+((row&1)?1.23:0.0))*scale;
+    const double centerY=(2.135*row+1.43)*scale;
+    points.clear();
+    for(int vertex=0;vertex<6;++vertex)
+      points.append(QPointF(static_cast<int>(centerX+offsetX[vertex]*1.25*scale),
+                           static_cast<int>(centerY+offsetY[vertex]*1.25*scale)));
+    fillMaxiCodePolygon(symbol,points,ink);
+  }
+  constexpr double radii[]{10.85,8.97,7.10,5.22,3.31,1.43};
+  for(int ring=0;ring<6;++ring)
+    fillMaxiCodePolygon(symbol,maxiCodeFinderCircle(35.76*scale,35.60*scale,radii[ring]*scale),
+                        (ring&1)?paper:ink,true);
+  return symbol;
+}
+
+void drawMaxiCode(QImage& image,State& state,const Barcode& barcode,const QString& text,const RenderOptions& options,QList<Diagnostic>& diagnostics) {
+  const int mode=barcode.parameters.isEmpty()||barcode.parameters[0].isEmpty()?2:barcode.parameters[0].toInt();
+  const int positionIndex=barcode.parameters.size()>1&&!barcode.parameters[1].isEmpty()?barcode.parameters[1].toInt():1;
+  const int total=barcode.parameters.size()>2&&!barcode.parameters[2].isEmpty()?barcode.parameters[2].toInt():1;
+  if(std::ranges::any_of(text,[](QChar c){return c.unicode()>255;})){diagnostics.append({Severity::Error,u"maxicode-encode"_s,u"MaxiCode requires byte data; use ^FH for binary fields."_s,-1,u"^BD"_s});return;}
+  auto encoded=BarcodeEncoders::MaxiCode::encode(text.toLatin1(),mode,positionIndex,total);
+  if(!encoded){diagnostics.append({Severity::Error,u"maxicode-encode"_s,encoded.error(),-1,u"^BD"_s});return;}
+  QImage symbol=rotateImage(rasterizeMaxiCode(encoded->grid,options),barcode.orientation);
   QPoint position=state.position;if(state.baseline)position.ry()-=symbol.height();
   QPainter target(&image);target.drawImage(position,symbol);
 }
 
-// MaxiCode raster geometry adapted from libzint backend/raster.c.
-// Copyright (C) 2009-2026 Robin Stuart and contributors, BSD-3-Clause.
-// The integer line/circle primitives are based on Alois Zingl's MIT-licensed
-// Bresenham algorithms. See third_party/zint-raster/LICENSE.
-void setRasterPixel(QImage& image,int x,int y,QRgb colour) {
-  if(image.rect().contains(x,y))image.setPixel(x,y,colour);
+int barcodeParameter(const Barcode& barcode,qsizetype index,int fallback) {
+  if(index>=barcode.parameters.size()||barcode.parameters[index].isEmpty())return fallback;
+  bool ok=false;const int value=barcode.parameters[index].toInt(&ok);return ok?value:fallback;
 }
 
-void plotRasterLine(QImage& image,int x0,int y0,int x1,int y1,QRgb colour) {
-  const int dx=std::abs(x1-x0),sx=x0<x1?1:-1;
-  const int dy=-std::abs(y1-y0),sy=y0<y1?1:-1;
-  int error=dx+dy;
-  for(;;){
-    setRasterPixel(image,x0,y0,colour);
-    if(x0==x1&&y0==y1)break;
-    const int twiceError=2*error;
-    if(twiceError>=dy){error+=dy;x0+=sx;}
-    if(twiceError<=dx){error+=dx;y0+=sy;}
+void placeNewSymbol(QImage& image,const QImage& original,const State& state,Orientation orientation) {
+  QPoint position=state.position;
+  if(state.baseline)position-=rotatedEdge(QPoint(state.justification==Justification::Right?original.width():0,original.height()),original.size(),orientation);
+  else if(state.justification==Justification::Right)position.rx()-=(orientation==Orientation::Rotated90||orientation==Orientation::BottomUp?original.height():original.width());
+  QPainter painter(&image);painter.drawImage(position,rotateImage(original,orientation));
+}
+
+void drawExtendedLinear(QImage& image,State& state,const Barcode& barcode,const QString& data,const RenderOptions& options,QList<Diagnostic>& diagnostics,RenderFonts& fonts) {
+  const int module=std::clamp(state.barcodeDefaults.moduleWidth,1,10);
+  const int height=barcodeParameter(barcode,1,std::max(1,state.barcodeDefaults.height));
+  if(height<1||height>32000){diagnostics.append({Severity::Error,u"barcode-height"_s,u"Barcode height must be 1 through 32000 dots."_s,-1,u'^'+barcode.symbology});return;}
+  const bool interleaved=barcode.symbology==u"B2",industrial=barcode.symbology==u"BI";
+  const bool retail=barcode.symbology==u"B8"||barcode.symbology==u"B9"||barcode.symbology==u"BU";
+  const bool caption=barcode.parameters.size()<=2||barcode.parameters[2]!=u"N";
+  const bool above=barcode.parameters.size()>3&&barcode.parameters[3]==u"Y";
+  const bool check=barcode.parameters.size()>4&&barcode.parameters[4]==u"Y";
+  if(!std::isfinite(state.barcodeDefaults.wideToNarrowRatio)||state.barcodeDefaults.wideToNarrowRatio<2.0||state.barcodeDefaults.wideToNarrowRatio>3.0){
+    diagnostics.append({Severity::Error,u"barcode-ratio"_s,u"Barcode wide-to-narrow ratio must be finite and between 2 and 3."_s,-1,u'^'+barcode.symbology});return;
   }
-}
-
-QImage maxiCodeHexagon(int width,int height,int left,int top,int right,int bottom,QRgb ink) {
-  QImage hexagon(width,height,QImage::Format_ARGB32_Premultiplied);hexagon.fill(Qt::transparent);
-  const int innerWidth=width-left-right,innerHeight=height-top-bottom;
-  const int radiusX=innerWidth/2,radiusY=innerHeight/2;
-  int startY=top+(radiusY+1)/2,endX=left+radiusX;
-  if(radiusX>2&&(radiusX<10||!(innerWidth&1)))--endX;
-  plotRasterLine(hexagon,left,startY,endX,top,ink);
-  bool foundPreviousLine=false;
-  for(int y=top;y<top+radiusY+(innerHeight&1);++y){
-    int first=-1;
-    for(int x=left;x<left+radiusX+(innerWidth&1);++x){
-      if(first!=-1){setRasterPixel(hexagon,x,y,ink);foundPreviousLine=true;}
-      else if(qAlpha(hexagon.pixel(x,y))!=0)first=x+1;
+  const int wide=std::clamp(static_cast<int>(module*state.barcodeDefaults.wideToNarrowRatio),module,30);
+  auto encoded=BarcodeEncoders::Linear::encode(barcode.symbology,data,module,wide,interleaved&&check);
+  if(!encoded){diagnostics.append({Severity::Error,u"barcode-encode"_s,encoded.error(),-1,u'^'+barcode.symbology});return;}
+  const int scale=interleaved||industrial?1:module;
+  const int barsWidth=static_cast<int>(encoded->modules.size())*scale;
+  const int guardExtra=retail?13:0;
+  const int textHeight=caption?12*module:0;
+  const int sidePad=caption&&retail&&barcode.symbology!=u"B8"?14*module:0;
+  const int barsTop=caption&&above?textHeight:0;
+  if(qint64(barsWidth+2*sidePad)*qint64(height+guardExtra+textHeight)>64*1024*1024){diagnostics.append({Severity::Error,u"barcode-size"_s,u"Barcode raster exceeds the allocation limit."_s,-1,u'^'+barcode.symbology});return;}
+  QImage symbol(barsWidth+2*sidePad,height+guardExtra+textHeight,QImage::Format_ARGB32_Premultiplied);symbol.fill(Qt::transparent);
+  QPainter painter(&symbol);painter.setPen(Qt::NoPen);painter.setBrush(options.foreground);
+  for(qsizetype i=0;i<encoded->modules.size();++i)if(encoded->modules[i]){
+    const int count=static_cast<int>(encoded->modules.size());
+    const int outsideGuard=barcode.symbology==u"BU"?10:3;
+    const bool guard=retail&&(i<outsideGuard||i>=count-(barcode.symbology==u"B9"?6:outsideGuard)||(barcode.symbology!=u"B9"&&i>=count/2-2&&i<=count/2+2));
+    painter.drawRect(sidePad+static_cast<int>(i)*scale,barsTop,scale,height+(guard?guardExtra:0));
+  }
+  if(caption){
+    const QString text=encoded->text;
+    if(retail&&!above){
+      const bool fontA=module<3;
+      const int fontScale=std::max(1,module/4);
+      const int cellWidth=fontA?6*module:20*fontScale;
+      const int baseline=height+(fontA?7*module+4:23*fontScale+4);
+      const auto print=[&](int origin,QStringView part,bool grouped=true){
+        const int count=static_cast<int>(part.size());
+        const qreal pitch=grouped&&count>1?qreal((7*count-3)*module-cellWidth)/(count-1):cellWidth;
+        for(int character=0;character<count;++character){
+          const int x=sidePad+qRound(origin+character*pitch);
+          if(fontA){
+            paintPrinterFontAGlyph(painter,QPoint(x,baseline),part[character],9*module,5*module,options.foreground,fonts,barcode.orientation);
+          }else{
+            const auto& glyph=RetailFont::digits[fontScale-1][part[character].unicode()-u'0'];
+            for(int row=0;row<glyph.height;++row){
+              const auto bits=RetailFont::rowBits(fontScale-1,part[character].unicode()-u'0',static_cast<char>(barcode.orientation),row);
+              for(int column=0;column<glyph.width;){
+                if(!(bits&(std::uint32_t{1}<<column))){++column;continue;}
+                const int start=column;
+                while(column<glyph.width&&(bits&(std::uint32_t{1}<<column)))++column;
+                painter.fillRect(x+glyph.xOffset+start,baseline+glyph.yOffset+row,column-start,1,options.foreground);
+              }
+            }
+          }
+        }
+      };
+      if(barcode.symbology==u"B8"){
+        print(5*module,QStringView{text}.first(4));print(37*module,QStringView{text}.last(4));
+      }else{
+        print(-5*module-cellWidth,QStringView{text}.first(1),false);
+        if(barcode.symbology==u"B9")print(5*module,QStringView{text}.mid(1,6));
+        else{print(12*module,QStringView{text}.mid(1,5));print(51*module,QStringView{text}.mid(6,5));}
+        if(barcode.parameters.size()<=4||barcode.parameters[4]!=u"N")print(barsWidth+2*module,QStringView{text}.last(1),false);
+      }
+    }else{
+      QString interpretation=text;
+      if(barcode.symbology==u"BA"){if(check)interpretation+=encoded->checkText;interpretation=QChar(0x25af)+interpretation+QChar(0x25af);}
+      const qreal advance=qreal(9*module)*1365/2048;
+      const qreal first=sidePad+(barsWidth-(retail?module:0)-advance*interpretation.size())/2.0;
+      const int baseline=above?barsTop-5*module+1:height+9*module;
+      for(qsizetype character=0;character<interpretation.size();++character){
+        const qreal origin=first+character*advance;
+        // A half-dot origin rounds in the direction of the transformed axis.
+        const int x=barcode.orientation==Orientation::Inverted||barcode.orientation==Orientation::BottomUp
+          ?static_cast<int>(std::ceil(origin-0.5)):qRound(origin);
+        paintPrinterFontAGlyph(painter,QPoint(x,baseline),interpretation[character],9*module,5*module,options.foreground,fonts,barcode.orientation);
+      }
     }
-    if(foundPreviousLine&&first==-1)for(int x=left;x<left+radiusX+(innerWidth&1);++x)setRasterPixel(hexagon,x,y,ink);
-  }
-  for(int y=top;y<top+radiusY+(innerHeight&1);++y)
-    for(int x=left;x<left+radiusX+(innerWidth&1);++x)if(qAlpha(hexagon.pixel(x,y))!=0)
-      setRasterPixel(hexagon,width-right-(x-left+1),y,ink);
-  for(int y=top;y<top+radiusY+(innerHeight&1);++y)
-    for(int x=left;x<width;++x)if(qAlpha(hexagon.pixel(x,y))!=0)
-      setRasterPixel(hexagon,x,height-bottom-(y-top+1),ink);
-  return hexagon;
-}
-
-void fillMidpointCircleLines(QImage& image,int x0,int y0,int x,int y,QRgb colour) {
-  for(int i=x0-x;i<=x0+x;++i){setRasterPixel(image,i,y0+y,colour);setRasterPixel(image,i,y0-y,colour);}
-  for(int i=x0-y;i<=x0+y;++i){setRasterPixel(image,i,y0+x,colour);setRasterPixel(image,i,y0-x,colour);}
-}
-
-void fillMidpointCircle(QImage& image,int x0,int y0,int radius,QRgb colour) {
-  int x=-radius,y=0,error=2-2*radius;
-  do{
-    fillMidpointCircleLines(image,x0,y0,x,y,colour);
-    radius=error;
-    if(radius<=y)error+=++y*2+1;
-    if(radius>x||error>y)error+=++x*2+1;
-  }while(x<0);
-  fillMidpointCircleLines(image,x0,y0,x,y,colour);
-}
-
-QImage rasterizeMaxiCode(const BarcodeEncoders::Matrix& grid,const RenderOptions& options) {
-  // Work at ten times the printer-dot resolution. This preserves Zint's
-  // integer construction while allowing the 203-DPI MaxiCode pitch (6.7 dots
-  // horizontally, 5.8 vertically) to be sampled deterministically.
-  constexpr int supersample=10;
-  constexpr double scaler=67.0;
-  const int hexWidth=qRound(scaler),hexHeight=qRound(scaler*1.1547);
-  const int left=static_cast<int>(std::ceil(hexWidth*0.05));
-  const int top=static_cast<int>(std::ceil(hexHeight*0.05));
-  const int right=qRound((hexWidth-left)*0.05),bottom=qRound((hexHeight-top)*0.05);
-  const int rowStep=qRound(0.866*hexWidth);
-  const int width=30*hexWidth-left-right,height=32*rowStep+hexHeight-top-bottom;
-  QImage symbol(width,height,QImage::Format_ARGB32_Premultiplied);symbol.fill(options.background);
-  const QRgb ink=options.foreground.rgba(),paper=options.background.rgba();
-  const auto hexagon=maxiCodeHexagon(hexWidth,hexHeight,left,top,right,bottom,ink);
-  QPainter painter(&symbol);painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
-  for(int row=0;row<33;++row){
-    const int odd=row&1,y=row*rowStep-top,xOffset=(odd?hexWidth/2:0)-left;
-    for(int column=0;column<30-odd;++column)if(grid.at(column,row))painter.drawImage(column*hexWidth+xOffset,y,hexagon);
   }
   painter.end();
-  // Sampling a 10x raster places this continuous centre in the preceding
-  // output pixel; bias by one printer dot to retain the ISO 14.5X centre.
-  const int centerX=static_cast<int>(14.5*hexWidth-left)+supersample;
-  const int centerY=static_cast<int>(std::ceil(height/2.0));
-  const int innerRadius=static_cast<int>(std::ceil(hexHeight/2.0));
-  int increment=((hexWidth*9-innerRadius)/5)/2;if(increment>right)increment-=right;
-  fillMidpointCircle(symbol,centerX,centerY,innerRadius+increment*5,ink);
-  fillMidpointCircle(symbol,centerX,centerY,innerRadius+increment*4,paper);
-  fillMidpointCircle(symbol,centerX,centerY,innerRadius+increment*3,ink);
-  fillMidpointCircle(symbol,centerX,centerY,innerRadius+increment*2,paper);
-  fillMidpointCircle(symbol,centerX,centerY,innerRadius+increment,ink);
-  fillMidpointCircle(symbol,centerX,centerY,innerRadius,paper);
-  QImage sampled((width+supersample-1)/supersample,(height+supersample-1)/supersample,
-    QImage::Format_ARGB32_Premultiplied);sampled.fill(options.background);
-  for(int y=0;y<sampled.height();++y)for(int x=0;x<sampled.width();++x)
-    sampled.setPixel(x,y,symbol.pixel(std::min(width-1,x*supersample+supersample/2),
-      std::min(height-1,y*supersample+supersample/2)));
-  return sampled;
+  State placed=state;
+  if(state.baseline){
+    // ^FT anchors the lower edge of the first bar, excluding the caption
+    // and the retail guard extensions, before applying the orientation.
+    const QPoint anchor(sidePad+(state.justification==Justification::Right?barsWidth:0),barsTop+height);
+    placed.position-=rotatedEdge(anchor,symbol.size(),barcode.orientation);
+    placed.baseline=false;
+    placed.justification=Justification::Left;
+  }else{
+    // ^FO names the top-left corner of the rotated bar body. Caption space
+    // can occur on either side after rotation, but must not move that body.
+    switch(barcode.orientation){
+      case Orientation::Normal:placed.position-=QPoint(sidePad,barsTop);break;
+      case Orientation::Rotated90:placed.position-=QPoint(symbol.height()-barsTop-height,sidePad);break;
+      case Orientation::Inverted:placed.position-=QPoint(sidePad,symbol.height()-barsTop-height);break;
+      case Orientation::BottomUp:placed.position-=QPoint(barsTop,sidePad);break;
+    }
+  }
+  placeNewSymbol(image,symbol,placed,barcode.orientation);
 }
 
-void drawMaxiCode(QImage& image,State& state,const Barcode& barcode,const QString& text,const RenderOptions& options,QList<Diagnostic>& diagnostics) {
-  const int mode=barcode.parameters.isEmpty()?2:barcode.parameters[0].toInt();
-  if(mode!=2){diagnostics.append({Severity::Error,u"maxicode-mode"_s,u"Only MaxiCode mode 2 is implemented; no symbol was rendered."_s,-1,u"^BD"_s});return;}
-  auto encoded=BarcodeEncoders::MaxiCode::encodeMode2(text.toLatin1());
-  if(!encoded){diagnostics.append({Severity::Error,u"maxicode-encode"_s,encoded.error(),-1,u"^BD"_s});return;}
-  QImage symbol=rotateImage(rasterizeMaxiCode(encoded->grid,options),barcode.orientation);
-  QPoint position=state.position;if(state.baseline)position.ry()-=symbol.height();else position.ry()+=1;
-  QPainter target(&image);target.drawImage(position,symbol);
+void drawExtendedMatrix(QImage& image,State& state,const Barcode& barcode,const QString& data,const RenderOptions& options,QList<Diagnostic>& diagnostics) {
+  using BarcodeEncoders::Matrix;
+  std::expected<Matrix,QString> matrix=std::unexpected(u"Unsupported matrix barcode options"_s);
+  int module=std::clamp(state.barcodeDefaults.moduleWidth,1,10),rowHeight=module;
+  if(std::ranges::any_of(data,[](QChar c){return c.unicode()>255;})){
+    diagnostics.append({Severity::Error,u"barcode-encoding"_s,u"This barcode requires explicit byte data; use ^FH for binary fields."_s,-1,u'^'+barcode.symbology});return;
+  }
+  if(barcode.symbology==u"BF"){
+    if(!validateBarcodeNumbers(barcode,{1,2},diagnostics))return;
+    matrix=BarcodeEncoders::MicroPdf417::encode(data.toLatin1(),barcodeParameter(barcode,2,0));
+    rowHeight=barcodeParameter(barcode,1,matrix?std::max(1,state.barcodeDefaults.height/matrix->height):1);
+  }else if(barcode.symbology==u"BR"){
+    if(!validateBarcodeNumbers(barcode,{1,2,3,4,5},diagnostics))return;
+    const int separator=barcodeParameter(barcode,3,1),height=barcodeParameter(barcode,4,25);
+    if(separator<1||separator>2||height<1||height>32000){
+      diagnostics.append({Severity::Error,u"barcode-parameter"_s,u"GS1 DataBar requires separator height 1 or 2 and bar height 1 through 32000."_s,-1,u"^BR"_s});return;
+    }
+    module=barcodeParameter(barcode,2,2);rowHeight=module;
+    matrix=BarcodeEncoders::DataBar::encode(data,barcodeParameter(barcode,1,1),barcodeParameter(barcode,4,25),barcodeParameter(barcode,5,0));
+  }else{
+    if(!validateBarcodeNumbers(barcode,{1,3,5},diagnostics))return;
+    for(const int index:{2,4})if(index<barcode.parameters.size()&&!barcode.parameters[index].isEmpty()
+      &&barcode.parameters[index]!=u"Y"&&barcode.parameters[index]!=u"N"){
+      diagnostics.append({Severity::Error,u"barcode-parameter"_s,u"Aztec ECI and reader initialization flags must be Y or N."_s,-1,u'^'+barcode.symbology});return;
+    }
+    module=barcodeParameter(barcode,1,2);rowHeight=module;
+    const bool eci=barcode.parameters.size()>2&&barcode.parameters[2]==u"Y";
+    if(eci||barcodeParameter(barcode,5,1)!=1){matrix=std::unexpected(u"Aztec embedded ECI and structured append are not supported."_s);}
+    else matrix=BarcodeEncoders::Aztec::encode(data.toLatin1(),barcodeParameter(barcode,3,23),barcode.parameters.size()>4&&barcode.parameters[4]==u"Y");
+  }
+  if(!matrix){diagnostics.append({Severity::Error,u"barcode-encode"_s,matrix.error(),-1,u'^'+barcode.symbology});return;}
+  if(module<1||module>10||rowHeight<1||rowHeight>9999||qint64(matrix->width)*module*matrix->height*rowHeight>64*1024*1024){diagnostics.append({Severity::Error,u"barcode-size"_s,u"Invalid or unsafe barcode module size."_s,-1,u'^'+barcode.symbology});return;}
+  QImage symbol(matrix->width*module,matrix->height*rowHeight,QImage::Format_ARGB32_Premultiplied);symbol.fill(options.background);
+  QPainter painter(&symbol);painter.setPen(Qt::NoPen);painter.setBrush(options.foreground);
+  for(int y=0;y<matrix->height;++y)for(int x=0;x<matrix->width;++x)if(matrix->at(x,y))painter.drawRect(x*module,y*rowHeight,module,rowHeight);
+  painter.end();placeNewSymbol(image,symbol,state,barcode.orientation);
 }
 
 void drawBarcode(QImage& image, State& state, const Barcode& barcode, const QString& data, const RenderOptions& options, QList<Diagnostic>& diagnostics,RenderFonts& fonts) {
+  if(state.reverse){
+    QImage mask(image.size(),QImage::Format_ARGB32_Premultiplied);mask.fill(Qt::transparent);
+    RenderOptions ink=options;ink.foreground=Qt::white;ink.background=Qt::transparent;
+    state.reverse=false;drawBarcode(mask,state,barcode,data,ink,diagnostics,fonts);
+    QPainter painter(&image);painter.setCompositionMode(QPainter::CompositionMode_Difference);painter.drawImage(0,0,mask);return;
+  }
   if (barcode.symbology == u"B3") drawCode39(image,state,barcode,data,options);
   else if(barcode.symbology==u"BQ")drawQrCode(image,state,barcode,data,options,diagnostics);
   else if(barcode.symbology==u"BX")drawDataMatrix(image,state,barcode,data,options,diagnostics);
@@ -1041,6 +1479,8 @@ void drawBarcode(QImage& image, State& state, const Barcode& barcode, const QStr
   else if(barcode.symbology==u"BK")drawCodabar(image,state,barcode,data,options,diagnostics);
   else if(barcode.symbology==u"B7")drawPdf417(image,state,barcode,data,options,diagnostics);
   else if(barcode.symbology==u"BD")drawMaxiCode(image,state,barcode,data,options,diagnostics);
+  else if(QStringList{u"B8"_s,u"B9"_s,u"BU"_s,u"BA"_s,u"B2"_s,u"BI"_s}.contains(barcode.symbology))drawExtendedLinear(image,state,barcode,data,options,diagnostics,fonts);
+  else if(QStringList{u"BF"_s,u"BR"_s,u"BO"_s,u"B0"_s}.contains(barcode.symbology))drawExtendedMatrix(image,state,barcode,data,options,diagnostics);
   else diagnostics.append({Severity::Warning,u"barcode-render-pending"_s,
     u"This barcode parser is available, but its native encoder is not implemented yet."_s,-1,u'^'+barcode.symbology});
   state.pendingBarcode.reset(); state.reverse=false; state.block.reset();
@@ -1049,10 +1489,19 @@ void drawBarcode(QImage& image, State& state, const Barcode& barcode, const QStr
 std::expected<QImage, RenderError> renderLabel(const Label& label, int index, const RenderOptions& options, QList<Diagnostic>& diagnostics,RenderFonts& fonts) {
   const int width=options.width>0?options.width:(label.width()>0?label.width():812);
   const int height=options.height>0?options.height:(label.height()>0?label.height():1218);
-  if(width<=0||height<=0||width>100000||height>100000) return std::unexpected(RenderError{u"invalid-size"_s,u"Label dimensions are invalid or unsafe."_s,index});
+  if(width<=0||height<=0||width>100000||height>100000||qint64(width)*height>64*1024*1024) return std::unexpected(RenderError{u"invalid-size"_s,u"Label dimensions are invalid or unsafe."_s,index});
   QImage image(width,height,QImage::Format_ARGB32_Premultiplied); image.fill(options.background);
-  State state; state.font=ScalableFont{};
-  const QPoint home=options.ignoreLabelHome?QPoint{}:QPoint{label.homeX(),label.homeY()};
+  State state;
+  int labelTop=0;bool mirror=false;
+  for(const auto& command:label.commands()){
+    if(const auto* top=std::get_if<LabelTop>(&command.payload))labelTop=top->dots;
+    if(const auto* value=std::get_if<PrintMirror>(&command.payload))mirror=value->enabled;
+  }
+  // An explicitly requested canvas centers a narrower/wider ^PW print area.
+  // Apply this before ^PO/^PM, as the Labelary canvas does.
+  const int printOffset=label.width()>0?int(std::floor((qint64(width)-label.width())/2.0)):0;
+  const qint64 homeX=qint64(options.ignoreLabelHome?0:label.homeX())+printOffset;
+  const qint64 homeY=qint64(options.ignoreLabelHome?0:label.homeY())+labelTop;
 
   const auto prepareGraphicPainter=[&](QPainter& painter,LineColor color,int thickness){
     if(state.reverse){painter.setCompositionMode(QPainter::CompositionMode_Difference);painter.setPen(QPen(Qt::white,thickness));painter.setBrush(Qt::white);}
@@ -1060,27 +1509,49 @@ std::expected<QImage, RenderError> renderLabel(const Label& label, int index, co
   };
 
   for(const auto& command:label.commands()) {
+    state.reverse=state.labelReverse||state.fieldReverse;
     std::visit([&](const auto& value){
       using T=std::decay_t<decltype(value)>;
-      if constexpr(std::is_same_v<T,FieldOrigin>){state.position=QPoint(value.x+state.labelShift,value.y)+home;state.baseline=false;}
-      else if constexpr(std::is_same_v<T,FieldTypeset>){state.position=QPoint(value.x+state.labelShift,value.y)+home;state.baseline=true;}
+      if constexpr(std::is_same_v<T,FieldOrigin>){state.position=printerPosition(qint64(value.x)+state.labelShift+homeX,qint64(value.y)+homeY);state.baseline=false;state.justification=value.useDefaultJustification?state.defaultJustification:value.justification;}
+      else if constexpr(std::is_same_v<T,FieldTypeset>){state.position=printerPosition(value.usePreviousX?state.nextTypeset.x():qint64(value.x)+state.labelShift+homeX,value.usePreviousY?state.nextTypeset.y():qint64(value.y)+homeY);state.baseline=true;state.justification=value.useDefaultJustification?state.defaultJustification:value.justification;}
       else if constexpr(std::is_same_v<T,ScalableFont>) {state.font=value;state.barcodeInterpretationFont=value;}
-      else if constexpr(std::is_same_v<T,FieldSeparator>) state.barcodeInterpretationFont.reset();
-      else if constexpr(std::is_same_v<T,ChangeFont>){state.font.font=value.font;state.font.height=value.height;state.font.width=value.width;}
-      else if constexpr(std::is_same_v<T,FieldDirection>) state.fieldDirection=value.orientation;
-      else if constexpr(std::is_same_v<T,FieldReverse>) state.reverse=true;
+      else if constexpr(std::is_same_v<T,FieldSeparator>) {state.font=state.defaultFont;state.barcodeInterpretationFont.reset();state.fieldReverse=false;state.parameter={};state.pendingBarcode.reset();state.block.reset();}
+      else if constexpr(std::is_same_v<T,ChangeFont>){state.defaultFont={value.font,Orientation::Normal,value.height,value.width};state.font=state.defaultFont;}
+      else if constexpr(std::is_same_v<T,FieldDirection>){state.fieldDirection=value.orientation;state.defaultJustification=value.justification;}
+      else if constexpr(std::is_same_v<T,FieldReverse>) state.fieldReverse=true;
+      else if constexpr(std::is_same_v<T,LabelReverse>) state.labelReverse=value.enabled;
+      else if constexpr(std::is_same_v<T,FieldParameter>) state.parameter=value;
       else if constexpr(std::is_same_v<T,FieldBlock>) state.block=value;
       else if constexpr(std::is_same_v<T,FieldEncoding>) { /* Accepted compatibility command; no raster state change. */ }
       else if constexpr(std::is_same_v<T,BarcodeDefault>) state.barcodeDefaults=value;
       else if constexpr(std::is_same_v<T,LabelShift>) state.labelShift=value.dots;
       else if constexpr(std::is_same_v<T,PrintMode>) { /* Print mode does not change local raster geometry. */ }
       else if constexpr(std::is_same_v<T,PrintOrientation>) state.printOrientation=value.orientation;
-      else if constexpr(std::is_same_v<T,Barcode>) state.pendingBarcode=value;
-      else if constexpr(std::is_same_v<T,FieldData>){if(state.pendingBarcode)drawBarcode(image,state,*state.pendingBarcode,value.data,options,diagnostics,fonts);else drawText(image,state,value.data,options,fonts);}
+      else if constexpr(std::is_same_v<T,Barcode>){
+        state.pendingBarcode=value;state.barcodeOffset=command.offset;state.barcodeSource=command.source;
+        // QR magnification also changes the following barcode module width,
+        // even if this ^BQ has no field data. ^BY subsequently overrides it.
+        if(value.symbology==u"BQ")state.barcodeDefaults.moduleWidth=qrMagnification(value);
+      }
+      else if constexpr(std::is_same_v<T,FieldData>){
+        if(state.pendingBarcode){
+          const auto firstDiagnostic=diagnostics.size();
+          drawBarcode(image,state,*state.pendingBarcode,value.data,options,diagnostics,fonts);
+          for(qsizetype i=firstDiagnostic;i<diagnostics.size();++i){
+            if(diagnostics[i].offset<0)diagnostics[i].offset=state.barcodeOffset;
+            diagnostics[i].command=state.barcodeSource;
+          }
+        }else{
+          const auto firstDiagnostic=diagnostics.size();
+          drawText(image,state,value.data,options,fonts,diagnostics,command.offset);
+          for(qsizetype i=firstDiagnostic;i<diagnostics.size();++i)diagnostics[i].command=command.source;
+        }
+      }
       else if constexpr(std::is_same_v<T,GraphicBox>){
         const int boxWidth=value.width>0?value.width:value.thickness;
         const int boxHeight=value.height>0?value.height:value.thickness;
-        const auto fillRectangle=QRect(state.position,QSize(boxWidth,boxHeight));
+        const QPoint origin=state.position-QPoint(state.justification==Justification::Right?boxWidth:0,state.baseline?boxHeight:0);
+        const auto fillRectangle=QRect(origin,QSize(boxWidth,boxHeight));
         const bool filled=value.thickness*2>=std::min(boxWidth,boxHeight);
         QPainterPath path;path.setFillRule(Qt::OddEvenFill);path.addRect(QRectF(fillRectangle));
         if(!filled){const int inset=std::min({value.thickness,boxWidth/2,boxHeight/2});path.addRect(QRectF(fillRectangle.adjusted(inset,inset,-inset,-inset)));}
@@ -1091,28 +1562,35 @@ std::expected<QImage, RenderError> renderLabel(const Label& label, int index, co
       else if constexpr(std::is_same_v<T,GraphicCircle>||std::is_same_v<T,GraphicEllipse>){
         const int width=[](const auto& graphic){if constexpr(std::is_same_v<T,GraphicCircle>)return graphic.diameter;else return graphic.width;}(value);
         const int height=[](const auto& graphic){if constexpr(std::is_same_v<T,GraphicCircle>)return graphic.diameter;else return graphic.height;}(value);
-        const QRectF outer(state.position.x(),state.position.y()+1,width,std::max(0,height-1));const int inset=std::min({value.thickness,width/2,height/2});
-        QPainterPath path;path.setFillRule(Qt::OddEvenFill);path.addEllipse(outer);
-        if(value.thickness*2<std::min(width,height))path.addEllipse(outer.adjusted(inset,inset,-inset,-inset));
+        if(width<0||height<0||width>32000||height>32000||value.thickness>32000){diagnostics.append({Severity::Error,u"graphic-dimensions"_s,u"Graphic dimensions must be between 0 and 32000 dots."_s,command.offset,command.source});state.reverse=false;return;}
+        const QPoint origin=GraphicGeometry::anchoredOrigin(state.position,width,height,state.justification==Justification::Right,state.baseline);
         QPainter p(&image);p.setRenderHint(QPainter::Antialiasing,false);p.setPen(Qt::NoPen);p.setBrush(state.reverse?Qt::white:commandColor(value.color,options));
-        if(state.reverse)p.setCompositionMode(QPainter::CompositionMode_Difference);p.drawPath(path);state.reverse=false;
+        if(state.reverse)p.setCompositionMode(QPainter::CompositionMode_Difference);
+        GraphicGeometry::drawEllipse(p,origin,width,height,value.thickness,image.size());state.reverse=false;
       }
       else if constexpr(std::is_same_v<T,GraphicDiagonal>){
+        if(value.width<0||value.height<0||value.width>32000||value.height>32000||value.thickness>32000){diagnostics.append({Severity::Error,u"graphic-dimensions"_s,u"Graphic dimensions must be between 0 and 32000 dots."_s,command.offset,command.source});state.reverse=false;return;}
+        const QPoint origin=GraphicGeometry::anchoredOrigin(state.position,value.width,value.height,state.justification==Justification::Right,state.baseline);
         QPainter p(&image);p.setPen(Qt::NoPen);p.setBrush(state.reverse?Qt::white:commandColor(value.color,options));
         if(state.reverse)p.setCompositionMode(QPainter::CompositionMode_Difference);
-        // Zebra rasterizes ^GD as a constant number of dots on every scan
-        // line. R descends from the upper-right; L ascends from upper-left.
-        for(int y=0;y<value.height;++y){
-          const int ascending=y*value.width/value.height;
-          const int x=value.orientation==u'L'?ascending:value.width-ascending;
-          p.drawRect(state.position.x()+x,state.position.y()+y,value.thickness,1);
-        }
+        GraphicGeometry::drawDiagonal(p,origin,value.width,value.height,value.thickness,value.orientation==u'L',image.size());
         state.reverse=false;
       }
-      else if constexpr(std::is_same_v<T,GraphicField>) drawGraphicField(image,state.position,value,options,command.offset,diagnostics);
+      else if constexpr(std::is_same_v<T,GraphicField>) {
+        QPoint position=state.position;
+        if(state.baseline&&value.bytesPerRow>0)position.ry()-=value.totalBytes/value.bytesPerRow;
+        if(state.justification==Justification::Right)position.rx()-=value.bytesPerRow*8;
+        if(state.reverse){
+          QImage mask(image.size(),QImage::Format_ARGB32_Premultiplied);mask.fill(Qt::transparent);
+          auto ink=options;ink.background=Qt::transparent;ink.foreground=Qt::white;
+          drawGraphicField(mask,position,value,ink,command.offset,diagnostics);
+          QPainter painter(&image);painter.setCompositionMode(QPainter::CompositionMode_Difference);painter.drawImage(0,0,mask);
+        }else drawGraphicField(image,position,value,options,command.offset,diagnostics);
+      }
     },command.payload);
   }
   image=rotateImage(image,state.printOrientation);
+  if(mirror)image.flip(Qt::Horizontal);
   return image;
 }
 

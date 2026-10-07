@@ -1,0 +1,14 @@
+MaxiCode plot geometry adapted from OkapiBarcode:
+https://github.com/woo-j/OkapiBarcode
+
+backend/MaxiCode.java: Copyright 2014-2015 Robin Stuart, Daniel Gredler
+graphics/Hexagon.java: Copyright 2014 Robin Stuart
+output/Java2DRenderer.java: Copyright 2014-2015 Robin Stuart, Robert Elliott,
+Daniel Gredler
+
+Licensed under the Apache License, Version 2.0; see LICENSE.
+
+QtZpl changes: native C++23 dot-coordinate polygon scan conversion and fixed
+subpixel cubic finder rasterization; no Java code or runtime dependency.
+The geometry and scan conversion are checked against unmodified bitonal
+Labelary references in tests/golden/maxicode-extended.

@@ -2,6 +2,8 @@
   <qresource prefix="/qtzpl/fonts">
     <file alias="font0.ttf">font0.ttf</file>
     <file alias="font_a.ttf">font_a.ttf</file>
+    <file alias="font_a_native.ttf">font_a_native.ttf</file>
     <file alias="ocr_b.ttf">ocr_b.ttf</file>
+    <file alias="ocr_b_native.ttf">ocr_b_native.ttf</file>
   </qresource>
 </RCC>

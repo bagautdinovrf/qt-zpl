@@ -20,6 +20,7 @@ struct Case {
 
 using Cases = std::vector<Case>;
 void addAlgorithmCases(Cases& cases);
+void addExtensionCases(Cases& cases);
 void addPipelineCases(Cases& cases, const QString& corpusDir);
 void addComponentCases(Cases& cases, const QString& fontFile);
 

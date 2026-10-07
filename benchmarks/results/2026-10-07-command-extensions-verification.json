@@ -1,0 +1,152 @@
+{
+  "configuration": "clean Debug / Qt 6.11.2 / MSVC 19.44",
+  "ctestTargets": 15,
+  "ctestPassed": 12,
+  "cases": [
+    {
+      "file": "aztec_results.txt",
+      "passed": 11,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "barcode_anchors_results.txt",
+      "passed": 18,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "code128_extended_results.txt",
+      "passed": 14,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "databar_results.txt",
+      "passed": 52,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "datamatrix_rectangular_results.txt",
+      "passed": 19,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "encoder_performance_results.txt",
+      "passed": 9,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "extensions_results.txt",
+      "passed": 244,
+      "failed": 9,
+      "skipped": 0
+    },
+    {
+      "file": "font_glyphs_results.txt",
+      "passed": 7,
+      "failed": 16,
+      "skipped": 0
+    },
+    {
+      "file": "maxicode_extended_results.txt",
+      "passed": 12,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "micropdf417_results.txt",
+      "passed": 51,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "parser_performance_results.txt",
+      "passed": 14,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "qr_performance_results.txt",
+      "passed": 55,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "renderer_performance_results.txt",
+      "passed": 124,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "retail_font_results.txt",
+      "passed": 20,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "test_results.txt",
+      "passed": 101,
+      "failed": 2,
+      "skipped": 0
+    }
+  ],
+  "staticReleaseInstallConsumer": "PASS",
+  "baseCommit": "c114df8e17c80f640e3eac22a113caebe960cc76",
+  "state": "publication authorized with known Font 0 parity failures; replacement font excluded because no redistribution license is available",
+  "sourceHashes": {
+    "include/QtZpl/export.hpp": "7e0bc723c726674cd1ebad445930f53cb6923594172b6b4fd57234df814af43e",
+    "include/QtZpl/model.hpp": "502830550e75c554a0ea83247fa678b4ded958cf624461dc967821fb2f12e589",
+    "include/QtZpl/qtzpl.hpp": "50d06b3f04669904da4f82d1a50d99a98ae018dcad07e8263a29dee4396f11cc",
+    "resources/fonts/font0.ttf": "f1213c8b4ead38a2736089a8889b0341258e7b3faa33b8935238ce46d96410c6",
+    "resources/fonts/font_a.ttf": "b4a6c3e4faab8773f4ff761d56451646409f29abedd68f05d38c2df667d3c582",
+    "resources/fonts/font_a_native.ttf": "879bc462ff9714845da40d181f7c86c8ab76c0baac61e4059ad34df751a6262b",
+    "resources/fonts/ocr_b.ttf": "5b635ef49a33fd12d72a1005cc44d6dde713d789659b3fb1a6bd4d43af7d1ea9",
+    "resources/fonts/ocr_b_native.ttf": "67b11c470222c7bb4550e7d4c216fd06145a939208af77e5f946bcee53e70868",
+    "resources/fonts/qtzpl_fonts.qrc": "9e5009d42e1483bfee79c9a2991f286d6ce238283e0a047dc4bfe863baecd7a5",
+    "src/aztec_encoder.cpp": "142b7f85588695c16985bd0d73c1d7f42ad3848b177233a35ae9218b2049b776",
+    "src/aztec_encoder.hpp": "690753c1b026eecc17a8952d72ad248ac6fb6e919e5d562ceff7c3a5ee070e74",
+    "src/barcode_encoders.cpp": "f5c4fe43d6bf6ce691a7912d8d8df36a23eb92a79d641f0a39b3b2e09f3ab87f",
+    "src/barcode_encoders.hpp": "6e4a161a37fb4fe81bd5d02f1e5a29192b23d273aab8d3e8e000a2c25f729955",
+    "src/databar-ZINT-LICENSE.txt": "e2eeeae504be1641cd7cd1d94dc788c59a1f108d1d2e83def47ad4dc3a0e8d50",
+    "src/databar_encoder.cpp": "0558b57879c299ebcee43f4d5aeba567bfd048410cb5397c3d9574a323999345",
+    "src/databar_encoder.hpp": "0323c37a168d2ed29692661c6058919bf0d2e079af2b13ba8b65c77f96187285",
+    "src/databar_expanded.inc": "9a7e1d9e97cddc5739a14ed3ec37a3441ba1e06ac53227a2ace25f090dbdb3f5",
+    "src/databar_tables.hpp": "1a5fc103c6a0743f97f0c726887d2903117cbcc0aec4ba03d3190343200bb5e0",
+    "src/graphic_geometry.hpp": "3dfd21ae02d45e2e463f290f13bef08b1d9498bd049aeb8aa4682d6647b6e89e",
+    "src/linear_encoders.cpp": "9c3902d1a32bf588f8c595a5bc3d293421dd5a157fa2d2c32eff808c92962d3c",
+    "src/linear_encoders.hpp": "2c364a776087e904c7fb899fb5d44d752937d5826601dbe47a2d46d77cd8a6e3",
+    "src/maxicode_encoder.cpp": "11a34d3fb1961c418877921bdae0bf00d866ba089e6ce4c585731aaf00419e15",
+    "src/maxicode_encoder.hpp": "257dcb2670506eb289412bcc01e76942df0c5596c4e1e2b5b6a27c4e73d30c10",
+    "src/maxicode_tables.inc": "bd69564a78bfd1bc5a4201190c369fff2339f4323afb0d3fbe76c36d714875a8",
+    "src/micropdf417_encoder.cpp": "d2dc2297b766685b8e6beddfd70eaa00d507da7ddd987a7bea8ccc147b83fda5",
+    "src/micropdf417_encoder.hpp": "2c3c15aa0a8ba23324eda768615e9d405c8edd866b6b6e4793b99924aaa33687",
+    "src/micropdf417_tables.inc": "0711eb569fb87898baf0e0f7cc9bd48ef5c56f426fa258d11026edce858b7066",
+    "src/parser.cpp": "4680f843e5cc0089c3acc9f5fe0369e748cac07ce3864c1289b62e63fca717c1",
+    "src/pdf417_codeword_patterns.inc": "5df9f05dad811cc547621c833e8d75e228a8bb136f6f57347b8f33f09538c280",
+    "src/pdf417_encoder.cpp": "cb8f38c93fe76e71ea44175f0c6ccb017fe16003b064dad1fe7c2b3e2d7a7c79",
+    "src/pdf417_encoder.hpp": "d429a74058e0fdedd4530c60ee0286824f63d4f200b3e26c8636bd3881652028",
+    "src/printer_font_metrics.hpp": "c2a1a520501e0f28a37d7544c3ed19ca588b23687b06c05492cceee70da97e63",
+    "src/printer_font_raster.hpp": "f263d231895f72baa793043cea378587506afd59a03050f85efbe58bb5bc9d71",
+    "src/renderer.cpp": "26a128f97e3dd06f72d4ce0bfe9afa624faa07eccf7bffa7a0eb80b5cd6e2447",
+    "src/retail_font.hpp": "3f81274ffb08c8aad511e7d4ba3a7d77837f7e9e04369207a5170648a3f951d0"
+  },
+  "sourceManifestSha256": "84c1eb42b1c3bf158f2ee30da23926728dc7045ca459dea98a00c28cf0b4177b",
+  "benchmarkFile": "2026-10-07-command-extensions.json",
+  "benchmarkSha256": "a3e051dc4785ee2e9bb7566428bebe70762d3a9fe47c2d67eadb3747b67f0f05",
+  "glyphAudit": {
+    "distinctCodepoints": 329,
+    "sizeProfiles": 8,
+    "atlases": 16,
+    "placements": 2920,
+    "differentPlacements": 2743,
+    "differentPixels": 201922,
+    "labelaryUnsupportedCodepoints": 16
+  },
+  "passed": 751,
+  "failed": 27,
+  "sourceHashFormat": "SHA-256 of original build working-tree bytes; Windows CRLF may differ from normalized Git blobs"
+}

@@ -14,7 +14,7 @@ namespace QtZpl {
 
 enum class Severity { Warning, Error };
 enum class Orientation : char { Normal = 'N', Rotated90 = 'R', Inverted = 'I', BottomUp = 'B' };
-enum class Justification : char { Left = 'L', Right = 'R', Center = 'C', Justified = 'J' };
+enum class Justification : char { Left = 'L', Right = 'R', Center = 'C', Justified = 'J', Auto = 'A' };
 enum class LineColor : char { Black = 'B', White = 'W' };
 
 struct Diagnostic {
@@ -29,10 +29,10 @@ struct FormatStart {};
 struct FormatEnd {};
 struct FieldSeparator {};
 struct FieldReverse {};
-struct FieldOrigin { int x = 0; int y = 0; Justification justification = Justification::Left; };
-struct FieldTypeset { int x = 0; int y = 0; Justification justification = Justification::Left; };
+struct FieldOrigin { int x = 0; int y = 0; Justification justification = Justification::Left; bool useDefaultJustification = false; };
+struct FieldTypeset { int x = 0; int y = 0; Justification justification = Justification::Left; bool usePreviousX = false; bool usePreviousY = false; bool useDefaultJustification = false; };
 struct FieldData { QString data; };
-struct FieldDirection { Orientation orientation = Orientation::Normal; };
+struct FieldDirection { Orientation orientation = Orientation::Normal; Justification justification = Justification::Left; };
 struct FieldBlock { int width = 0; int maxLines = 1; int lineSpacing = 0; Justification justification = Justification::Left; int hangingIndent = 0; };
 struct FieldEncoding { QString parameters; };
 struct ScalableFont { QChar font = u'0'; Orientation orientation = Orientation::Normal; int height = 30; int width = 0; };
@@ -61,6 +61,10 @@ struct Barcode {
 };
 struct Comment { QString text; };
 struct UnknownCommand { QChar prefix = u'^'; QString opcode; QString parameters; qsizetype offset = -1; };
+struct LabelTop { int dots = 0; };
+struct PrintMirror { bool enabled = false; };
+struct LabelReverse { bool enabled = false; };
+struct FieldParameter { QChar direction = u'H'; int spacing = 0; };
 
 using CommandPayload = std::variant<
     FormatStart, FormatEnd, FieldSeparator, FieldReverse, FieldOrigin, FieldTypeset,
@@ -68,7 +72,7 @@ using CommandPayload = std::variant<
     BarcodeDefault, PrintWidth, LabelLength, LabelHome, LabelShift, PrintMode,
     PrintOrientation, PrintRate, MediaDarkness, PrintQuantity, GraphicBox,
     GraphicCircle, GraphicDiagonal, GraphicEllipse, GraphicField, Barcode, Comment,
-    UnknownCommand>;
+    UnknownCommand, LabelTop, PrintMirror, LabelReverse, FieldParameter>;
 
 struct Command {
   CommandPayload payload;

@@ -15,6 +15,19 @@ set(CMAKE_AUTORCC ON)
 
 find_package(Qt6 6.11 REQUIRED COMPONENTS Core Gui)
 
+# Use Qt's own FreeType when available, keeping Windows free of another DLL.
+# Unix Qt packages may instead use their system FreeType.
+find_package(Qt6FreetypePrivate QUIET)
+find_package(Qt6BundledFreetype QUIET)
+if(TARGET Qt6::FreetypePrivate AND TARGET Qt6::BundledFreetype)
+  set(QTZPL_FREETYPE_BUNDLED ON)
+  set(QTZPL_FREETYPE_TARGETS Qt6::FreetypePrivate Qt6::BundledFreetype)
+else()
+  find_package(Freetype REQUIRED)
+  set(QTZPL_FREETYPE_BUNDLED OFF)
+  set(QTZPL_FREETYPE_TARGETS Freetype::Freetype)
+endif()
+
 set(QTZPL_LIBRARY_TYPE STATIC)
 if(QTZPL_BUILD_SHARED)
   set(QTZPL_LIBRARY_TYPE SHARED)
@@ -24,6 +37,10 @@ add_library(QtZpl ${QTZPL_LIBRARY_TYPE}
   resources/fonts/qtzpl_fonts.qrc
   third_party/qrcodegen/qrcodegen.cpp
   src/barcode_encoders.cpp
+  src/linear_encoders.cpp
+  src/aztec_encoder.cpp
+  src/databar_encoder.cpp
+  src/micropdf417_encoder.cpp
   src/maxicode_encoder.cpp
   src/parser.cpp
   src/pdf417_encoder.cpp
@@ -42,6 +59,7 @@ if(NOT QTZPL_BUILD_SHARED)
   target_compile_definitions(QtZpl PUBLIC QTZPL_STATIC)
 endif()
 target_link_libraries(QtZpl PUBLIC Qt6::Core Qt6::Gui)
+target_link_libraries(QtZpl PRIVATE ${QTZPL_FREETYPE_TARGETS})
 set_target_properties(QtZpl PROPERTIES
   VERSION ${PROJECT_VERSION}
   SOVERSION ${PROJECT_VERSION_MAJOR}
@@ -58,6 +76,20 @@ install(TARGETS QtZpl EXPORT QtZplTargets
   INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(FILES src/databar-ZINT-LICENSE.txt DESTINATION ${CMAKE_INSTALL_DATADIR}/QtZpl/licenses)
+install(DIRECTORY third_party/zxing-linear/ third_party/zxing-aztec/
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/QtZpl/licenses/apache-2.0 FILES_MATCHING PATTERN "LICENSE")
+install(FILES third_party/zxing-linear/NOTICE DESTINATION ${CMAKE_INSTALL_DATADIR}/QtZpl/licenses/zxing-linear)
+install(FILES third_party/zxing-aztec/NOTICE DESTINATION ${CMAKE_INSTALL_DATADIR}/QtZpl/licenses/zxing-aztec)
+install(FILES third_party/zint-raster/LICENSE DESTINATION ${CMAKE_INSTALL_DATADIR}/QtZpl/licenses/zint-raster)
+install(FILES third_party/okapi-maxicode/LICENSE third_party/okapi-maxicode/NOTICE
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/QtZpl/licenses/okapi-maxicode)
+install(FILES third_party/ocrb/LICENSE third_party/ocrb/NOTICE
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/QtZpl/licenses/ocrb)
+install(FILES third_party/font-a-native/LICENSE third_party/font-a-native/NOTICE
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/QtZpl/licenses/font-a-native)
+install(FILES third_party/zxing-datamatrix/LICENSE third_party/zxing-datamatrix/NOTICE
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/QtZpl/licenses/zxing-datamatrix)
 install(EXPORT QtZplTargets
   FILE QtZplTargets.cmake
   NAMESPACE QtZpl::

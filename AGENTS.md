@@ -123,9 +123,12 @@ The library does not own:
 
 ### Barcode requirements
 
-- Current native renderers include Code 128 (`^BC`), Code 39 (`^B3`), EAN-13
-  (`^BE`), and square DataMatrix ECC200 (`^BX`). Unsupported parsed barcodes
-  currently emit `barcode-render-pending`.
+- Native renderers include Code 128/39/93, Codabar, EAN-13/8, UPC-A/E,
+  Interleaved/Industrial 2 of 5, GS1 DataBar types 1–6, QR Model 2,
+  square/rectangular DataMatrix ECC200, PDF417 (including truncated),
+  MicroPDF417 modes 0–33, Aztec, and MaxiCode modes 2–6. Unsupported parsed
+  barcodes emit `barcode-render-pending`; unsupported options must produce
+  a specific diagnostic instead of a substitute symbol.
 - Do not add a barcode runtime dependency merely to make a symbol appear.
   Prefer a reviewed native implementation with known vectors.
 - Code 128 supports the default Subset B modes `N`/`B`, automatic mode `A`,
@@ -133,8 +136,10 @@ The library does not own:
   `>;`, and `>0` through `>8`. Invalid subset data must emit `code128-encode`
   and render no symbol. GS1 mode `D` strips presentation parentheses/spaces,
   inserts one leading FNC1, honors `>8` separators and packs numeric pairs.
-  Mode `U` and the optional UCC Mod 10 check digit
-  (`e=Y`) remain unsupported; do not silently approximate them.
+  Mode `U` and the optional UCC Mod 10 check digit (`e=Y`) are supported.
+  Keep mode U's default interpretation above the bars and its Mod 10/FNC1
+  vectors. Labelary ignores `e=Y` in some non-U inputs: preserve authoritative
+  Mod 10 vectors and compare that case with an explicitly appended digit.
 - EAN-13 accepts 12 digits and calculates the check digit, or accepts 13 digits
   and validates it. Non-digit formatting characters may be ignored only when
   this matches the reference behavior.

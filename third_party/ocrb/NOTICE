@@ -1,0 +1,11 @@
+OCRB.ttf from the Tsukurimashou OCR fonts version 0.3.1 (2021-03-30).
+Matthew Skala (2011, 2021); based on code by Norbert Schwarz (1986, 2011).
+The font is distributed unmodified as resources/fonts/ocr_b_native.ttf.
+Project: https://tsukurimashou.org/ocr.php.en
+Archive: https://tsukurimashou.org/files/ocr-0.3.1.zip
+
+This face is separate from the legacy Barcodesoft OCRB font already in this repository.
+
+The printer-dot numeric rasters in src/retail_font.hpp use the same OCR B designs.
+Their glyph metrics and bitmaps are calibrated against the matching bitonal Labelary
+fixtures under tests/golden/retail-native-fonts, reproduced by tools/generate_retail_glyphs.py.

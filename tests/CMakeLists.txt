@@ -4,6 +4,8 @@ qt_add_resources(qtzpl_tests "qtzpl_test_goldens"
   PREFIX "/qtzpl/tests/golden"
   BASE "${CMAKE_CURRENT_SOURCE_DIR}/golden"
   FILES
+    golden/code128-extended/code128-font-a-caption.zpl
+    golden/code128-extended/code128-font-a-caption-labelary-bitonal.png
     golden/code128-gs1-n.zpl
     golden/code128-gs1-n-labelary-bitonal.png
     golden/code128-gs1-b.zpl
@@ -70,6 +72,67 @@ qt_add_resources(qtzpl_tests "qtzpl_test_goldens"
 # QtTest's Windows GUI executable does not reliably expose stdout to CTest.
 # Always keep the detailed result in the build tree, including failed rows.
 add_test(NAME qtzpl_tests COMMAND qtzpl_tests -o "${CMAKE_CURRENT_BINARY_DIR}/test_results.txt,txt")
+
+add_executable(qtzpl_command_extensions_tests test_command_extensions.cpp ../src/linear_encoders.cpp)
+target_link_libraries(qtzpl_command_extensions_tests PRIVATE QtZpl::QtZpl Qt6::Test)
+file(GLOB QTZPL_EXTENSION_GOLDENS CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/golden/extensions/*.zpl" "${CMAKE_CURRENT_SOURCE_DIR}/golden/extensions/*.png")
+qt_add_resources(qtzpl_command_extensions_tests "extensions" PREFIX "/qtzpl/extensions" BASE "${CMAKE_CURRENT_SOURCE_DIR}/golden/extensions" FILES ${QTZPL_EXTENSION_GOLDENS})
+add_test(NAME qtzpl_command_extensions_tests COMMAND qtzpl_command_extensions_tests -o "${CMAKE_CURRENT_BINARY_DIR}/extensions_results.txt,txt")
+
+foreach(encoder IN ITEMS aztec databar micropdf417 maxicode_extended datamatrix_rectangular)
+  set(encoder_test "test_${encoder}.cpp")
+  if(encoder MATCHES "^(aztec|databar|micropdf417)$")
+    set(encoder_test "test_${encoder}_encoder.cpp")
+  endif()
+  add_executable(qtzpl_${encoder}_tests ${encoder_test})
+  target_compile_definitions(qtzpl_${encoder}_tests PRIVATE QTZPL_STATIC)
+  target_link_libraries(qtzpl_${encoder}_tests PRIVATE QtZpl::QtZpl Qt6::Test)
+  add_test(NAME qtzpl_${encoder}_tests COMMAND qtzpl_${encoder}_tests -o "${CMAKE_CURRENT_BINARY_DIR}/${encoder}_results.txt,txt")
+endforeach()
+target_sources(qtzpl_aztec_tests PRIVATE ../src/aztec_encoder.cpp)
+target_sources(qtzpl_databar_tests PRIVATE ../src/databar_encoder.cpp)
+target_sources(qtzpl_micropdf417_tests PRIVATE ../src/micropdf417_encoder.cpp)
+target_sources(qtzpl_maxicode_extended_tests PRIVATE ../src/maxicode_encoder.cpp)
+foreach(group IN ITEMS aztec databar micropdf417 maxicode-extended datamatrix-rectangular datamatrix-diagnostics pdf417-truncated)
+  file(GLOB group_goldens CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/golden/${group}/*.zpl" "${CMAKE_CURRENT_SOURCE_DIR}/golden/${group}/*.png")
+  string(REPLACE "-" "_" target_suffix "${group}")
+  if(group STREQUAL "pdf417-truncated")
+    set(target_suffix micropdf417)
+  elseif(group STREQUAL "datamatrix-diagnostics")
+    set(target_suffix datamatrix_rectangular)
+  endif()
+  qt_add_resources(qtzpl_${target_suffix}_tests "${target_suffix}_${group}_goldens" PREFIX "/qtzpl/tests/golden" BASE "${CMAKE_CURRENT_SOURCE_DIR}/golden" FILES ${group_goldens})
+endforeach()
+
+add_executable(qtzpl_code128_extended_tests test_code128_extended.cpp)
+target_link_libraries(qtzpl_code128_extended_tests PRIVATE QtZpl::QtZpl Qt6::Test)
+file(GLOB QTZPL_CODE128_EXTENDED_GOLDENS CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/golden/code128-extended/*.zpl" "${CMAKE_CURRENT_SOURCE_DIR}/golden/code128-extended/*.png")
+qt_add_resources(qtzpl_code128_extended_tests "code128_extended" PREFIX "/qtzpl/tests/golden" BASE "${CMAKE_CURRENT_SOURCE_DIR}/golden" FILES ${QTZPL_CODE128_EXTENDED_GOLDENS})
+add_test(NAME qtzpl_code128_extended_tests COMMAND qtzpl_code128_extended_tests -o "${CMAKE_CURRENT_BINARY_DIR}/code128_extended_results.txt,txt")
+
+add_executable(qtzpl_barcode_anchors_tests test_barcode_anchors.cpp)
+target_link_libraries(qtzpl_barcode_anchors_tests PRIVATE QtZpl::QtZpl Qt6::Test)
+file(GLOB QTZPL_ANCHOR_GOLDENS CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/golden/barcode-anchors/*.zpl" "${CMAKE_CURRENT_SOURCE_DIR}/golden/barcode-anchors/*.png")
+qt_add_resources(qtzpl_barcode_anchors_tests "barcode_anchors" PREFIX "/qtzpl/tests/golden" BASE "${CMAKE_CURRENT_SOURCE_DIR}/golden" FILES ${QTZPL_ANCHOR_GOLDENS})
+add_test(NAME qtzpl_barcode_anchors_tests COMMAND qtzpl_barcode_anchors_tests -o "${CMAKE_CURRENT_BINARY_DIR}/barcode_anchors_results.txt,txt")
+
+foreach(group IN ITEMS retail-native-fonts font-glyphs)
+  if(group STREQUAL "retail-native-fonts")
+    set(test_name retail_font)
+  else()
+    set(test_name font_glyphs)
+  endif()
+  add_executable(qtzpl_${test_name}_tests test_${test_name}.cpp)
+  target_link_libraries(qtzpl_${test_name}_tests PRIVATE QtZpl::QtZpl Qt6::Test)
+  file(GLOB glyph_goldens CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/golden/${group}/*.zpl"
+    "${CMAKE_CURRENT_SOURCE_DIR}/golden/${group}/*.png"
+    "${CMAKE_CURRENT_SOURCE_DIR}/golden/${group}/*.json")
+  qt_add_resources(qtzpl_${test_name}_tests "${test_name}_goldens"
+    PREFIX "/qtzpl/tests/golden" BASE "${CMAKE_CURRENT_SOURCE_DIR}/golden" FILES ${glyph_goldens})
+  add_test(NAME qtzpl_${test_name}_tests COMMAND qtzpl_${test_name}_tests
+    -o "${CMAKE_CURRENT_BINARY_DIR}/${test_name}_results.txt,txt")
+endforeach()
 
 # Correctness guards for measured optimization paths. Timings remain opt-in.
 foreach(area IN ITEMS encoder parser renderer qr)

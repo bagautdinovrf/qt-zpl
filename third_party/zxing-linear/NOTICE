@@ -1,0 +1,4 @@
+Code 93 pattern table and full ASCII mapping adapted from ZXing Code93Reader.java and Code93Writer.java (Apache-2.0).
+Copyright ZXing authors.
+https://github.com/zxing/zxing
+QtZpl adaptation: C++23 value types, explicit errors, bounded input.

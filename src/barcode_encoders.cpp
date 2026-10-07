@@ -4,6 +4,7 @@
 #include <array>
 #include <algorithm>
 #include <limits>
+#include <optional>
 #include <string_view>
 
 namespace QtZpl::BarcodeEncoders {
@@ -26,6 +27,13 @@ constexpr std::array<DmSize,24> sizes{{
   {44,44,2,2,56,1}, {48,48,2,2,68,1}, {52,52,2,2,84,2}, {64,64,4,4,112,2},
   {72,72,4,4,144,4}, {80,80,4,4,192,4}, {88,88,4,4,224,4}, {96,96,4,4,272,4},
   {104,104,4,4,336,6}, {120,120,6,6,408,6}, {132,132,6,6,496,8}, {144,144,6,6,620,10}
+}};
+
+// ISO/IEC 16022 ECC200 rectangular symbols. Multi-region symbols are split
+// horizontally; each region has its own solid and alternating border pair.
+constexpr std::array<DmSize,6> rectangularSizes{{
+  DmSize{8,18,1,1,7,1}, {8,32,2,1,11,1}, {12,26,1,1,14,1},
+  {12,36,2,1,18,1}, {16,36,2,1,24,1}, {16,48,2,1,28,1}
 }};
 
 class Galois final {
@@ -78,6 +86,60 @@ QByteArray encodeAscii(const QByteArray& content, bool gs1) {
     else result.append(char(c+1));
   }
   return result;
+}
+
+// ISO/IEC 16022 C40/Text character sets and terminal triplet handling.
+// Character mappings follow ZXing C40Encoder/TextEncoder (Apache-2.0),
+// Copyright 2006-2007 Jeremias Maerki; see third_party/zxing-datamatrix.
+void compactCharacter(unsigned char c,bool text,QVector<int>& values) {
+  if(c>=128){values.append(1);values.append(30);compactCharacter(c-128,text,values);return;}
+  if(c==' '){values.append(3);return;}
+  if(c>='0'&&c<='9'){values.append(c-'0'+4);return;}
+  const unsigned char first=text?'a':'A',last=text?'z':'Z';
+  if(c>=first&&c<=last){values.append(c-first+14);return;}
+  if(c<' '){values.append(0);values.append(c);return;}
+  if(c<='/'){values.append(1);values.append(c-'!');return;}
+  if(c<='@'){values.append(1);values.append(c-':'+15);return;}
+  if(c>='['&&c<='_'){values.append(1);values.append(c-'['+22);return;}
+  values.append(2);
+  values.append(!text?c-'`':c=='`'?0:c<='Z'?c-'A'+1:c-'{'+27);
+}
+
+std::optional<QByteArray> compactDataMatrix(const QByteArray& data,bool text,int capacity) {
+  QVector<int> values;values.reserve(data.size()*2);
+  QVector<int> ends;ends.reserve(data.size()+1);ends.append(0);
+  for(const unsigned char c:data){compactCharacter(c,text,values);ends.append(values.size());}
+  // ASCII suffix costs are computed once. Looking for a legal terminal
+  // boundary remains linear even at the largest ECC200 capacity.
+  QVector<int> suffixCost(data.size()+1);
+  for(qsizetype i=data.size();i>0;){
+    --i;const auto c=static_cast<unsigned char>(data[i]);
+    const bool pair=c>='0'&&c<='9'&&i+1<data.size()&&data[i+1]>='0'&&data[i+1]<='9';
+    suffixCost[i]=pair?1+suffixCost[i+2]:(c>=128?2:1)+suffixCost[i+1];
+  }
+  qsizetype prefix=-1;bool padTriplet=false,unlatch=false;
+  for(qsizetype count=data.size();count>0;--count){
+    const int valueCount=ends[count];
+    const bool padded=count==data.size()&&valueCount%3==2;
+    if(valueCount%3!=0&&!padded)continue;
+    const int compactWords=1+2*((valueCount+2)/3);
+    const int suffix=suffixCost[count];
+    const bool implicitAscii=suffix==1&&count+1==data.size()&&compactWords+1==capacity;
+    const bool needsUnlatch=!padded&&!implicitAscii&&(suffix>0||compactWords<capacity);
+    const int total=compactWords+suffix+(needsUnlatch?1:0);
+    if(total>capacity||(padded&&total!=capacity))continue;
+    prefix=count;padTriplet=padded;unlatch=needsUnlatch;break;
+  }
+  if(prefix<0)return std::nullopt;
+  values.resize(ends[prefix]);if(padTriplet)values.append(0);
+  QByteArray words;words.reserve(capacity);words.append(char(text?239:230));
+  for(qsizetype i=0;i<values.size();i+=3){
+    const int packed=1600*values[i]+40*values[i+1]+values[i+2]+1;
+    words.append(char(packed/256));words.append(char(packed%256));
+  }
+  if(unlatch)words.append(char(254));
+  words+=encodeAscii(data.sliced(prefix),false);
+  return words;
 }
 
 void pad(QByteArray& data,int count) {
@@ -162,7 +224,7 @@ std::expected<int,QString> code128DataValue(QChar c,char subset) {
 
 void appendCode128Checksum(QVector<int>& words) {
   int checksum=words.front();
-  for(qsizetype i=1;i<words.size();++i)checksum+=static_cast<int>(i)*words[i];
+  for(qsizetype i=1;i<words.size();++i)checksum=(checksum+static_cast<int>(i%103)*words[i])%103;
   words.append(checksum%103);
 }
 
@@ -354,13 +416,44 @@ std::expected<Matrix,QString> qrCode(const QByteArray& data,QChar errorCorrectio
 }
 
 std::expected<Matrix,QString> dataMatrix(QByteArray data,bool gs1,int requestedSize) {
-  auto words=Detail::dataMatrixCodewords(data,gs1); const DmSize* selected=nullptr;
-  if(requestedSize>0){
-    for(const auto& size:sizes)if(size.rows==requestedSize&&size.columns==requestedSize){selected=&size;break;}
-    if(!selected)return std::unexpected(QStringLiteral("Requested DataMatrix size is unsupported"));
-    if(selected->dataWords()<words.size())return std::unexpected(QStringLiteral("Data does not fit the requested DataMatrix size"));
-  }else for(const auto& size:sizes)if(size.dataWords()>=words.size()){selected=&size;break;}
-  if(!selected)return std::unexpected(QStringLiteral("Data exceeds the ECC200 capacity"));
+  return dataMatrix(std::move(data),gs1,requestedSize,requestedSize,false);
+}
+
+std::expected<Matrix,QString> dataMatrix(QByteArray data,bool gs1,int requestedRows,
+                                       int requestedColumns,bool rectangular) {
+  if(data.size()>3116)
+    return std::unexpected(QStringLiteral("DataMatrix payload exceeds the maximum ECC200 capacity"));
+  if(requestedRows<0||requestedColumns<0)
+    return std::unexpected(QStringLiteral("DataMatrix dimensions cannot be negative"));
+  const auto asciiWords=Detail::dataMatrixCodewords(data,gs1);
+  auto words=asciiWords; const DmSize* selected=nullptr;
+  bool matchingDimensions=false;
+  const auto consider=[&](const auto& candidates){
+    for(const auto& size:candidates){
+      if((requestedRows>0&&size.rows!=requestedRows)||(requestedColumns>0&&size.columns!=requestedColumns))continue;
+      matchingDimensions=true;
+      if(selected&&size.dataWords()>=selected->dataWords())continue;
+      if(size.dataWords()>=asciiWords.size()){words=asciiWords;selected=&size;continue;}
+      // Preserve the proven ASCII/GS1 encodation when it fits. C40/Text is
+      // considered only when it permits a smaller (or explicitly requested)
+      // symbol; an equal-size alternative must not change existing modules.
+      if(gs1)continue;
+      const auto c40=compactDataMatrix(data,false,size.dataWords());
+      const auto text=compactDataMatrix(data,true,size.dataWords());
+      if(!c40&&!text)continue;
+      words=(!text||(c40&&c40->size()<=text->size()))?*c40:*text;
+      selected=&size;
+    }
+  };
+  if(requestedRows>0&&requestedColumns>0){
+    // An explicit valid size determines the shape even if ratio was omitted.
+    consider(sizes);consider(rectangularSizes);
+  }else if(rectangular)consider(rectangularSizes);
+  else consider(sizes);
+  if(!selected){
+    if(!matchingDimensions)return std::unexpected(QStringLiteral("Requested DataMatrix size is unsupported"));
+    return std::unexpected(QStringLiteral("Data exceeds the requested ECC200 symbol capacity"));
+  }
   pad(words,selected->dataWords()); words=addEcc(std::move(words),*selected);
   Layout layout(*selected);layout.place(words);return layout.merge();
 }
@@ -387,8 +480,42 @@ std::expected<QVector<bool>,QString> ean13(QString data,QString* normalized) {
 }
 
 std::expected<QVector<int>,QString> Detail::code128Codewords(QStringView data,QChar mode) {
+  return code128Codewords(data,mode,false);
+}
+
+std::expected<QString,QString> Detail::code128UccData(QStringView data,QChar mode,bool uccCheckDigit) {
+  if(data.size()>16384)return std::unexpected(QStringLiteral("Code 128 field data exceeds 16384 characters"));
+  const bool caseMode=mode.toUpper()==u'U';
+  if(!caseMode&&!uccCheckDigit)return data.toString();
+  if(caseMode&&(data.size()!=19||!std::ranges::all_of(data,code128Digit)))
+    return std::unexpected(QStringLiteral("Code 128 UCC case mode requires exactly 19 decimal digits"));
+  QString digits;
+  digits.reserve(data.size());
+  for(qsizetype i=0;i<data.size();++i){
+    const QChar c=data[i];
+    if(!caseMode&&c==u'>'&&i+1<data.size()&&QStringView{u"56789:;"}.contains(data[i+1])){++i;continue;}
+    if(!caseMode&&mode.toUpper()==u'D'&&(c==u'('||c==u')'||c==u' '))continue;
+    if(!code128Digit(c))return std::unexpected(QStringLiteral("Code 128 UCC Mod 10 requires numeric field data"));
+    digits.append(c);
+  }
+  if(digits.isEmpty())return std::unexpected(QStringLiteral("Code 128 UCC Mod 10 requires numeric field data"));
+  int sum=0,weight=3;
+  for(qsizetype i=digits.size();i>0;){sum=(sum+digits[--i].digitValue()*weight)%10;weight=4-weight;}
+  QString normalized=data.toString();
+  normalized.append(QChar(u'0'+(10-sum%10)%10));
+  return normalized;
+}
+
+std::expected<QVector<int>,QString> Detail::code128Codewords(QStringView data,QChar mode,bool uccCheckDigit) {
   if(data.isEmpty())return std::unexpected(QStringLiteral("Code 128 requires field data"));
+  if(data.size()>16384)return std::unexpected(QStringLiteral("Code 128 field data exceeds 16384 characters"));
   mode=mode.toUpper();
+  if(mode==u'U'||uccCheckDigit){
+    const auto normalized=code128UccData(data,mode,uccCheckDigit);
+    if(!normalized)return std::unexpected(normalized.error());
+    if(mode==u'U')return code128Gs1(*normalized);
+    return code128Codewords(*normalized,mode,false);
+  }
   if(mode==u'D')return code128Gs1(data);
   if(!QStringView{u"NABC"}.contains(mode))
     return std::unexpected(QStringLiteral("Code 128 mode %1 is not implemented").arg(mode));
@@ -412,7 +539,11 @@ std::expected<QVector<int>,QString> Detail::code128Codewords(QStringView data,QC
 }
 
 std::expected<QVector<bool>,QString> code128(QString data,QChar mode) {
-  auto words=Detail::code128Codewords(data,mode);if(!words)return std::unexpected(words.error());
+  return code128(std::move(data),mode,false);
+}
+
+std::expected<QVector<bool>,QString> code128(QString data,QChar mode,bool uccCheckDigit) {
+  auto words=Detail::code128Codewords(data,mode,uccCheckDigit);if(!words)return std::unexpected(words.error());
   QVector<bool> modules;modules.reserve((words->size()*11)+13);
   for(const int word:*words)for(const char* p=code128Patterns[word];*p;++p){const int width=*p-'0';const bool bar=(p-code128Patterns[word])%2==0;for(int i=0;i<width;++i)modules.append(bar);}
   for(const char* p=code128Patterns.back();*p;++p){const int width=*p-'0';const bool bar=(p-code128Patterns.back())%2==0;for(int i=0;i<width;++i)modules.append(bar);}

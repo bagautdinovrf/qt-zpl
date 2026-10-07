@@ -3,10 +3,17 @@ add_executable(qtzpl_benchmarks
   algorithm_cases.cpp
   pipeline_cases.cpp
   component_cases.cpp
+  extension_cases.cpp
+  ../src/linear_encoders.cpp
+  ../src/aztec_encoder.cpp
+  ../src/databar_encoder.cpp
+  ../src/maxicode_encoder.cpp
+  ../src/micropdf417_encoder.cpp
 )
 target_link_libraries(qtzpl_benchmarks PRIVATE QtZpl::QtZpl)
 target_include_directories(qtzpl_benchmarks PRIVATE "${PROJECT_SOURCE_DIR}/src")
 target_compile_definitions(qtzpl_benchmarks PRIVATE
+  QTZPL_STATIC
   QTZPL_BENCH_CORPUS_DIR="${PROJECT_SOURCE_DIR}/tests/corpus/go-zpl-demo"
   QTZPL_BENCH_FONT_FILE="${PROJECT_SOURCE_DIR}/resources/fonts/font0.ttf"
   QTZPL_BENCH_BUILD_TYPE="$<CONFIG>"

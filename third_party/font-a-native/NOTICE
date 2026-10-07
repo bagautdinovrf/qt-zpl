@@ -1,0 +1,40 @@
+QtZpl Font A Native
+==================
+
+resources/fonts/font_a_native.ttf is a renamed derivative of the licensed
+DejaVu Sans Mono source already embedded as resources/fonts/font_a.ttf.
+Original source SHA-256:
+b4a6c3e4faab8773f4ff761d56451646409f29abedd68f05d38c2df667d3c582
+
+Copyright (c) 2003 by Bitstream, Inc. All Rights Reserved.
+DejaVu changes are in public domain. The complete font license is in LICENSE
+and remains embedded in the derivative's name table.
+Upstream: https://dejavu-fonts.github.io/
+License: https://dejavu-fonts.github.io/License.html
+
+QtZpl modifications: affine normalization of glyph outlines to printer Font A
+metrics, a 1365-unit fixed advance, rounded design-grid coordinates, regenerated
+TrueType hints, and the new family name "QtZpl Font A Native". The transformation
+coefficients in src/printer_font_metrics.hpp were checked against Labelary
+vector output; no downloaded Labelary font subset is a generation input.
+
+Reproduction
+------------
+Run tools/generate_font_a.py with FontForge 20251009, source commit
+c41bdb922285f35defd1e1385adfd13bde1ab32a, and ttfautohint 1.8.4:
+
+  fontforge -lang=py -script tools/generate_font_a.py --ttfautohint PATH
+
+FontForge: https://fontforge.org/
+ttfautohint: https://freetype.org/ttfautohint/
+ttfautohint options: -x 0 (disable the screen-font x-height increase).
+ttfautohint's COPYING grants an explicit exception for copying, distributing,
+and modifying generated font bytecode independently of its tool licenses:
+https://github.com/fonttools/ttfautohint-mirror/blob/master/COPYING
+The generator uses only the committed original font and metric coefficients;
+it normalizes output timestamps and SFNT checksums for reproducible assets.
+These tools are generation-time tools, not build or runtime requirements.
+
+Rendering uses Qt's bundled FreeType (or the configured system FreeType) with
+native TrueType hints and a monochrome raster. Hints are fitted at the selected
+height before horizontal stretching. Each render owns its font face and cache.

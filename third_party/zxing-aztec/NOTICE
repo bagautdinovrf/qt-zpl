@@ -1,0 +1,24 @@
+QtZpl Aztec encoder
+
+The Aztec placement in src/aztec_encoder.cpp, and
+the reference vectors in tests/test_aztec_encoder.cpp, are adapted from
+ZXing-C++ v2.3.0, released under the Apache License, Version 2.0.
+
+Copyright 2016 Huy Cuong Nguyen
+Copyright 2016 ZXing authors
+
+Upstream source:
+https://github.com/zxing-cpp/zxing-cpp/tree/v2.3.0/core/src/aztec
+https://github.com/zxing-cpp/zxing-cpp/blob/v2.3.0/test/unit/aztec/AZEncoderTest.cpp
+
+The high-level character tables and block-selection algorithm are adapted
+from OkapiBarcode's AztecCode.java, Apache License, Version 2.0:
+Copyright 2014 Robin Stuart
+https://github.com/woo-j/OkapiBarcode/blob/365889dd5aea8118cddcc6121aeb6c8a2f7be4d1/src/main/java/uk/org/okapibarcode/backend/AztecCode.java
+
+Modified for QtZpl: standalone QByteArray/std::expected interface; bounded
+input; immutable lookup tables; local finite-field arithmetic; ZPL size
+selection, reader initialization, ECI, and decimal rune handling. The table
+switch emitter replaces the upstream switch tree with explicit mode tables.
+
+There is no dependency on ZXing or OkapiBarcode at build time or runtime.

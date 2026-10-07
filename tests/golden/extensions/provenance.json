@@ -1,0 +1,471 @@
+{
+  "source": "Labelary API",
+  "date": "2026-10-07",
+  "dpmm": 8,
+  "size": "3x2",
+  "quality": "Bitonal",
+  "responses": [
+    {
+      "name": "b8-ft-n",
+      "warnings": ""
+    },
+    {
+      "name": "b8-ft-r",
+      "warnings": ""
+    },
+    {
+      "name": "b8-ft-i",
+      "warnings": ""
+    },
+    {
+      "name": "b8-ft-b",
+      "warnings": ""
+    },
+    {
+      "name": "b9-ft-n",
+      "warnings": ""
+    },
+    {
+      "name": "b9-ft-r",
+      "warnings": ""
+    },
+    {
+      "name": "b9-ft-i",
+      "warnings": ""
+    },
+    {
+      "name": "b9-ft-b",
+      "warnings": ""
+    },
+    {
+      "name": "bu-ft-n",
+      "warnings": ""
+    },
+    {
+      "name": "bu-ft-r",
+      "warnings": ""
+    },
+    {
+      "name": "bu-ft-i",
+      "warnings": ""
+    },
+    {
+      "name": "bu-ft-b",
+      "warnings": ""
+    },
+    {
+      "name": "ba-ft-n",
+      "warnings": ""
+    },
+    {
+      "name": "ba-ft-r",
+      "warnings": ""
+    },
+    {
+      "name": "ba-ft-i",
+      "warnings": ""
+    },
+    {
+      "name": "ba-ft-b",
+      "warnings": ""
+    },
+    {
+      "name": "b2-ft-n",
+      "warnings": ""
+    },
+    {
+      "name": "b2-ft-r",
+      "warnings": ""
+    },
+    {
+      "name": "b2-ft-i",
+      "warnings": ""
+    },
+    {
+      "name": "b2-ft-b",
+      "warnings": ""
+    },
+    {
+      "name": "bi-ft-n",
+      "warnings": ""
+    },
+    {
+      "name": "bi-ft-r",
+      "warnings": ""
+    },
+    {
+      "name": "bi-ft-i",
+      "warnings": ""
+    },
+    {
+      "name": "bi-ft-b",
+      "warnings": ""
+    },
+    {
+      "name": "ft-gb",
+      "warnings": ""
+    },
+    {
+      "name": "ft-gc",
+      "warnings": ""
+    },
+    {
+      "name": "ft-ge",
+      "warnings": ""
+    },
+    {
+      "name": "ft-gd",
+      "warnings": ""
+    },
+    {
+      "name": "ft-gf",
+      "warnings": ""
+    },
+    {
+      "name": "font-a-atlas",
+      "warnings": ""
+    },
+    {
+      "name": "fo-text-n-0",
+      "warnings": ""
+    },
+    {
+      "name": "fo-text-n-1",
+      "warnings": ""
+    },
+    {
+      "name": "fo-text-n-2",
+      "warnings": ""
+    },
+    {
+      "name": "fo-text-r-0",
+      "warnings": ""
+    },
+    {
+      "name": "fo-text-r-1",
+      "warnings": ""
+    },
+    {
+      "name": "fo-text-r-2",
+      "warnings": ""
+    },
+    {
+      "name": "fo-text-i-0",
+      "warnings": ""
+    },
+    {
+      "name": "fo-text-i-1",
+      "warnings": ""
+    },
+    {
+      "name": "fo-text-i-2",
+      "warnings": ""
+    },
+    {
+      "name": "fo-text-b-0",
+      "warnings": ""
+    },
+    {
+      "name": "fo-text-b-1",
+      "warnings": ""
+    },
+    {
+      "name": "fo-text-b-2",
+      "warnings": ""
+    },
+    {
+      "name": "fo-right-box",
+      "warnings": ""
+    },
+    {
+      "name": "fo-fw-right",
+      "warnings": ""
+    },
+    {
+      "name": "ft-text-n-0",
+      "warnings": ""
+    },
+    {
+      "name": "ft-text-n-1",
+      "warnings": ""
+    },
+    {
+      "name": "ft-text-n-2",
+      "warnings": ""
+    },
+    {
+      "name": "ft-text-r-0",
+      "warnings": ""
+    },
+    {
+      "name": "ft-text-r-1",
+      "warnings": ""
+    },
+    {
+      "name": "ft-text-r-2",
+      "warnings": ""
+    },
+    {
+      "name": "ft-text-i-0",
+      "warnings": ""
+    },
+    {
+      "name": "ft-text-i-1",
+      "warnings": ""
+    },
+    {
+      "name": "ft-text-i-2",
+      "warnings": ""
+    },
+    {
+      "name": "ft-text-b-0",
+      "warnings": ""
+    },
+    {
+      "name": "ft-text-b-1",
+      "warnings": ""
+    },
+    {
+      "name": "ft-text-b-2",
+      "warnings": ""
+    },
+    {
+      "name": "ft-right-box",
+      "warnings": ""
+    },
+    {
+      "name": "ft-fw-right",
+      "warnings": ""
+    },
+    {
+      "name": "ft-omitted",
+      "warnings": ""
+    },
+    {
+      "name": "ft-bx-n",
+      "warnings": ""
+    },
+    {
+      "name": "ft-bx-r",
+      "warnings": ""
+    },
+    {
+      "name": "ft-bx-i",
+      "warnings": ""
+    },
+    {
+      "name": "ft-bx-b",
+      "warnings": ""
+    },
+    {
+      "name": "ft-bq-n",
+      "warnings": ""
+    },
+    {
+      "name": "ft-bq-r",
+      "warnings": ""
+    },
+    {
+      "name": "ft-bq-i",
+      "warnings": ""
+    },
+    {
+      "name": "ft-bq-b",
+      "warnings": ""
+    },
+    {
+      "name": "ft-b7-n",
+      "warnings": ""
+    },
+    {
+      "name": "ft-b7-r",
+      "warnings": ""
+    },
+    {
+      "name": "ft-b7-i",
+      "warnings": ""
+    },
+    {
+      "name": "ft-b7-b",
+      "warnings": ""
+    },
+    {
+      "name": "font-a-h10-w5",
+      "warnings": ""
+    },
+    {
+      "name": "font-a-h20-w10",
+      "warnings": ""
+    },
+    {
+      "name": "font-a-h30-w0",
+      "warnings": "38|1|^A|3|Value 0 is less than minimum value 1 and was ignored"
+    },
+    {
+      "name": "font-a-h50-w50",
+      "warnings": ""
+    },
+    {
+      "name": "font0-hyphen-h25-w25",
+      "warnings": ""
+    },
+    {
+      "name": "font0-en-dash-h25-w25",
+      "warnings": ""
+    },
+    {
+      "name": "font0-em-dash-h25-w25",
+      "warnings": ""
+    },
+    {
+      "name": "font0-minus-h25-w25",
+      "warnings": ""
+    },
+    {
+      "name": "font0-hyphen-h40-w40",
+      "warnings": ""
+    },
+    {
+      "name": "font0-en-dash-h40-w40",
+      "warnings": ""
+    },
+    {
+      "name": "font0-em-dash-h40-w40",
+      "warnings": ""
+    },
+    {
+      "name": "font0-minus-h40-w40",
+      "warnings": ""
+    },
+    {
+      "name": "font0-hyphen-h60-w30",
+      "warnings": ""
+    },
+    {
+      "name": "font0-en-dash-h60-w30",
+      "warnings": ""
+    },
+    {
+      "name": "font0-em-dash-h60-w30",
+      "warnings": ""
+    },
+    {
+      "name": "font0-minus-h60-w30",
+      "warnings": ""
+    },
+    {
+      "name": "qr-state-base",
+      "size": "4x2",
+      "description": "QR command changes following PDF417 module width; BX preserves and BY overrides it.",
+      "warnings": ""
+    },
+    {
+      "name": "qr-state-bx6",
+      "size": "4x2",
+      "description": "QR command changes following PDF417 module width; BX preserves and BY overrides it.",
+      "warnings": ""
+    },
+    {
+      "name": "qr-state-qr-10",
+      "size": "4x2",
+      "description": "QR command changes following PDF417 module width; BX preserves and BY overrides it.",
+      "warnings": ""
+    },
+    {
+      "name": "qr-state-qr-100",
+      "size": "4x2",
+      "description": "QR command changes following PDF417 module width; BX preserves and BY overrides it.",
+      "warnings": ""
+    },
+    {
+      "name": "qr-state-qr-11",
+      "size": "4x2",
+      "description": "QR command changes following PDF417 module width; BX preserves and BY overrides it.",
+      "warnings": ""
+    },
+    {
+      "name": "qr-state-qr-empty",
+      "size": "4x2",
+      "description": "QR command changes following PDF417 module width; BX preserves and BY overrides it.",
+      "warnings": ""
+    },
+    {
+      "name": "qr-state-qr-invalid",
+      "size": "4x2",
+      "description": "QR command changes following PDF417 module width; BX preserves and BY overrides it.",
+      "warnings": ""
+    },
+    {
+      "name": "qr-state-qr-omitted",
+      "size": "4x2",
+      "description": "QR command changes following PDF417 module width; BX preserves and BY overrides it.",
+      "warnings": ""
+    },
+    {
+      "name": "qr-state-qr-zero",
+      "size": "4x2",
+      "description": "QR command changes following PDF417 module width; BX preserves and BY overrides it.",
+      "warnings": ""
+    },
+    {
+      "name": "qr-state-qr4-bx6",
+      "size": "4x2",
+      "description": "QR command changes following PDF417 module width; BX preserves and BY overrides it.",
+      "warnings": ""
+    },
+    {
+      "name": "qr-state-qr4-by2",
+      "size": "4x2",
+      "description": "QR command changes following PDF417 module width; BX preserves and BY overrides it.",
+      "warnings": ""
+    },
+    {
+      "name": "qr-state-qr4-command",
+      "size": "4x2",
+      "description": "QR command changes following PDF417 module width; BX preserves and BY overrides it.",
+      "warnings": ""
+    },
+    {
+      "name": "qr-state-qr4",
+      "size": "4x2",
+      "description": "QR command changes following PDF417 module width; BX preserves and BY overrides it.",
+      "warnings": ""
+    },
+    {
+      "name": "qr-state-qr5",
+      "size": "4x2",
+      "description": "QR command changes following PDF417 module width; BX preserves and BY overrides it.",
+      "warnings": ""
+    },
+    {
+      "name": "dm-compact-text-sampler",
+      "size": "2x1",
+      "warnings": ""
+    },
+    {
+      "name": "dm-compact-text-lower",
+      "size": "2x1",
+      "warnings": ""
+    },
+    {
+      "name": "dm-compact-text-terminal-one",
+      "size": "2x1",
+      "warnings": ""
+    },
+    {
+      "name": "dm-compact-c40-upper",
+      "size": "2x1",
+      "warnings": ""
+    },
+    {
+      "name": "dm-compact-c40-tail-digit",
+      "size": "2x1",
+      "warnings": ""
+    },
+    {
+      "name": "dm-compact-text-punctuation",
+      "size": "2x1",
+      "warnings": ""
+    }
+  ]
+}

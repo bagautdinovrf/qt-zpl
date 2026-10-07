@@ -1,6 +1,7 @@
 #include <QtZpl/qtzpl.hpp>
 
 #include <QtCore/QLatin1StringView>
+#include <QtCore/QStringConverter>
 #include <algorithm>
 #include <optional>
 
@@ -41,6 +42,18 @@ Justification justificationValue(const QList<QString>& p, qsizetype index) {
     case 'J': return Justification::Justified;
     default: return Justification::Left;
   }
+}
+
+Justification fieldJustification(const QList<QString>& p,qsizetype index) {
+  switch(intValue(p,index)){
+    case 1:return Justification::Right;
+    case 2:return Justification::Auto;
+    default:return Justification::Left;
+  }
+}
+
+bool missingParameter(const QList<QString>& p,qsizetype index) {
+  return index>=p.size()||p[index].trimmed().isEmpty();
 }
 
 LineColor colorValue(const QList<QString>& p, qsizetype index) {
@@ -118,7 +131,15 @@ private:
       }
     }
     const auto start = position_;
-    while (position_ < input_.size() && input_[position_] != caret_ && input_[position_] != tilde_) ++position_;
+    int parameterIndex=0;
+    while(position_<input_.size()&&input_[position_]!=caret_){
+      if(input_[position_]==tilde_){
+        // ^BX's escape character is a literal parameter; the default is '~'.
+        if(opcode!=u"BX"||parameterIndex!=6||position_==start||input_[position_-1]!=u',')break;
+      }
+      if(input_[position_]==u',')++parameterIndex;
+      ++position_;
+    }
     return input_.mid(start, position_ - start).toString().remove(u'\r').remove(u'\n');
   }
 
@@ -129,7 +150,7 @@ private:
     current_->commands_.append(Command{std::move(payload), offset, QString{prefix} + opcode + params});
   }
 
-  QString decodeHex(QString value) {
+  QString decodeHex(QString value,qsizetype offset,const QString& source) {
     if (hexIndicator_.isNull()) return value;
     const QStringView encoded{value};
     const auto hexDigit=[](QChar c)->int {
@@ -139,6 +160,28 @@ private:
       if(code>='a'&&code<='f')return code-'a'+10;
       return -1;
     };
+    if(characterSet_==28){
+      QString decoded;decoded.reserve(value.size());
+      for(qsizetype i=0;i<encoded.size();){
+        QByteArray bytes;
+        while(i+2<encoded.size()&&encoded[i]==hexIndicator_){
+          const int high=hexDigit(encoded[i+1]),low=hexDigit(encoded[i+2]);
+          if(high<0||low<0)break;
+          bytes.append(static_cast<char>((high<<4)|low));i+=3;
+        }
+        if(!bytes.isEmpty()){
+          QStringDecoder decoder(QStringDecoder::Utf8,QStringConverter::Flag::Stateless);
+          const QString text=decoder(bytes);
+          if(decoder.hasError()){
+            diagnostics_.append({Severity::Warning,u"invalid-field-encoding"_s,
+              u"The ^FH field contains invalid UTF-8 bytes for ^CI28; its source was preserved."_s,offset,source});
+            hexIndicator_={};return value;
+          }
+          decoded+=text;
+        }else decoded+=encoded[i++];
+      }
+      hexIndicator_={};return decoded;
+    }
     QString decoded;
     decoded.reserve(value.size());
     for (qsizetype i = 0; i < encoded.size(); ++i) {
@@ -187,8 +230,8 @@ private:
     // Field text and raw compatibility commands are not comma-separated
     // parameters. Splitting a large ^FD needlessly allocates one QString per
     // comma; keep the original payload and source intact instead.
-    if(op==u"FD"||op==u"FV"){add(FieldData{decodeHex(raw)},offset,prefix,op,raw);return true;}
-    if(op==u"FS"){add(FieldSeparator{},offset,prefix,op,raw);return true;}
+    if(op==u"FD"||op==u"FV"){add(FieldData{decodeHex(raw,offset,QString{prefix}+op+raw)},offset,prefix,op,raw);return true;}
+    if(op==u"FS"){hexIndicator_={};add(FieldSeparator{},offset,prefix,op,raw);return true;}
     if(op==u"FR"){add(FieldReverse{},offset,prefix,op,raw);return true;}
     if(op==u"FH"){hexIndicator_=raw.isEmpty()?u'_':raw.front();return true;}
     if(op==u"FX"){add(Comment{raw},offset,prefix,op,raw);return true;}
@@ -197,19 +240,26 @@ private:
     if(op==u"GF"){parseGraphicField(offset,raw);return true;}
 
     const auto p = split(raw);
-    if (op == u"FO") add(FieldOrigin{intValue(p,0), intValue(p,1), justificationValue(p,2)}, offset,prefix,op,raw);
-    else if (op == u"FT") add(FieldTypeset{intValue(p,0), intValue(p,1), justificationValue(p,2)}, offset,prefix,op,raw);
-    else if (op == u"FW" || op == u"FP") add(FieldDirection{orientationValue(p)}, offset,prefix,op,raw);
+    if (op == u"FO") add(FieldOrigin{intValue(p,0), intValue(p,1), fieldJustification(p,2),missingParameter(p,2)}, offset,prefix,op,raw);
+    else if (op == u"FT") add(FieldTypeset{intValue(p,0), intValue(p,1), fieldJustification(p,2),missingParameter(p,0),missingParameter(p,1),missingParameter(p,2)}, offset,prefix,op,raw);
+    else if (op == u"FW") add(FieldDirection{orientationValue(p),fieldJustification(p,1)}, offset,prefix,op,raw);
+    else if (op == u"FP") {
+      const QChar requested=charValue(p,0,u'H');
+      add(FieldParameter{QStringView{u"HVR"}.contains(requested)?requested:u'H',std::clamp(intValue(p,1),-10,9999)},offset,prefix,op,raw);
+    }
     else if (op == u"A@") parseDownloadedFont(p,offset,raw);
     else if (op.size() == 2 && op.front() == u'A') parseFont(op, p, offset, raw);
     else if (op == u"CF") add(ChangeFont{charValue(p,0,u'0'), intValue(p,1,30), intValue(p,2,0)}, offset,prefix,op,raw);
     else if (op == u"FB") add(FieldBlock{intValue(p,0), intValue(p,1,1), intValue(p,2), justificationValue(p,3), intValue(p,4)}, offset,prefix,op,raw);
-    else if (op == u"CI") add(CharacterSet{intValue(p,0)}, offset,prefix,op,raw);
+    else if (op == u"CI") {characterSet_=intValue(p,0);add(CharacterSet{characterSet_}, offset,prefix,op,raw);}
     else if (op == u"BY") add(BarcodeDefault{intValue(p,0,2), doubleValue(p,1,3.0), intValue(p,2,10)}, offset,prefix,op,raw);
     else if (op == u"PW") { current_->width_ = intValue(p,0); add(PrintWidth{current_->width_}, offset,prefix,op,raw); }
     else if (op == u"LL") { current_->height_ = intValue(p,0); add(LabelLength{current_->height_}, offset,prefix,op,raw); }
     else if (op == u"LH") { current_->homeX_=intValue(p,0); current_->homeY_=intValue(p,1); add(LabelHome{current_->homeX_,current_->homeY_},offset,prefix,op,raw); }
     else if (op == u"LS") add(LabelShift{intValue(p,0)},offset,prefix,op,raw);
+    else if (op == u"LT") add(LabelTop{std::clamp(intValue(p,0),-120,120)},offset,prefix,op,raw);
+    else if (op == u"PM") add(PrintMirror{charValue(p,0,u'N')==u'Y'},offset,prefix,op,raw);
+    else if (op == u"LR") add(LabelReverse{charValue(p,0,u'N')==u'Y'},offset,prefix,op,raw);
     else if (op == u"MM") add(PrintMode{charValue(p,0,u'T'),charValue(p,1,u'N')==u'Y'},offset,prefix,op,raw);
     else if (op == u"PO") add(PrintOrientation{orientationValue(p)},offset,prefix,op,raw);
     else if (op == u"MD") add(MediaDarkness{intValue(p,0)},offset,prefix,op,raw);
@@ -261,7 +311,7 @@ private:
   }
 
   bool isBarcode(const QString& op) const {
-    static const QList<QString> codes{u"BC"_s,u"B3"_s,u"BE"_s,u"BU"_s,u"BI"_s,u"B2"_s,u"BK"_s,u"BQ"_s,u"BX"_s,u"B7"_s,u"BD"_s,u"BO"_s};
+    static const QList<QString> codes{u"BC"_s,u"B3"_s,u"BE"_s,u"BU"_s,u"BI"_s,u"B2"_s,u"BK"_s,u"BQ"_s,u"BX"_s,u"B7"_s,u"BD"_s,u"BO"_s,u"B0"_s,u"B8"_s,u"B9"_s,u"BA"_s,u"BR"_s,u"BF"_s};
     return codes.contains(op);
   }
 
@@ -288,6 +338,7 @@ private:
   QChar caret_ = u'^';
   QChar tilde_ = u'~';
   QChar hexIndicator_;
+  int characterSet_=0;
 };
 
 std::expected<Document, ParseError> parse(QStringView zpl, const ParseOptions& options) {

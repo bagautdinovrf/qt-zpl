@@ -1,0 +1,24 @@
+{
+  "source": "Labelary API",
+  "quality": "Bitonal",
+  "date": "2026-10-07",
+  "dpmm": 8,
+  "size": "2x1",
+  "responses": [
+    {
+      "name": "dm-compact-ascii-json",
+      "size": "2x1",
+      "warnings": ""
+    },
+    {
+      "name": "dm-compact-c40-punctuation",
+      "size": "2x1",
+      "warnings": ""
+    },
+    {
+      "name": "dm-compact-text-terminal-two",
+      "size": "2x1",
+      "warnings": ""
+    }
+  ]
+}
