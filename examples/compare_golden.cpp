@@ -66,7 +66,12 @@ int main(int argc, char** argv) {
     .ignoreLabelHome = parser.isSet(ignoreHomeOption),
   };
 
-  const auto result = QtZpl::render(QString::fromLatin1(input.readAll()), {}, options);
+  const QByteArray bytes=input.readAll();
+  // UTF-8 is explicit in ^CI28 fixtures. Keep the byte-preserving legacy path
+  // for older examples whose barcode fields contain non-UTF-8 bytes.
+  const auto zpl=bytes.contains("^CI28")||bytes.startsWith("\xEF\xBB\xBF")
+    ?QString::fromUtf8(bytes):QString::fromLatin1(bytes);
+  const auto result = QtZpl::render(zpl, {}, options);
   if (!result || result->labels.isEmpty()) {
     QTextStream(stderr) << "Render failed"
                         << (result ? u": no labels"_s : u": "_s + result.error().message) << Qt::endl;

@@ -4,11 +4,14 @@
 #include "maxicode_encoder.hpp"
 
 #include <QtCore/QByteArray>
+#include <QtCore/QFile>
+#include <QtCore/QtMath>
 #include <QtCore/QtEndian>
 #include <QtGui/QPainter>
 #include <QtGui/QPainterPath>
 #include <QtGui/QFontDatabase>
 #include <QtGui/QTransform>
+#include <QtGui/QRawFont>
 #include <algorithm>
 #include <cmath>
 #include <optional>
@@ -29,6 +32,7 @@ struct State {
   bool reverse = false;
   Orientation fieldDirection = Orientation::Normal;
   ScalableFont font;
+  std::optional<ScalableFont> barcodeInterpretationFont;
   std::optional<FieldBlock> block;
   BarcodeDefault barcodeDefaults;
   std::optional<Barcode> pendingBarcode;
@@ -142,7 +146,58 @@ struct BlockLine {
   bool paragraphEnd = false;
 };
 
-QList<BlockLine> layoutBlockLines(const QString& text,const FieldBlock& block,const QFontMetrics& metrics) {
+// Use the font's design grid rather than QFont::setStretch. On Windows the
+// latter quantizes widths through GDI's integer average-character width, while
+// other Qt backends use a different scale. Font 0 has a 1000-unit em and a
+// 750-unit cap height; independent ZPL height/width scale that same design grid.
+class Font0Metrics {
+public:
+  Font0Metrics(int height,int width)
+    : font(fontBytes(),1000,QFont::PreferNoHinting),
+      scaleX(static_cast<qreal>(width>0?width:height)/1000.0),
+      scaleY(static_cast<qreal>(height)/1000.0),fontHeight(height) {}
+
+  [[nodiscard]] int ascent() const {return qFloor(font.capHeight()*scaleY);}
+  [[nodiscard]] int height() const {return std::max(1,fontHeight);}
+  [[nodiscard]] qreal designAdvance(const QString& text) const {
+    const auto glyphs=font.glyphIndexesForString(text);
+    const auto advances=font.advancesForGlyphIndexes(glyphs,QRawFont::UseDesignMetrics);
+    qreal width=0;for(const auto& advance:advances)width+=advance.x()*scaleX;
+    return width;
+  }
+  [[nodiscard]] int horizontalAdvance(const QString& text) const {return qRound(designAdvance(text));}
+  [[nodiscard]] QPainterPath outline(const QString& text) const {
+    const auto glyphs=font.glyphIndexesForString(text);
+    const auto advances=font.advancesForGlyphIndexes(glyphs,QRawFont::UseDesignMetrics);
+    QPainterPath result;qreal x=0;
+    for(qsizetype i=0;i<glyphs.size();++i){
+      QTransform transform;transform.translate(x,0);transform.scale(scaleX,scaleY);
+      result.addPath(transform.map(font.pathForGlyph(glyphs[i])));
+      x+=advances[i].x()*scaleX;
+    }
+    return result;
+  }
+  void draw(QPainter& painter,int x,int baseline,const QString& text,const QColor& color) const {
+    const auto path=outline(text).translated(x,baseline);
+    painter.fillPath(path,color);
+  }
+private:
+  static QByteArray fontBytes() {
+    static const QByteArray bytes=[] {
+      initializeQtZplResources();
+      QFile file(u":/qtzpl/fonts/font0.ttf"_s);
+      return file.open(QIODevice::ReadOnly)?file.readAll():QByteArray{};
+    }();
+    return bytes;
+  }
+  QRawFont font;
+  qreal scaleX;
+  qreal scaleY;
+  int fontHeight;
+};
+
+template<typename Metrics>
+QList<BlockLine> layoutBlockLines(const QString& text,const FieldBlock& block,const Metrics& metrics) {
   QList<BlockLine> lines;
   const int maximumLines=std::max(1,block.maxLines);
   const int hangingIndent=std::max(0,block.hangingIndent);
@@ -195,7 +250,8 @@ QList<BlockLine> layoutBlockLines(const QString& text,const FieldBlock& block,co
   return lines;
 }
 
-int logicalAlignmentX(const BlockLine& line,const FieldBlock& block,const QFontMetrics& metrics) {
+template<typename Metrics>
+int logicalAlignmentX(const BlockLine& line,const FieldBlock& block,const Metrics& metrics) {
   const int textWidth=metrics.horizontalAdvance(line.text);
   const int available=std::max(0,block.width-line.indent);
   if(block.justification==Justification::Right)return line.indent+std::max(0,available-textWidth);
@@ -212,10 +268,10 @@ QPoint rotatedAnchor(QPoint anchor,QSize source,Orientation orientation) {
   }
 }
 
-void drawBlockText(QImage& image,State& state,const QString& text,const RenderOptions& options,
-                   const QFont& font,Orientation orientation) {
+template<typename Metrics,typename PaintText>
+void drawBlockTextLayout(QImage& image,State& state,const QString& text,const RenderOptions& options,
+                        const Metrics& metrics,Orientation orientation,PaintText paintText) {
   const auto block=*state.block;
-  const QFontMetrics metrics(font);
   const auto lines=layoutBlockLines(text,block,metrics);
   if(lines.isEmpty()){state.reverse=false;state.block.reset();return;}
   const int lineAdvance=std::max(1,metrics.height()+block.lineSpacing);
@@ -226,7 +282,8 @@ void drawBlockText(QImage& image,State& state,const QString& text,const RenderOp
   const int layoutHeight=std::max(1,metrics.height()+(layoutLineCount-1)*lineAdvance);
   QImage field(std::max(1,block.width),actualHeight,QImage::Format_ARGB32_Premultiplied);
   field.fill(Qt::transparent);
-  QPainter fp(&field);fp.setRenderHint(QPainter::TextAntialiasing,false);fp.setFont(font);
+  QPainter fp(&field);fp.setRenderHint(QPainter::TextAntialiasing,false);
+  fp.setRenderHint(QPainter::Antialiasing,false);
   fp.setPen(state.reverse?options.background:options.foreground);
   for(qsizetype lineIndex=0;lineIndex<lines.size();++lineIndex){
     const auto& line=lines[lineIndex];
@@ -236,11 +293,11 @@ void drawBlockText(QImage& image,State& state,const QString& text,const RenderOp
       if(words.size()>1){
         int wordsWidth=0;for(const auto& word:words)wordsWidth+=metrics.horizontalAdvance(word);
         const double gap=static_cast<double>(std::max(0,block.width-line.indent-wordsWidth))/(words.size()-1);
-        double x=line.indent;for(const auto& word:words){fp.drawText(qRound(x),y,word);x+=metrics.horizontalAdvance(word)+gap;}
+        double x=line.indent;for(const auto& word:words){paintText(fp,qRound(x),y,word);x+=metrics.horizontalAdvance(word)+gap;}
         continue;
       }
     }
-    fp.drawText(logicalAlignmentX(line,block,metrics),y,line.text);
+    paintText(fp,logicalAlignmentX(line,block,metrics),y,line.text);
   }
   fp.end();
 
@@ -248,7 +305,9 @@ void drawBlockText(QImage& image,State& state,const QString& text,const RenderOp
     ?QPoint(0,baseline+(layoutLineCount-1)*lineAdvance)
     :QPoint{};
   const QSize layoutSize(field.width(),layoutHeight);
-  const QPoint anchor=rotatedAnchor(logicalAnchor,layoutSize,orientation);
+  // ^FO positions the top-left of the rotated block. Only ^FT names a
+  // baseline that must itself be rotated around the logical field origin.
+  const QPoint anchor=state.baseline?rotatedAnchor(logicalAnchor,layoutSize,orientation):QPoint{};
   QPoint rasterOffset;
   if(orientation==Orientation::Rotated90)rasterOffset.rx()=layoutHeight-actualHeight;
   else if(orientation==Orientation::Inverted)rasterOffset.ry()=layoutHeight-actualHeight;
@@ -259,11 +318,64 @@ void drawBlockText(QImage& image,State& state,const QString& text,const RenderOp
   state.reverse=false;state.block.reset();
 }
 
+void drawBlockText(QImage& image,State& state,const QString& text,const RenderOptions& options,
+                   const QFont& font,Orientation orientation) {
+  drawBlockTextLayout(image,state,text,options,QFontMetrics(font),orientation,
+    [&](QPainter& painter,int x,int y,const QString& line){painter.setFont(font);painter.drawText(x,y,line);});
+}
+
+void drawFont0Text(QImage& image,State& state,const QString& text,const RenderOptions& options,
+                   int height,int width,Orientation orientation) {
+  const Font0Metrics metrics(height,width);
+  const QColor color=state.reverse?options.background:options.foreground;
+  if(state.block&&state.block->width>0){
+    drawBlockTextLayout(image,state,text,options,metrics,orientation,
+      [&](QPainter& painter,int x,int y,const QString& line){metrics.draw(painter,x,y,line,color);});
+    return;
+  }
+
+  QPainterPath outline=metrics.outline(text);
+  if(!state.baseline)outline.translate(0,metrics.ascent());
+  const QRect bounds=outline.boundingRect().toAlignedRect();
+  if(bounds.isEmpty()){state.reverse=false;state.block.reset();return;}
+  QImage field(bounds.size(),QImage::Format_ARGB32_Premultiplied);
+  field.fill(Qt::transparent);
+  QPainter raster(&field);raster.setRenderHint(QPainter::Antialiasing,false);
+  raster.fillPath(outline.translated(-bounds.left(),-bounds.top()),color);raster.end();
+
+  QPoint position=state.position;
+  if(state.baseline){
+    const QPoint baseline(-bounds.left(),-bounds.top());
+    position-=rotatedAnchor(baseline,field.size(),orientation);
+  }else{
+    // ^FO rotates the nominal character cell, retaining side bearings and
+    // descenders. It is not the top-left of the cropped ink. Glyphs may extend
+    // beyond that cell, so the raster bounds must remain independent of it.
+    const int nominalWidth=qFloor(metrics.designAdvance(text));
+    switch(orientation){
+      case Orientation::Normal:position+=bounds.topLeft();break;
+      case Orientation::Rotated90:position+=QPoint(height-bounds.bottom()-1,bounds.left());break;
+      case Orientation::Inverted:position+=QPoint(nominalWidth-bounds.right()-1,height-bounds.bottom()-1);break;
+      case Orientation::BottomUp:position+=QPoint(bounds.top(),nominalWidth-bounds.right()-1);break;
+    }
+  }
+  field=rotateImage(field,orientation);
+  QPainter painter(&image);
+  painter.setCompositionMode(state.reverse?QPainter::CompositionMode_Difference:QPainter::CompositionMode_SourceOver);
+  painter.drawImage(position,field);
+  state.reverse=false;state.block.reset();
+}
+
 void drawText(QImage& image, State& state, const QString& text, const RenderOptions& options) {
   if (text.isEmpty()) { state.reverse=false; state.block.reset(); return; }
   const QSize defaults=builtInFontDefaults(state.font.font);
   const int height = state.font.height>0?state.font.height:defaults.height();
   const int width = state.font.width>0?state.font.width:defaults.width();
+  const auto orientation=state.font.orientation==Orientation::Normal?state.fieldDirection:state.font.orientation;
+  if(state.font.font==u'0'){
+    drawFont0Text(image,state,text,options,height,width,orientation);
+    return;
+  }
   const bool fontA=state.font.font.toUpper()==u'A';
   // Zebra Font A is a small bitmap face. Labelary keeps its glyph cell near
   // 20 dots even when ^CF requests a smaller height.
@@ -276,7 +388,6 @@ void drawText(QImage& image, State& state, const QString& text, const RenderOpti
     ? builtInFont(state.font.font,pixelHeight,state.font.width>0?width:0)
     : zebraFont(pixelHeight,requestedStretch);
 
-  const auto orientation=state.font.orientation==Orientation::Normal?state.fieldDirection:state.font.orientation;
   if(state.block&&state.block->width>0){drawBlockText(image,state,text,options,font,orientation);return;}
 
   QFontMetrics metrics(font);
@@ -678,17 +789,30 @@ void drawCode128(QImage& image,State& state,const Barcode& barcode,const QString
   QImage caption;
   if(interpretation){
     const QString interpretationText=code128Interpretation(text);
-    // Zebra's Code 128 interpretation uses Font A with a larger fixed cell
-    // than ordinary Font 0 text at the same bar height.
-    const QFont font=builtInFont(u'A',50,50);
-    const QRect bounds=QFontMetrics(font).boundingRect(interpretationText).adjusted(-1,-1,1,1);
-    QImage field(std::max(1,bounds.width()),std::max(1,bounds.height()),QImage::Format_ARGB32_Premultiplied);
-    field.fill(Qt::transparent);
-    QPainter textPainter(&field);
-    textPainter.setRenderHint(QPainter::TextAntialiasing,false);
-    textPainter.setFont(font);textPainter.setPen(options.foreground);
-    textPainter.drawText(-bounds.left(),-bounds.top(),interpretationText);
-    textPainter.end();
+    // The default interpretation scales with ^BY's module width. An ^A in
+    // this field may override it; an ^A belonging to a previous ^FS field may
+    // not leak into the barcode caption.
+    const auto captionFont=state.barcodeInterpretationFont;
+    QImage field;
+    if(captionFont&&captionFont->font==u'0'){
+      const Font0Metrics metrics(std::max(1,captionFont->height),captionFont->width);
+      const auto outline=metrics.outline(interpretationText);
+      const QRect bounds=outline.boundingRect().toAlignedRect();
+      field=QImage(std::max(1,bounds.width()),std::max(1,bounds.height()),QImage::Format_ARGB32_Premultiplied);
+      field.fill(Qt::transparent);
+      QPainter painter(&field);painter.setRenderHint(QPainter::Antialiasing,false);
+      painter.fillPath(outline.translated(-bounds.left(),-bounds.top()),options.foreground);
+    }else{
+      const QFont font=captionFont
+        ? builtInFont(captionFont->font,captionFont->height,captionFont->width)
+        : builtInFont(u'A',module*10,module*10);
+      const QRect bounds=QFontMetrics(font).boundingRect(interpretationText).adjusted(-1,-1,1,1);
+      field=QImage(std::max(1,bounds.width()),std::max(1,bounds.height()),QImage::Format_ARGB32_Premultiplied);
+      field.fill(Qt::transparent);
+      QPainter painter(&field);painter.setRenderHint(QPainter::TextAntialiasing,false);
+      painter.setFont(font);painter.setPen(options.foreground);
+      painter.drawText(-bounds.left(),-bounds.top(),interpretationText);
+    }
     const QRect ink=alphaBounds(field);
     if(!ink.isEmpty())caption=field.copy(ink);
   }
@@ -700,7 +824,8 @@ void drawCode128(QImage& image,State& state,const Barcode& barcode,const QString
   for(qsizetype i=0;i<modules->size();++i)if((*modules)[i])painter.drawRect(static_cast<int>(i)*module,barsTop,module,height);
   if(!caption.isNull()){
     const int textTop=interpretationAbove?0:height+gap;
-    painter.drawImage((symbol.width()-caption.width())/2,textTop,caption);
+    const int textLeft=state.barcodeInterpretationFont?0:(symbol.width()-caption.width())/2;
+    painter.drawImage(textLeft,textTop,caption);
   }
   painter.end();symbol=rotateImage(symbol,barcode.orientation);
   QPoint position=state.position;
@@ -887,7 +1012,8 @@ std::expected<QImage, RenderError> renderLabel(const Label& label, int index, co
       using T=std::decay_t<decltype(value)>;
       if constexpr(std::is_same_v<T,FieldOrigin>){state.position=QPoint(value.x+state.labelShift,value.y)+home;state.baseline=false;}
       else if constexpr(std::is_same_v<T,FieldTypeset>){state.position=QPoint(value.x+state.labelShift,value.y)+home;state.baseline=true;}
-      else if constexpr(std::is_same_v<T,ScalableFont>) state.font=value;
+      else if constexpr(std::is_same_v<T,ScalableFont>) {state.font=value;state.barcodeInterpretationFont=value;}
+      else if constexpr(std::is_same_v<T,FieldSeparator>) state.barcodeInterpretationFont.reset();
       else if constexpr(std::is_same_v<T,ChangeFont>){state.font.font=value.font;state.font.height=value.height;state.font.width=value.width;}
       else if constexpr(std::is_same_v<T,FieldDirection>) state.fieldDirection=value.orientation;
       else if constexpr(std::is_same_v<T,FieldReverse>) state.reverse=true;

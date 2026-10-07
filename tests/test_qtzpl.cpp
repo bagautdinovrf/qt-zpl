@@ -11,9 +11,11 @@
 #include <QtGui/QImage>
 #include <QtGui/QPainter>
 #include <QtGui/QPen>
+#include <QtGui/QRawFont>
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#include <future>
 
 using namespace Qt::StringLiterals;
 
@@ -555,6 +557,71 @@ private slots:
     QVERIFY(words.has_value());
     QCOMPARE(*words,QVector<int>({105,12,34,56,100,33,34,92}));
   }
+  void code128Gs1ModeDMatchesLabelaryCodewords() {
+    // Decoded from the committed bitonal Labelary barcode, including the
+    // leading FNC1, the LOT/serial separator, subset switches and Mod 103.
+    const QVector<int> expected{105,102,1,4,60,12,34,56,78,93,11,26,10,7,
+      17,26,10,14,10,100,44,47,52,17,18,19,102,99,21,42,15};
+    const QString formatted=u"(01)04601234567893(11)261007(17)261014(10)LOT123>8(21)42"_s;
+    const auto words=QtZpl::BarcodeEncoders::Detail::code128Codewords(formatted,u'D');
+    QVERIFY(words.has_value());QCOMPARE(*words,expected);
+    const auto explicitStart=QtZpl::BarcodeEncoders::Detail::code128Codewords(u">;>8"_s+formatted,u'D');
+    QVERIFY(explicitStart.has_value());QCOMPARE(*explicitStart,expected);
+    const auto spaces=QtZpl::BarcodeEncoders::Detail::code128Codewords(u"(01) 04601234567893 (11) 261007 (17) 261014 (10) LOT123>8 (21) 42",u'D');
+    QVERIFY(spaces.has_value());QCOMPARE(*spaces,expected);
+    QVERIFY(!QtZpl::BarcodeEncoders::Detail::code128Codewords(u"() ",u'D'));
+    QVERIFY(!QtZpl::BarcodeEncoders::Detail::code128Codewords(u"(10)МОЛОКО",u'D'));
+    QVERIFY(!QtZpl::BarcodeEncoders::Detail::code128Codewords(u">;1234",u'U'));
+  }
+  void code128Gs1RendersExactLabelaryModules_data() {
+    QTest::addColumn<QString>("name");
+    QTest::newRow("normal")<<u"code128-gs1-n"_s;
+    QTest::newRow("bottom-up")<<u"code128-gs1-b"_s;
+  }
+  void code128Gs1RendersExactLabelaryModules() {
+    QFETCH(QString,name);
+    const auto zpl=goldenZpl(name);const auto golden=goldenImage(name);
+    QVERIFY(!zpl.isEmpty());QVERIFY(!golden.isNull());
+    const auto result=QtZpl::render(zpl,{},QtZpl::RenderOptions{.dpi=300});
+    QVERIFY(result.has_value());QVERIFY(result->diagnostics.isEmpty());
+    QCOMPARE(result->labels.front().size(),golden.size());
+    QCOMPARE(inkJaccard(result->labels.front(),golden),1.0);
+  }
+  void code128EmptyHeightUsesBarcodeDefault() {
+    const auto inherited=QtZpl::render(u"^XA^PW100^LL400^BY3,2,60^FO10,36^BCB,,N,N^FD>;>800123456789012345678^FS^XZ");
+    const auto explicitHeight=QtZpl::render(u"^XA^PW100^LL400^BY3,2,90^FO10,36^BCB,60,N,N^FD>;>800123456789012345678^FS^XZ");
+    QVERIFY(inherited.has_value());QVERIFY(explicitHeight.has_value());
+    QVERIFY(inherited->diagnostics.isEmpty());
+    QCOMPARE(inherited->labels.front(),explicitHeight->labels.front());
+    QCOMPARE(inkBounds(inherited->labels.front()).left(),10);
+    QCOMPARE(inkBounds(inherited->labels.front()).width(),60);
+  }
+  void fieldOriginBlockRotatesAroundItsTopLeftBounds() {
+    const auto normal=QtZpl::render(u"^XA^PW600^LL1200^FO26,510^A0N,26,33^FB450,1,0,C,0^FDMilk pasteurized\\&^FS^XZ");
+    const auto bottomUp=QtZpl::render(u"^XA^PW600^LL1200^FO26,510^A0B,26,33^FB450,1,0,C,0^FDMilk pasteurized\\&^FS^XZ");
+    QVERIFY(normal.has_value());QVERIFY(bottomUp.has_value());
+    const auto normalBounds=inkBounds(normal->labels.front());
+    const auto rotatedBounds=inkBounds(bottomUp->labels.front());
+    QVERIFY(!normalBounds.isEmpty());QVERIFY(!rotatedBounds.isEmpty());
+    QCOMPARE(rotatedBounds.height(),normalBounds.width());
+    QCOMPARE(rotatedBounds.top(),510+450-(normalBounds.right()-26)-1);
+    QVERIFY(rotatedBounds.left()>=26);
+    QVERIFY(rotatedBounds.left()<60);
+  }
+  void fieldOriginBlockUsesLabelaryCenterAfterRotation() {
+    const auto zpl=goldenZpl(u"font0-block-b");
+    const auto golden=goldenImage(u"font0-block-b");
+    QVERIFY(!zpl.isEmpty());QVERIFY(!golden.isNull());
+    const auto rendered=QtZpl::render(zpl);QVERIFY(rendered.has_value());
+    const auto actualBounds=inkBounds(rendered->labels.front());
+    const auto referenceBounds=inkBounds(golden);
+    // This assertion checks ^FO/^FB geometry, independently of the known
+    // differences in Font 0 glyph hinting between Qt and the printer.
+    QCOMPARE(actualBounds.left(),referenceBounds.left());
+    QVERIFY(std::abs(actualBounds.center().y()-referenceBounds.center().y())<=3);
+    QVERIFY(actualBounds.top()>=510);
+    QVERIFY(actualBounds.bottom()<510+650);
+  }
   void rendersCode128() {
     auto result=QtZpl::render(u"^XA^PW260^LL100^BY2^FO10,10^BCN,60,N,N,N,N^FDABC123^FS^XZ");
     QVERIFY(result.has_value());
@@ -566,9 +633,9 @@ private slots:
   }
   void code128InterpretationIsNotVerticallyClipped() {
     const auto barcode=QtZpl::render(
-      u"^XA^PW400^LL400^BY3,2,250^FO50,50^BC^FD{{00}}^FS^XZ");
+      u"^XA^PW650^LL400^BY5,2,250^FO50,50^BC^FD{{00}}^FS^XZ");
     const auto standalone=QtZpl::render(
-      u"^XA^PW400^LL120^FO50,20^AAN,50,50^FD{{00}}^FS^XZ");
+      u"^XA^PW650^LL120^FO50,20^AAN,50,50^FD{{00}}^FS^XZ");
     QVERIFY(barcode.has_value());QVERIFY(standalone.has_value());
     qsizetype captionInk=0;
     for(int y=305;y<barcode->labels.front().height();++y)for(int x=0;x<barcode->labels.front().width();++x)
@@ -578,6 +645,20 @@ private slots:
       standaloneInk+=standalone->labels.front().pixelColor(x,y).value()<128;
     QCOMPARE(captionInk,standaloneInk);
     QCOMPARE(inkBounds(barcode->labels.front()).top(),50);
+  }
+  void code128InterpretationDoesNotReusePreviousFieldFont() {
+    const auto afterText=QtZpl::render(goldenZpl(u"code128-caption-after-field"));
+    const auto bare=QtZpl::render(u"^XA^PW600^LL1200^BY3,2,60^FO10,36^BCB,,Y,N^FD>;>800123456789012345678^FS^XZ");
+    const auto reference=goldenImage(u"code128-caption-after-field");
+    QVERIFY(afterText.has_value());QVERIFY(bare.has_value());QVERIFY(!reference.isNull());
+    const QRect barcodeRegion(0,0,100,580);
+    QCOMPARE(afterText->labels.front().copy(barcodeRegion),bare->labels.front().copy(barcodeRegion));
+    const auto actualBounds=inkBounds(afterText->labels.front().copy(barcodeRegion));
+    const auto referenceBounds=inkBounds(reference.copy(barcodeRegion));
+    QCOMPARE(actualBounds.left(),referenceBounds.left());
+    QCOMPARE(actualBounds.top(),referenceBounds.top());
+    QVERIFY(std::abs(actualBounds.right()-referenceBounds.right())<=1);
+    QCOMPARE(actualBounds.bottom(),referenceBounds.bottom());
   }
   void reportsInvalidCode128SubsetC() {
     auto result=QtZpl::render(u"^XA^FO0,0^BCN,50,N,N,N,C^FD123^FS^XZ");
@@ -713,6 +794,51 @@ private slots:
     const int renderedWidth=right-left+1;
     const int labelaryWidth=437;
     QVERIFY2(std::abs(renderedWidth-labelaryWidth)<=10,qPrintable(u"Font 0 width %1 differs from Labelary width %2"_s.arg(renderedWidth).arg(labelaryWidth)));
+  }
+  void font0PrinterBaselineMatchesLabelaryAcrossSizes_data() {
+    QTest::addColumn<QString>("name");
+    for(const auto& name:{u"font0-h26-w33",u"font0-h27-w34",u"font0-h25-w38",
+                         u"font0-h40-w40",u"font0-h70-w251",u"font0-h16-w9",u"font0-h14-w22"})
+      QTest::newRow(qPrintable(QString::fromUtf16(name)))<<QString::fromUtf16(name);
+  }
+  void font0PrinterBaselineMatchesLabelaryAcrossSizes() {
+    QFETCH(QString,name);
+    const auto zpl=goldenZpl(name);const auto golden=goldenImage(name);
+    QVERIFY(!zpl.isEmpty());QVERIFY(!golden.isNull());
+    const auto rendered=QtZpl::render(zpl);QVERIFY(rendered.has_value());
+    QVERIFY(rendered->diagnostics.isEmpty());
+    const auto& actual=rendered->labels.front();QCOMPARE(actual.size(),golden.size());
+    for(int row=0;row<4;++row){
+      const QRect originRegion(0,row*130,2400,130);
+      const QRect typesetRegion(0,600+row*130,2400,130);
+      const auto actualOrigin=inkBounds(actual.copy(originRegion));
+      const auto actualTypeset=inkBounds(actual.copy(typesetRegion));
+      const auto goldenOrigin=inkBounds(golden.copy(originRegion));
+      const auto goldenTypeset=inkBounds(golden.copy(typesetRegion));
+      QVERIFY(!actualOrigin.isEmpty());QVERIFY(!actualTypeset.isEmpty());
+      QCOMPARE(actualTypeset.top()-actualOrigin.top(),goldenTypeset.top()-goldenOrigin.top());
+      QCOMPARE(actualTypeset.left(),actualOrigin.left());
+      QCOMPARE(actualTypeset.size(),actualOrigin.size());
+    }
+  }
+  void font0UsesEmbeddedCyrillicAndPackagingSymbols() {
+    const auto rendered=QtZpl::render(u"^XA^CI28^PW600^LL100^FO5,5^A0N,27,34^FDМолоко ±°«»Ёё^FS^XZ");
+    QVERIFY(rendered.has_value());QVERIFY(!inkBounds(rendered->labels.front()).isEmpty());
+    const QRawFont font(u":/qtzpl/fonts/font0.ttf"_s,1000,QFont::PreferNoHinting);
+    QVERIFY(font.isValid());
+    for(const auto character:QStringView{u"Молоко питьевое пастеризованное ±°«»Ёё"})
+      QVERIFY2(font.supportsCharacter(character),qPrintable(u"Missing embedded glyph U+%1"_s.arg(static_cast<uint>(character.unicode()),4,16,QChar(u'0'))));
+  }
+  void font0RenderingUsesIndependentThreadLocalFontEngines() {
+    const auto document=QtZpl::parse(u"^XA^CI28^PW200^LL250^FO15,15^A0B,26,33^FB200,2,0,C^FDМолоко Тест\\&±2°^FS^XZ");
+    QVERIFY(document.has_value());
+    const auto expected=QtZpl::render(*document);QVERIFY(expected.has_value());
+    auto first=std::async(std::launch::async,[&]{return QtZpl::render(*document);});
+    auto second=std::async(std::launch::async,[&]{return QtZpl::render(*document);});
+    const auto a=first.get(),b=second.get();
+    QVERIFY(a.has_value());QVERIFY(b.has_value());
+    QCOMPARE(a->labels.front(),expected->labels.front());
+    QCOMPARE(b->labels.front(),expected->labels.front());
   }
   void font0MatchesStoredLabelaryGolden() {
     const auto zpl=goldenZpl(u"font0");

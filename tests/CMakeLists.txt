@@ -4,6 +4,28 @@ qt_add_resources(qtzpl_tests "qtzpl_test_goldens"
   PREFIX "/qtzpl/tests/golden"
   BASE "${CMAKE_CURRENT_SOURCE_DIR}/golden"
   FILES
+    golden/code128-gs1-n.zpl
+    golden/code128-gs1-n-labelary-bitonal.png
+    golden/code128-gs1-b.zpl
+    golden/code128-gs1-b-labelary-bitonal.png
+    golden/font0-block-b.zpl
+    golden/font0-block-b-labelary-bitonal.png
+    golden/font0-h26-w33.zpl
+    golden/font0-h26-w33-labelary-bitonal.png
+    golden/font0-h27-w34.zpl
+    golden/font0-h27-w34-labelary-bitonal.png
+    golden/font0-h25-w38.zpl
+    golden/font0-h25-w38-labelary-bitonal.png
+    golden/font0-h40-w40.zpl
+    golden/font0-h40-w40-labelary-bitonal.png
+    golden/font0-h70-w251.zpl
+    golden/font0-h70-w251-labelary-bitonal.png
+    golden/font0-h16-w9.zpl
+    golden/font0-h16-w9-labelary-bitonal.png
+    golden/font0-h14-w22.zpl
+    golden/font0-h14-w22-labelary-bitonal.png
+    golden/code128-caption-after-field.zpl
+    golden/code128-caption-after-field-labelary-bitonal.png
     golden/font0.zpl
     golden/font0-labelary-bitonal.png
     golden/ocr-b.zpl
@@ -45,7 +67,9 @@ qt_add_resources(qtzpl_tests "qtzpl_test_goldens"
     golden/dpi-300-labelary-bitonal.png
     golden/dpi-600-labelary-bitonal.png
 )
-add_test(NAME qtzpl_tests COMMAND qtzpl_tests)
+# QtTest's Windows GUI executable does not reliably expose stdout to CTest.
+# Always keep the detailed result in the build tree, including failed rows.
+add_test(NAME qtzpl_tests COMMAND qtzpl_tests -o "${CMAKE_CURRENT_BINARY_DIR}/test_results.txt,txt")
 
 file(GLOB QTZPL_DEMO_CORPUS_FIXTURES CONFIGURE_DEPENDS
   "${CMAKE_CURRENT_SOURCE_DIR}/corpus/go-zpl-demo/*.zpl"

@@ -1,0 +1,1 @@
+^XA^PW600^LL1200^FO26,510^A0B,26,33^FB650,1,0,C,0^FDMilk pasteurized 2.5 percent\&^FS^XZ

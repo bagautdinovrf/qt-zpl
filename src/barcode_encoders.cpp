@@ -211,7 +211,11 @@ std::expected<QVector<int>,QString> code128Explicit(QStringView data) {
   appendCode128Checksum(words);return words;
 }
 
-std::expected<QVector<int>,QString> code128Auto(QStringView data) {
+// A private sentinel distinguishes a GS1 FNC1 invocation from an ordinary ASCII
+// GS byte. The latter is data in subset A, not the FNC1 symbol character.
+constexpr QChar code128Fnc1Token{0x100};
+
+std::expected<QVector<int>,QString> code128Auto(QStringView data,bool gs1=false) {
   if(data.isEmpty())return std::unexpected(QStringLiteral("Code 128 requires field data"));
   QVector<int> words;
   char subset='B';
@@ -220,7 +224,9 @@ std::expected<QVector<int>,QString> code128Auto(QStringView data) {
   const auto initialDigits=digitRun(0);
   if(initialDigits>=4){words.append(startC);subset='C';}
   else words.append(startB);
+  if(gs1)words.append(fnc1);
   while(i<data.size()){
+    if(gs1&&data[i]==code128Fnc1Token){words.append(fnc1);++i;continue;}
     const auto run=digitRun(i);
     if(subset=='B'&&run>=4){
       if(run%2!=0){auto value=code128DataValue(data[i++],'B');if(!value)return std::unexpected(value.error());words.append(*value);}
@@ -235,6 +241,30 @@ std::expected<QVector<int>,QString> code128Auto(QStringView data) {
     words.append(*value);
   }
   appendCode128Checksum(words);return words;
+}
+
+std::expected<QVector<int>,QString> code128Gs1(QStringView data) {
+  QString normalized;normalized.reserve(data.size());
+  for(qsizetype i=0;i<data.size();++i){
+    const auto character=data[i];
+    if(character==u'('||character==u')'||character==u' ')continue;
+    if(character==u'>'&&i+1<data.size()){
+      const auto invocation=data[i+1];
+      if(invocation==u'8'){normalized.append(code128Fnc1Token);++i;continue;}
+      if(invocation==u'0'){normalized.append(u'>');++i;continue;}
+      // Mode D selects the appropriate subset itself. Explicit leading start
+      // codes are accepted for existing Zebra GS1 formats, but do not disable
+      // automatic packing of later application identifiers.
+      if(normalized.isEmpty()&&(invocation==u'9'||invocation==u':'||invocation==u';')){++i;continue;}
+    }
+    if(character.unicode()>127)
+      return std::unexpected(QStringLiteral("GS1-128 requires ASCII field data"));
+    normalized.append(character);
+  }
+  // A leading >8 is often included in legacy formats; mode D already supplies
+  // that FNC1. Preserve subsequent separators, including consecutive ones.
+  if(normalized.startsWith(code128Fnc1Token))normalized.remove(0,1);
+  return code128Auto(normalized,true);
 }
 
 constexpr std::array<const char*,107> code128Patterns{{
@@ -357,6 +387,10 @@ std::expected<QVector<bool>,QString> ean13(QString data,QString* normalized) {
 
 std::expected<QVector<int>,QString> Detail::code128Codewords(QStringView data,QChar mode) {
   if(data.isEmpty())return std::unexpected(QStringLiteral("Code 128 requires field data"));
+  mode=mode.toUpper();
+  if(mode==u'D')return code128Gs1(data);
+  if(!QStringView{u"NABC"}.contains(mode))
+    return std::unexpected(QStringLiteral("Code 128 mode %1 is not implemented").arg(mode));
   const bool hasInvocation=[&]{for(qsizetype i=0;i+1<data.size();++i)if(data[i]==u'>'&&QStringView{u"<0=123456789:;"}.contains(data[i+1]))return true;return false;}();
   if(hasInvocation)return code128Explicit(data);
   switch(mode.toUpper().unicode()){

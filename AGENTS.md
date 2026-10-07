@@ -131,7 +131,9 @@ The library does not own:
 - Code 128 supports the default Subset B modes `N`/`B`, automatic mode `A`,
   strict numeric-pair mode `C`, Mod 103, and Zebra invocation codes `>9`, `>:`,
   `>;`, and `>0` through `>8`. Invalid subset data must emit `code128-encode`
-  and render no symbol. Modes `U`/`D` and the optional UCC Mod 10 check digit
+  and render no symbol. GS1 mode `D` strips presentation parentheses/spaces,
+  inserts one leading FNC1, honors `>8` separators and packs numeric pairs.
+  Mode `U` and the optional UCC Mod 10 check digit
   (`e=Y`) remain unsupported; do not silently approximate them.
 - EAN-13 accepts 12 digits and calculates the check digit, or accepts 13 digits
   and validates it. Non-digit formatting characters may be ignored only when

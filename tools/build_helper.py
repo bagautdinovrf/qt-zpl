@@ -168,7 +168,7 @@ def resolve_build_dir(config: str, build_dir: Path | None) -> Path:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("action", nargs="?", default="all", choices=("configure", "build", "test", "install", "gallery", "all"))
-    parser.add_argument("--qt-version", default="6.11.1")
+    parser.add_argument("--qt-version", default="6.11.2")
     parser.add_argument("--compiler", default="msvc2022_64")
     parser.add_argument("--config", choices=("Debug", "Release", "RelWithDebInfo"))
     parser.add_argument("--build-dir", type=Path)
