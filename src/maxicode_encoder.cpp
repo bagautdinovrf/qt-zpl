@@ -138,10 +138,13 @@ std::expected<std::array<int,84>,QString> secondaryCodewords(const QByteArray& d
 }
 
 void addErrorCorrection(QVector<int>& codewords) {
-  QVector<int> primary;for(int i=0;i<10;++i)primary.append(codewords[i]);const auto primaryEcc=ReedSolomon(10).encode(primary);
+  // The field tables and generator polynomials depend only on the ECC length.
+  // Keep them immutable and share them across symbols and rendering threads.
+  static const ReedSolomon primaryEncoder(10),secondaryEncoder(20);
+  QVector<int> primary;for(int i=0;i<10;++i)primary.append(codewords[i]);const auto primaryEcc=primaryEncoder.encode(primary);
   for(int i=0;i<10;++i)codewords[10+i]=primaryEcc[9-i];
   QVector<int> even,odd;for(int i=0;i<84;i+=2){even.append(codewords[20+i]);odd.append(codewords[21+i]);}
-  const auto evenEcc=ReedSolomon(20).encode(even);const auto oddEcc=ReedSolomon(20).encode(odd);
+  const auto evenEcc=secondaryEncoder.encode(even);const auto oddEcc=secondaryEncoder.encode(odd);
   for(int i=0;i<20;++i){codewords[104+2*i]=evenEcc[19-i];codewords[105+2*i]=oddEcc[19-i];}
 }
 

@@ -5,6 +5,7 @@ project(QtZpl VERSION 0.1.0 LANGUAGES CXX)
 option(QTZPL_BUILD_SHARED "Build QtZpl as a shared library" ON)
 option(QTZPL_BUILD_TESTS "Build QtZpl tests" ON)
 option(QTZPL_BUILD_EXAMPLES "Build QtZpl examples" ON)
+option(QTZPL_BUILD_BENCHMARKS "Build opt-in offline performance benchmarks" OFF)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -85,4 +86,8 @@ endif()
 
 if(QTZPL_BUILD_EXAMPLES)
   add_subdirectory(examples)
+endif()
+
+if(QTZPL_BUILD_BENCHMARKS)
+  add_subdirectory(benchmarks)
 endif()

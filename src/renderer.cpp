@@ -5,6 +5,7 @@
 
 #include <QtCore/QByteArray>
 #include <QtCore/QFile>
+#include <QtCore/QHash>
 #include <QtCore/QtMath>
 #include <QtCore/QtEndian>
 #include <QtGui/QPainter>
@@ -146,14 +147,43 @@ struct BlockLine {
   bool paragraphEnd = false;
 };
 
+// A QRawFont owns a font engine for the current rendering thread. Keep one
+// lazily-created face per render call, including all labels in that call,
+// without sharing a mutable font engine between concurrent document renders.
+class RenderFonts {
+public:
+  const QRawFont& font0() {
+    if(!font0_)font0_.emplace(font0Bytes(),1000,QFont::PreferNoHinting);
+    return *font0_;
+  }
+  const QPainterPath& font0Glyph(quint32 glyph) {
+    const auto found=font0Glyphs_.constFind(glyph);
+    if(found!=font0Glyphs_.cend())return found.value();
+    return font0Glyphs_.insert(glyph,font0().pathForGlyph(glyph)).value();
+  }
+private:
+  static const QByteArray& font0Bytes() {
+    static const QByteArray bytes=[] {
+      initializeQtZplResources();
+      QFile file(u":/qtzpl/fonts/font0.ttf"_s);
+      return file.open(QIODevice::ReadOnly)?file.readAll():QByteArray{};
+    }();
+    return bytes;
+  }
+  std::optional<QRawFont> font0_;
+  // Keys come only from the embedded face, bounding this cache by its glyph
+  // count. Store design-space paths so all requested sizes share exact data.
+  QHash<quint32,QPainterPath> font0Glyphs_;
+};
+
 // Use the font's design grid rather than QFont::setStretch. On Windows the
 // latter quantizes widths through GDI's integer average-character width, while
 // other Qt backends use a different scale. Font 0 has a 1000-unit em and a
 // 750-unit cap height; independent ZPL height/width scale that same design grid.
 class Font0Metrics {
 public:
-  Font0Metrics(int height,int width)
-    : font(fontBytes(),1000,QFont::PreferNoHinting),
+  Font0Metrics(int height,int width,RenderFonts& fontContext)
+    : font(fontContext.font0()),fonts(fontContext),
       scaleX(static_cast<qreal>(width>0?width:height)/1000.0),
       scaleY(static_cast<qreal>(height)/1000.0),fontHeight(height) {}
 
@@ -172,7 +202,7 @@ public:
     QPainterPath result;qreal x=0;
     for(qsizetype i=0;i<glyphs.size();++i){
       QTransform transform;transform.translate(x,0);transform.scale(scaleX,scaleY);
-      result.addPath(transform.map(font.pathForGlyph(glyphs[i])));
+      result.addPath(transform.map(fonts.font0Glyph(glyphs[i])));
       x+=advances[i].x()*scaleX;
     }
     return result;
@@ -182,15 +212,8 @@ public:
     painter.fillPath(path,color);
   }
 private:
-  static QByteArray fontBytes() {
-    static const QByteArray bytes=[] {
-      initializeQtZplResources();
-      QFile file(u":/qtzpl/fonts/font0.ttf"_s);
-      return file.open(QIODevice::ReadOnly)?file.readAll():QByteArray{};
-    }();
-    return bytes;
-  }
-  QRawFont font;
+  const QRawFont& font;
+  RenderFonts& fonts;
   qreal scaleX;
   qreal scaleY;
   int fontHeight;
@@ -325,8 +348,8 @@ void drawBlockText(QImage& image,State& state,const QString& text,const RenderOp
 }
 
 void drawFont0Text(QImage& image,State& state,const QString& text,const RenderOptions& options,
-                   int height,int width,Orientation orientation) {
-  const Font0Metrics metrics(height,width);
+                   int height,int width,Orientation orientation,RenderFonts& fonts) {
+  const Font0Metrics metrics(height,width,fonts);
   const QColor color=state.reverse?options.background:options.foreground;
   if(state.block&&state.block->width>0){
     drawBlockTextLayout(image,state,text,options,metrics,orientation,
@@ -351,12 +374,11 @@ void drawFont0Text(QImage& image,State& state,const QString& text,const RenderOp
     // ^FO rotates the nominal character cell, retaining side bearings and
     // descenders. It is not the top-left of the cropped ink. Glyphs may extend
     // beyond that cell, so the raster bounds must remain independent of it.
-    const int nominalWidth=qFloor(metrics.designAdvance(text));
     switch(orientation){
       case Orientation::Normal:position+=bounds.topLeft();break;
       case Orientation::Rotated90:position+=QPoint(height-bounds.bottom()-1,bounds.left());break;
-      case Orientation::Inverted:position+=QPoint(nominalWidth-bounds.right()-1,height-bounds.bottom()-1);break;
-      case Orientation::BottomUp:position+=QPoint(bounds.top(),nominalWidth-bounds.right()-1);break;
+      case Orientation::Inverted:position+=QPoint(qFloor(metrics.designAdvance(text))-bounds.right()-1,height-bounds.bottom()-1);break;
+      case Orientation::BottomUp:position+=QPoint(bounds.top(),qFloor(metrics.designAdvance(text))-bounds.right()-1);break;
     }
   }
   field=rotateImage(field,orientation);
@@ -366,14 +388,14 @@ void drawFont0Text(QImage& image,State& state,const QString& text,const RenderOp
   state.reverse=false;state.block.reset();
 }
 
-void drawText(QImage& image, State& state, const QString& text, const RenderOptions& options) {
+void drawText(QImage& image, State& state, const QString& text, const RenderOptions& options,RenderFonts& fonts) {
   if (text.isEmpty()) { state.reverse=false; state.block.reset(); return; }
   const QSize defaults=builtInFontDefaults(state.font.font);
   const int height = state.font.height>0?state.font.height:defaults.height();
   const int width = state.font.width>0?state.font.width:defaults.width();
   const auto orientation=state.font.orientation==Orientation::Normal?state.fieldDirection:state.font.orientation;
   if(state.font.font==u'0'){
-    drawFont0Text(image,state,text,options,height,width,orientation);
+    drawFont0Text(image,state,text,options,height,width,orientation,fonts);
     return;
   }
   const bool fontA=state.font.font.toUpper()==u'A';
@@ -577,8 +599,6 @@ std::optional<QByteArray> decodeAsciiGraphic(const GraphicField& gf,qsizetype of
 void drawGraphicField(QImage& image,const QPoint& pos,const GraphicField& gf,const RenderOptions& options,
                       qsizetype offset,QList<Diagnostic>& diagnostics) {
   if (gf.bytesPerRow <= 0) return;
-  int x=0,y=0;
-  QPainter painter(&image); painter.setPen(options.foreground);
   const bool z64=gf.compression==u'A'&&QByteArrayView{gf.data}.trimmed().startsWith(":Z64:");
   const auto z64Data=z64?decodeZ64(gf,offset,diagnostics):std::optional<QByteArray>{};
   if(z64&&!z64Data)return;
@@ -588,10 +608,42 @@ void drawGraphicField(QImage& image,const QPoint& pos,const GraphicField& gf,con
   if(gf.compression==u'B'||z64||asciiData){
     const QByteArrayView bytes=z64?QByteArrayView{*z64Data}
       :(asciiData?QByteArrayView{*asciiData}:QByteArrayView{gf.data});
+    // SourceOver with fully opaque ink replaces the destination exactly.
+    // Clip in wide arithmetic before requesting scanlines; input validation
+    // above still processes the entire graphic, even when it is off-label.
+    // QColor::alpha() rounds 16-bit alpha, so it cannot decide opacity here.
+    if(options.foreground.rgba64().alpha()==65535){
+      if(bytes.isEmpty())return;
+      const qsizetype rowBytes=gf.bytesPerRow;
+      const qint64 firstX=std::max<qint64>(0,-static_cast<qint64>(pos.x()));
+      const qint64 lastX=std::min<qint64>(static_cast<qint64>(rowBytes)*8,
+        static_cast<qint64>(image.width())-pos.x());
+      const qint64 firstY=std::max<qint64>(0,-static_cast<qint64>(pos.y()));
+      const qint64 lastY=std::min<qint64>((bytes.size()-1)/rowBytes+1,
+        static_cast<qint64>(image.height())-pos.y());
+      if(firstX>=lastX||firstY>=lastY)return;
+      const QRgb ink=options.foreground.rgba();
+      for(qint64 y=firstY;y<lastY;++y){
+        const qsizetype rowStart=static_cast<qsizetype>(y*rowBytes);
+        const qint64 end=std::min(lastX,static_cast<qint64>(bytes.size()-rowStart)*8);
+        auto* pixels=reinterpret_cast<QRgb*>(image.scanLine(static_cast<int>(pos.y()+y)));
+        for(qint64 x=firstX;x<end;++x)
+          if(static_cast<unsigned char>(bytes[rowStart+static_cast<qsizetype>(x/8)])&(1U<<(7-x%8)))
+            pixels[static_cast<qsizetype>(pos.x()+x)]=ink;
+      }
+      return;
+    }
+    qint64 x=0,y=0;
+    const qint64 rowWidth=static_cast<qint64>(gf.bytesPerRow)*8;
+    QPainter painter(&image);painter.setPen(options.foreground);
     for(const unsigned char byte:bytes){
       for(int bit=7;bit>=0;--bit){
-        if(byte&(1U<<bit))painter.drawPoint(pos.x()+x,pos.y()+y);
-        if(++x>=gf.bytesPerRow*8){x=0;++y;}
+        if(byte&(1U<<bit)){
+          const qint64 targetX=pos.x()+x,targetY=pos.y()+y;
+          if(targetX>=0&&targetX<image.width()&&targetY>=0&&targetY<image.height())
+            painter.drawPoint(static_cast<int>(targetX),static_cast<int>(targetY));
+        }
+        if(++x>=rowWidth){x=0;++y;}
       }
     }
     return;
@@ -771,7 +823,7 @@ QString code128Interpretation(QStringView data) {
   return result;
 }
 
-void drawCode128(QImage& image,State& state,const Barcode& barcode,const QString& text,const RenderOptions& options,QList<Diagnostic>& diagnostics) {
+void drawCode128(QImage& image,State& state,const Barcode& barcode,const QString& text,const RenderOptions& options,QList<Diagnostic>& diagnostics,RenderFonts& fonts) {
   if(barcode.parameters.size()>4&&barcode.parameters[4].compare(u"Y",Qt::CaseInsensitive)==0){
     diagnostics.append({Severity::Error,u"code128-ucc-check-digit"_s,
       u"The optional UCC Mod 10 check digit is not implemented; no Code 128 symbol was rendered."_s,-1,u"^BC"_s});
@@ -795,7 +847,7 @@ void drawCode128(QImage& image,State& state,const Barcode& barcode,const QString
     const auto captionFont=state.barcodeInterpretationFont;
     QImage field;
     if(captionFont&&captionFont->font==u'0'){
-      const Font0Metrics metrics(std::max(1,captionFont->height),captionFont->width);
+      const Font0Metrics metrics(std::max(1,captionFont->height),captionFont->width,fonts);
       const auto outline=metrics.outline(interpretationText);
       const QRect bounds=outline.boundingRect().toAlignedRect();
       field=QImage(std::max(1,bounds.width()),std::max(1,bounds.height()),QImage::Format_ARGB32_Premultiplied);
@@ -980,12 +1032,12 @@ void drawMaxiCode(QImage& image,State& state,const Barcode& barcode,const QStrin
   QPainter target(&image);target.drawImage(position,symbol);
 }
 
-void drawBarcode(QImage& image, State& state, const Barcode& barcode, const QString& data, const RenderOptions& options, QList<Diagnostic>& diagnostics) {
+void drawBarcode(QImage& image, State& state, const Barcode& barcode, const QString& data, const RenderOptions& options, QList<Diagnostic>& diagnostics,RenderFonts& fonts) {
   if (barcode.symbology == u"B3") drawCode39(image,state,barcode,data,options);
   else if(barcode.symbology==u"BQ")drawQrCode(image,state,barcode,data,options,diagnostics);
   else if(barcode.symbology==u"BX")drawDataMatrix(image,state,barcode,data,options,diagnostics);
   else if(barcode.symbology==u"BE")drawEan13(image,state,barcode,data,options,diagnostics);
-  else if(barcode.symbology==u"BC")drawCode128(image,state,barcode,data,options,diagnostics);
+  else if(barcode.symbology==u"BC")drawCode128(image,state,barcode,data,options,diagnostics,fonts);
   else if(barcode.symbology==u"BK")drawCodabar(image,state,barcode,data,options,diagnostics);
   else if(barcode.symbology==u"B7")drawPdf417(image,state,barcode,data,options,diagnostics);
   else if(barcode.symbology==u"BD")drawMaxiCode(image,state,barcode,data,options,diagnostics);
@@ -994,7 +1046,7 @@ void drawBarcode(QImage& image, State& state, const Barcode& barcode, const QStr
   state.pendingBarcode.reset(); state.reverse=false; state.block.reset();
 }
 
-std::expected<QImage, RenderError> renderLabel(const Label& label, int index, const RenderOptions& options, QList<Diagnostic>& diagnostics) {
+std::expected<QImage, RenderError> renderLabel(const Label& label, int index, const RenderOptions& options, QList<Diagnostic>& diagnostics,RenderFonts& fonts) {
   const int width=options.width>0?options.width:(label.width()>0?label.width():812);
   const int height=options.height>0?options.height:(label.height()>0?label.height():1218);
   if(width<=0||height<=0||width>100000||height>100000) return std::unexpected(RenderError{u"invalid-size"_s,u"Label dimensions are invalid or unsafe."_s,index});
@@ -1024,7 +1076,7 @@ std::expected<QImage, RenderError> renderLabel(const Label& label, int index, co
       else if constexpr(std::is_same_v<T,PrintMode>) { /* Print mode does not change local raster geometry. */ }
       else if constexpr(std::is_same_v<T,PrintOrientation>) state.printOrientation=value.orientation;
       else if constexpr(std::is_same_v<T,Barcode>) state.pendingBarcode=value;
-      else if constexpr(std::is_same_v<T,FieldData>){if(state.pendingBarcode)drawBarcode(image,state,*state.pendingBarcode,value.data,options,diagnostics);else drawText(image,state,value.data,options);}
+      else if constexpr(std::is_same_v<T,FieldData>){if(state.pendingBarcode)drawBarcode(image,state,*state.pendingBarcode,value.data,options,diagnostics,fonts);else drawText(image,state,value.data,options,fonts);}
       else if constexpr(std::is_same_v<T,GraphicBox>){
         const int boxWidth=value.width>0?value.width:value.thickness;
         const int boxHeight=value.height>0?value.height:value.thickness;
@@ -1069,7 +1121,8 @@ std::expected<QImage, RenderError> renderLabel(const Label& label, int index, co
 std::expected<RenderResult, RenderError> render(const Document& document, const RenderOptions& options) {
   if(options.dpi!=203&&options.dpi!=300&&options.dpi!=600) return std::unexpected(RenderError{u"invalid-dpi"_s,u"DPI must be 203, 300, or 600."_s,-1});
   RenderResult result; result.diagnostics=document.diagnostics(); result.labels.reserve(document.labels().size());
-  for(int i=0;i<document.labels().size();++i){auto image=renderLabel(document.labels()[i],i,options,result.diagnostics);if(!image)return std::unexpected(image.error());result.labels.append(std::move(*image));}
+  RenderFonts fonts;
+  for(int i=0;i<document.labels().size();++i){auto image=renderLabel(document.labels()[i],i,options,result.diagnostics,fonts);if(!image)return std::unexpected(image.error());result.labels.append(std::move(*image));}
   return result;
 }
 

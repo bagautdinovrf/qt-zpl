@@ -6,6 +6,7 @@ Examples:
     py -3 tools/build_helper.py all --clean
     py -3 tools/build_helper.py test --config Debug
     py -3 tools/build_helper.py build --target QtZpl
+    py -3 tools/build_helper.py benchmark --config Release
     py -3 tools/build_helper.py install --install-prefix C:\\QtZpl\\Release
 """
 
@@ -118,6 +119,7 @@ def configure(args: argparse.Namespace, environment: dict[str, str], qt_dir: Pat
         f"-DQTZPL_BUILD_TESTS={'ON' if args.tests else 'OFF'}",
         f"-DQTZPL_BUILD_EXAMPLES={'ON' if args.examples else 'OFF'}",
         f"-DQTZPL_BUILD_SHARED={'ON' if args.shared else 'OFF'}",
+        f"-DQTZPL_BUILD_BENCHMARKS={'ON' if args.benchmarks else 'OFF'}",
     ]
     if args.install_prefix is not None:
         command.append(f"-DCMAKE_INSTALL_PREFIX={args.install_prefix}")
@@ -136,13 +138,16 @@ def prepare_build_dir(args: argparse.Namespace) -> None:
 
 def run_action(args: argparse.Namespace, environment: dict[str, str], qt_dir: Path) -> None:
     prepare_build_dir(args)
-    if args.action in ("configure", "all") or not (args.build_dir / "CMakeCache.txt").exists():
+    if (args.action in ("configure", "all", "benchmark") or args.benchmarks
+            or not (args.build_dir / "CMakeCache.txt").exists()):
         configure(args, environment, qt_dir)
     if args.action == "configure":
         return
 
     cmake = str(QT_TOOLS / "CMake_64" / "bin" / "cmake.exe")
     target = "install" if args.action == "install" else ("qtzpl_gallery" if args.action == "gallery" else args.target)
+    if args.action == "benchmark":
+        target = "qtzpl_benchmarks"
     run([cmake, "--build", str(args.build_dir), "--target", target, "--parallel", str(args.parallel)], environment)
     if args.action in ("test", "all") and args.tests:
         environment["PATH"] = str(args.build_dir) + os.pathsep + environment.get("PATH", "")
@@ -152,11 +157,21 @@ def run_action(args: argparse.Namespace, environment: dict[str, str], qt_dir: Pa
         environment["PATH"] = str(args.build_dir) + os.pathsep + environment.get("PATH", "")
         run([str(args.build_dir / "examples" / "qtzpl_gallery.exe"), str(args.output_dir.resolve())], environment)
 
+    if args.action == "benchmark":
+        environment["PATH"] = str(args.build_dir) + os.pathsep + environment.get("PATH", "")
+        command = [str(args.build_dir / "benchmarks" / "qtzpl_benchmarks.exe"),
+                   "--samples", str(args.benchmark_samples),
+                   "--min-ms", str(args.benchmark_min_ms),
+                   "--output", str(args.benchmark_output or args.build_dir / "benchmark-results.json")]
+        if args.benchmark_filter:
+            command.extend(["--filter", args.benchmark_filter])
+        run(command, environment)
+
     print(f"QtZpl {args.action} ({args.config}) succeeded. Build directory: {args.build_dir}")
 
 
 def wants_all_configs(argv: list[str], action: str) -> bool:
-    if action in ("install", "gallery", "configure", "test"):
+    if action in ("install", "gallery", "configure", "test", "benchmark"):
         return False
     return "--config" not in argv and "--build-dir" not in argv
 
@@ -167,7 +182,7 @@ def resolve_build_dir(config: str, build_dir: Path | None) -> Path:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("action", nargs="?", default="all", choices=("configure", "build", "test", "install", "gallery", "all"))
+    parser.add_argument("action", nargs="?", default="all", choices=("configure", "build", "test", "install", "gallery", "benchmark", "all"))
     parser.add_argument("--qt-version", default="6.11.2")
     parser.add_argument("--compiler", default="msvc2022_64")
     parser.add_argument("--config", choices=("Debug", "Release", "RelWithDebInfo"))
@@ -185,8 +200,17 @@ def main() -> int:
     parser.add_argument("--static", dest="shared", action="store_false")
     parser.add_argument("--no-tests", dest="tests", action="store_false")
     parser.add_argument("--no-examples", dest="examples", action="store_false")
+    parser.add_argument("--benchmarks", action="store_true", help="Build optional performance benchmark executable")
+    parser.add_argument("--benchmark-filter", default="", help="Run only benchmark names containing this text")
+    parser.add_argument("--benchmark-samples", type=int, default=9)
+    parser.add_argument("--benchmark-min-ms", type=int, default=50)
+    parser.add_argument("--benchmark-output", type=Path, help="Benchmark JSON output (defaults to build directory)")
     parser.set_defaults(shared=True, tests=True, examples=True)
     args = parser.parse_args()
+    if args.action == "benchmark":
+        args.benchmarks = True
+        if args.config is None:
+            args.config = "Release"
     if args.install_prefix is not None:
         args.install_prefix = args.install_prefix.resolve()
     if args.action == "install" and args.install_prefix is None:

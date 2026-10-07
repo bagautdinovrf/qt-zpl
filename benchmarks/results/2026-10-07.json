@@ -1,0 +1,3669 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-07",
+  "baseline_commit": "4bdc94fcfbf1d409a792eb7958a057eae6d2b760",
+  "method": "Full run: 9 batches, target 50ms. Paired runs: base/A/B/B/A/base, 7 batches target 100ms per case per run; summary is median of two trial medians. Same machine, Qt windows backend, Release shared library; warmed single-thread wall time.",
+  "variants": {
+    "baseline": "Unmodified production code at baseline_commit",
+    "variant_a": "Parser split/FH, linear Code128, per-render Font0, opaque GF scanlines",
+    "variant_b": "A + per-render glyph path cache, QR callback, immutable PDF417/MaxiCode ECC tables, wide GF clipping"
+  },
+  "chosen_variant": "variant_b",
+  "metadata": {
+    "baseline": {
+      "architecture": "x86_64",
+      "build_type": "Release",
+      "compiler": "MSVC 19.44.35228.0",
+      "cpu": "Intel Core i7-11700, 8 cores / 16 logical",
+      "logical_cpu_count": 16,
+      "method": "Warmed single-thread wall time, median of batch means; allocations and destruction included; file I/O excluded. p95 is NOT request latency.",
+      "os": "Windows 11 Version 25H2",
+      "qt": "6.11.2",
+      "qt_platform": "windows",
+      "revision": "4bdc94fcfbf1d409a792eb7958a057eae6d2b760 baseline",
+      "samples": 9,
+      "shared_library": true,
+      "target_batch_ms": 50,
+      "timestamp_utc": "2026-10-07T18:12:30Z",
+      "warmup_ms": 20
+    },
+    "variant_a": {
+      "architecture": "x86_64",
+      "build_type": "Release",
+      "compiler": "MSVC 19.44.35228.0",
+      "cpu": "Intel Core i7-11700, 8 cores / 16 logical",
+      "logical_cpu_count": 16,
+      "method": "Warmed single-thread wall time, median of batch means; allocations and destruction included; file I/O excluded. p95 is NOT request latency.",
+      "os": "Windows 11 Version 25H2",
+      "qt": "6.11.2",
+      "qt_platform": "windows",
+      "revision": "4bdc94f + variant A: parser, Code128, per-call font, GF",
+      "samples": 9,
+      "shared_library": true,
+      "target_batch_ms": 50,
+      "timestamp_utc": "2026-10-07T18:19:18Z",
+      "warmup_ms": 20
+    },
+    "variant_b": {
+      "architecture": "x86_64",
+      "build_type": "Release",
+      "compiler": "MSVC 19.44.35228.0",
+      "cpu": "Intel Core i7-11700, 8 cores / 16 logical",
+      "logical_cpu_count": 16,
+      "method": "Warmed single-thread wall time, median of batch means; allocations and destruction included; file I/O excluded. p95 is NOT request latency.",
+      "os": "Windows 11 Version 25H2",
+      "qt": "6.11.2",
+      "qt_platform": "windows",
+      "revision": "4bdc94f + variant B: glyph cache, QR single encode, ECC caches",
+      "samples": 9,
+      "shared_library": true,
+      "target_batch_ms": 50,
+      "timestamp_utc": "2026-10-07T18:24:26Z",
+      "warmup_ms": 20
+    }
+  },
+  "pipeline_fingerprints_checked_and_equal": 69,
+  "final_production_sha256": {
+    "src/parser.cpp": "cf5754227b2651bba542c4b71a1cb23bf289e5c6df9e598d51556df7fa975816",
+    "src/renderer.cpp": "75ca23983e72c0b97174275a4c31ed2b42e79bd26bea89d07d8f9ed52bd67765",
+    "src/barcode_encoders.cpp": "dd6e25dc51f4378d53d877ce56db0a770266f8bf4c2a83c6f950634a93a0fb7f",
+    "src/pdf417_encoder.cpp": "f584fd3c3b7c660c336e99f34daf016f18f781e9987cc5c7765a8dcdb847d251",
+    "src/maxicode_encoder.cpp": "7f9d0f03629073ef2252f1ead9f98f6c408f32ee33757a8b3bfd0be1ffbcb382",
+    "third_party/qrcodegen/qrcodegen.cpp": "bad71ac59c92c4db42fc6defaeac401f80c12a3f3ddf235eaf9b059a63bedf05",
+    "third_party/qrcodegen/qrcodegen.hpp": "0ba5a38cc210b8debd7fe81adc6f604e185bb57b2ade917cb9091950b1a52c6f"
+  },
+  "full_runs": [
+    {
+      "name": "parse/corpus/barcodes",
+      "category": "parse",
+      "description": "Committed demo fixture; 1 page(s), 812x1015 dots, 203 DPI",
+      "input_bytes": 773,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "f16ba76a347830840689273249299ebe7ad9e6b018669d9ad0372cfc5469b28f",
+      "baseline": {
+        "median_ns": 45209.7,
+        "mad_ns": 686.2000000000044,
+        "min_ns": 43657.35,
+        "max_ns": 46449.55,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 34557.6,
+        "mad_ns": 131.65000000000146,
+        "min_ns": 34040.25,
+        "max_ns": 35465.75,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 42058.8,
+        "mad_ns": 423.6999999999971,
+        "min_ns": 40580.3,
+        "max_ns": 42854.3,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/corpus/barcodes",
+      "category": "render",
+      "description": "Committed demo fixture; 1 page(s), 812x1015 dots, 203 DPI",
+      "input_bytes": 773,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "ea0829ab5cccf9d4be4201c2c17f6064e7667486c57f915f56c469074f6eb8d1",
+      "baseline": {
+        "median_ns": 23639500,
+        "mad_ns": 1816150,
+        "min_ns": 21230275,
+        "max_ns": 27566100,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 15614666.666666666,
+        "mad_ns": 195183.33333333395,
+        "min_ns": 15157300,
+        "max_ns": 16099016.666666666,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 22745600,
+        "mad_ns": 1036850,
+        "min_ns": 21215050,
+        "max_ns": 24762275,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "end-to-end/corpus/barcodes",
+      "category": "end-to-end",
+      "description": "Committed demo fixture; 1 page(s), 812x1015 dots, 203 DPI",
+      "input_bytes": 773,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "ea0829ab5cccf9d4be4201c2c17f6064e7667486c57f915f56c469074f6eb8d1",
+      "baseline": {
+        "median_ns": 25673350,
+        "mad_ns": 1428650,
+        "min_ns": 21331600,
+        "max_ns": 39234600,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 15899800,
+        "mad_ns": 307100,
+        "min_ns": 15305333.333333334,
+        "max_ns": 17405416.666666668,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 22841775,
+        "mad_ns": 2287775,
+        "min_ns": 18978825,
+        "max_ns": 27324450,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "parse/corpus/fedex-express",
+      "category": "parse",
+      "description": "Committed demo fixture; 1 page(s), 812x1218 dots, 203 DPI",
+      "input_bytes": 2833,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "ed874f402b4d1f7bac4776089f030b12f4d78417b0b900cd63d48c19d7e1bac7",
+      "baseline": {
+        "median_ns": 260688,
+        "mad_ns": 7772,
+        "min_ns": 247417.5,
+        "max_ns": 283486,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 224192.65402843602,
+        "mad_ns": 4145.260663507128,
+        "min_ns": 217257.34597156398,
+        "max_ns": 330614.4549763033,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 306331,
+        "mad_ns": 16263,
+        "min_ns": 266523,
+        "max_ns": 395679,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/corpus/fedex-express",
+      "category": "render",
+      "description": "Committed demo fixture; 1 page(s), 812x1218 dots, 203 DPI",
+      "input_bytes": 2833,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "2e5025d6da5a6b7a8c6cebc6413f9582e53852fc185a2b84d5a98ff40bbd23f1",
+      "baseline": {
+        "median_ns": 16086625,
+        "mad_ns": 420800,
+        "min_ns": 13493425,
+        "max_ns": 20331350,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 6705083.333333333,
+        "mad_ns": 1300133.333333333,
+        "min_ns": 5121283.333333333,
+        "max_ns": 17394166.666666668,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 9852880,
+        "mad_ns": 237500,
+        "min_ns": 8715710,
+        "max_ns": 11503520,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "end-to-end/corpus/fedex-express",
+      "category": "end-to-end",
+      "description": "Committed demo fixture; 1 page(s), 812x1218 dots, 203 DPI",
+      "input_bytes": 2833,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "2e5025d6da5a6b7a8c6cebc6413f9582e53852fc185a2b84d5a98ff40bbd23f1",
+      "baseline": {
+        "median_ns": 13982766.666666666,
+        "mad_ns": 929266.6666666679,
+        "min_ns": 11573500,
+        "max_ns": 15795966.666666666,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 5835350,
+        "mad_ns": 325305.55555555597,
+        "min_ns": 5283138.888888889,
+        "max_ns": 7347211.111111111,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 7749312.5,
+        "mad_ns": 548775,
+        "min_ns": 6247625,
+        "max_ns": 8707837.5,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "parse/corpus/fedex-ground",
+      "category": "parse",
+      "description": "Committed demo fixture; 1 page(s), 812x1218 dots, 203 DPI",
+      "input_bytes": 2658,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "0e70451d5ee9ec69f8f73e5a9affc50841f0492e0cb3a1faf30348d75f2aa936",
+      "baseline": {
+        "median_ns": 248514.2857142857,
+        "mad_ns": 3292.380952380947,
+        "min_ns": 244290.47619047618,
+        "max_ns": 256997.61904761905,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 203324.2914979757,
+        "mad_ns": 1810.526315789466,
+        "min_ns": 200633.1983805668,
+        "max_ns": 220894.33198380566,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 231680.09259259258,
+        "mad_ns": 10816.203703703708,
+        "min_ns": 214479.62962962964,
+        "max_ns": 247299.07407407407,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/corpus/fedex-ground",
+      "category": "render",
+      "description": "Committed demo fixture; 1 page(s), 812x1218 dots, 203 DPI",
+      "input_bytes": 2658,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "1ba897f6c1ed696c9ad2e5d6ff74c153b9a37f4d60c56239fbbc720421a8dac1",
+      "baseline": {
+        "median_ns": 14324966.666666666,
+        "mad_ns": 650750,
+        "min_ns": 12695700,
+        "max_ns": 16300716.666666666,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 5633372.222222222,
+        "mad_ns": 243494.44444444403,
+        "min_ns": 5389877.777777778,
+        "max_ns": 12156372.222222222,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 9845880,
+        "mad_ns": 1788380,
+        "min_ns": 5472280,
+        "max_ns": 12286840,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "end-to-end/corpus/fedex-ground",
+      "category": "end-to-end",
+      "description": "Committed demo fixture; 1 page(s), 812x1218 dots, 203 DPI",
+      "input_bytes": 2658,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "1ba897f6c1ed696c9ad2e5d6ff74c153b9a37f4d60c56239fbbc720421a8dac1",
+      "baseline": {
+        "median_ns": 14750883.333333334,
+        "mad_ns": 384333.33333333395,
+        "min_ns": 13928333.333333334,
+        "max_ns": 15681133.333333334,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 5818112.5,
+        "mad_ns": 57062.5,
+        "min_ns": 5683106.25,
+        "max_ns": 5875175,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 7818425,
+        "mad_ns": 962187.5,
+        "min_ns": 6856237.5,
+        "max_ns": 9164837.5,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "parse/corpus/fedex-intl-express-awb",
+      "category": "parse",
+      "description": "Committed demo fixture; 2 page(s), 812x1218 dots, 203 DPI",
+      "input_bytes": 6600,
+      "units_per_operation": 2,
+      "unit": "label",
+      "output_fingerprint": "445e21afd7b6fa36c52ba9f6eb00464ba50a150a85c08a5d31166e4e4245bdd9",
+      "baseline": {
+        "median_ns": 569354,
+        "mad_ns": 7145.333333333372,
+        "min_ns": 559242,
+        "max_ns": 597834.6666666666,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 459384.0425531915,
+        "mad_ns": 2134.574468085135,
+        "min_ns": 451351.59574468085,
+        "max_ns": 470113.829787234,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 576982.0224719101,
+        "mad_ns": 4862.921348314616,
+        "min_ns": 521723.59550561797,
+        "max_ns": 673557.3033707865,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/corpus/fedex-intl-express-awb",
+      "category": "render",
+      "description": "Committed demo fixture; 2 page(s), 812x1218 dots, 203 DPI",
+      "input_bytes": 6600,
+      "units_per_operation": 2,
+      "unit": "label",
+      "output_fingerprint": "ff94d36f1cb103ec82649159f0163e0b433aa0104e94d8ebf1df2e7b304f88f5",
+      "baseline": {
+        "median_ns": 39781900,
+        "mad_ns": 962350,
+        "min_ns": 35888100,
+        "max_ns": 41309800,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 19020200,
+        "mad_ns": 500275,
+        "min_ns": 18375950,
+        "max_ns": 23661550,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 24255500,
+        "mad_ns": 2970950,
+        "min_ns": 20426200,
+        "max_ns": 28180550,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "end-to-end/corpus/fedex-intl-express-awb",
+      "category": "end-to-end",
+      "description": "Committed demo fixture; 2 page(s), 812x1218 dots, 203 DPI",
+      "input_bytes": 6600,
+      "units_per_operation": 2,
+      "unit": "label",
+      "output_fingerprint": "ff94d36f1cb103ec82649159f0163e0b433aa0104e94d8ebf1df2e7b304f88f5",
+      "baseline": {
+        "median_ns": 39721700,
+        "mad_ns": 2419550,
+        "min_ns": 37302150,
+        "max_ns": 46048250,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 18916575,
+        "mad_ns": 300125,
+        "min_ns": 17867400,
+        "max_ns": 24347500,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 24832950,
+        "mad_ns": 967475,
+        "min_ns": 21203025,
+        "max_ns": 26412425,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "parse/corpus/hello",
+      "category": "parse",
+      "description": "Committed demo fixture; 1 page(s), 812x609 dots, 203 DPI",
+      "input_bytes": 172,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "343192dc45f0157578b78ecda392b41a0b61f1e0911419e38da579bf45c40b53",
+      "baseline": {
+        "median_ns": 10670.934959349594,
+        "mad_ns": 124.83739837398389,
+        "min_ns": 10233.475609756097,
+        "max_ns": 12077.682926829268,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 9286.701933600876,
+        "mad_ns": 134.47646844217525,
+        "min_ns": 9084.695366654505,
+        "max_ns": 9800.474279460052,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 13792.932212296375,
+        "mad_ns": 902.1019442984762,
+        "min_ns": 12065.528113504992,
+        "max_ns": 15592.406726221756,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/corpus/hello",
+      "category": "render",
+      "description": "Committed demo fixture; 1 page(s), 812x609 dots, 203 DPI",
+      "input_bytes": 172,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "47a34ffada3bac6c032a7ea9d45bb3986a3c35ab50bbd84489524bd46f8c7704",
+      "baseline": {
+        "median_ns": 2256935.714285714,
+        "mad_ns": 24259.523809523787,
+        "min_ns": 1991614.2857142857,
+        "max_ns": 2435371.4285714286,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 1401738.5714285714,
+        "mad_ns": 31657.142857142724,
+        "min_ns": 1305344.2857142857,
+        "max_ns": 1552325.7142857143,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 2197867.5,
+        "mad_ns": 116100,
+        "min_ns": 1914180,
+        "max_ns": 2535032.5,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "end-to-end/corpus/hello",
+      "category": "end-to-end",
+      "description": "Committed demo fixture; 1 page(s), 812x609 dots, 203 DPI",
+      "input_bytes": 172,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "47a34ffada3bac6c032a7ea9d45bb3986a3c35ab50bbd84489524bd46f8c7704",
+      "baseline": {
+        "median_ns": 2248476.086956522,
+        "mad_ns": 63132.60869565187,
+        "min_ns": 2022932.608695652,
+        "max_ns": 2316365.217391304,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 1470040,
+        "mad_ns": 101750,
+        "min_ns": 1309118.5714285714,
+        "max_ns": 1702080,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 2008861.5384615385,
+        "mad_ns": 84740.38461538474,
+        "min_ns": 1889801.923076923,
+        "max_ns": 2312375,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "parse/corpus/labelary",
+      "category": "parse",
+      "description": "Committed demo fixture; 1 page(s), 812x1218 dots, 203 DPI",
+      "input_bytes": 912,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "2e6d5bc710a5e9330f6ce1e781d42102f02dd0e1f10f3e8b93db7913b175aacf",
+      "baseline": {
+        "median_ns": 63181.80790960452,
+        "mad_ns": 603.1638418079092,
+        "min_ns": 61928.700564971754,
+        "max_ns": 70360.56497175142,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 54537.42268041237,
+        "mad_ns": 1505.6701030927798,
+        "min_ns": 52924.63917525773,
+        "max_ns": 61930.927835051545,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 69795.49436795995,
+        "mad_ns": 3744.430538172717,
+        "min_ns": 63467.20901126408,
+        "max_ns": 86170.58823529411,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/corpus/labelary",
+      "category": "render",
+      "description": "Committed demo fixture; 1 page(s), 812x1218 dots, 203 DPI",
+      "input_bytes": 912,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "9ed49d13c78ba4f0633efbcf6d14be1274f3f6fbd8e4b1b897dcb6436ddd0ba3",
+      "baseline": {
+        "median_ns": 6701212.5,
+        "mad_ns": 685250,
+        "min_ns": 5412162.5,
+        "max_ns": 7439150,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 2924965,
+        "mad_ns": 32675,
+        "min_ns": 2865550,
+        "max_ns": 4877280,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 4728350,
+        "mad_ns": 123025,
+        "min_ns": 4551291.666666667,
+        "max_ns": 6044216.666666667,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "end-to-end/corpus/labelary",
+      "category": "end-to-end",
+      "description": "Committed demo fixture; 1 page(s), 812x1218 dots, 203 DPI",
+      "input_bytes": 912,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "9ed49d13c78ba4f0633efbcf6d14be1274f3f6fbd8e4b1b897dcb6436ddd0ba3",
+      "baseline": {
+        "median_ns": 7208614.285714285,
+        "mad_ns": 260321.42857142817,
+        "min_ns": 6793650,
+        "max_ns": 9281464.285714285,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 3182590,
+        "mad_ns": 248745,
+        "min_ns": 2929065,
+        "max_ns": 5640405,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 4926280,
+        "mad_ns": 351630,
+        "min_ns": 3944960,
+        "max_ns": 5543970,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "parse/corpus/product",
+      "category": "parse",
+      "description": "Committed demo fixture; 1 page(s), 812x609 dots, 203 DPI",
+      "input_bytes": 677,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "f9b163074b61c71357d4b6913cd4fb91be09bfee769eaff5f0fd4e884f8ae7c2",
+      "baseline": {
+        "median_ns": 43902.45464247599,
+        "mad_ns": 1561.4194236926342,
+        "min_ns": 42015.52828175027,
+        "max_ns": 47013.44717182497,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 34984.6,
+        "mad_ns": 452.75,
+        "min_ns": 34451.6,
+        "max_ns": 39282.9,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 41007.05,
+        "mad_ns": 1301.5999999999985,
+        "min_ns": 37884.15,
+        "max_ns": 42643.6,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/corpus/product",
+      "category": "render",
+      "description": "Committed demo fixture; 1 page(s), 812x609 dots, 203 DPI",
+      "input_bytes": 677,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "5c377a2f5726028cafc2803824f1ce082278d55013e1a1bf228d783a60e1a402",
+      "baseline": {
+        "median_ns": 5221185.714285715,
+        "mad_ns": 100285.71428571455,
+        "min_ns": 4828200,
+        "max_ns": 5506842.857142857,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 2627985,
+        "mad_ns": 139280,
+        "min_ns": 2480975,
+        "max_ns": 3116825,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 2898360,
+        "mad_ns": 100900,
+        "min_ns": 2772900,
+        "max_ns": 3729165,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "end-to-end/corpus/product",
+      "category": "end-to-end",
+      "description": "Committed demo fixture; 1 page(s), 812x609 dots, 203 DPI",
+      "input_bytes": 677,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "5c377a2f5726028cafc2803824f1ce082278d55013e1a1bf228d783a60e1a402",
+      "baseline": {
+        "median_ns": 5327681.25,
+        "mad_ns": 113443.75,
+        "min_ns": 4821912.5,
+        "max_ns": 5739837.5,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 2598045,
+        "mad_ns": 81870,
+        "min_ns": 2516175,
+        "max_ns": 2737710,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 3407700,
+        "mad_ns": 195885.7142857141,
+        "min_ns": 3139204.761904762,
+        "max_ns": 3671528.5714285714,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "parse/corpus/qrcode",
+      "category": "parse",
+      "description": "Committed demo fixture; 1 page(s), 812x609 dots, 203 DPI",
+      "input_bytes": 605,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "755f368c1999a4f28b5339e9637195e82cafc3b00db23e07210eb35bc746fa14",
+      "baseline": {
+        "median_ns": 29043.4,
+        "mad_ns": 432.7000000000007,
+        "min_ns": 28366.05,
+        "max_ns": 30937.85,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 23483.007626310773,
+        "mad_ns": 1414.7283126787443,
+        "min_ns": 22060.91515729266,
+        "max_ns": 25874.189704480457,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 29856.75,
+        "mad_ns": 849.5999999999985,
+        "min_ns": 28536,
+        "max_ns": 31025.3,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/corpus/qrcode",
+      "category": "render",
+      "description": "Committed demo fixture; 1 page(s), 812x609 dots, 203 DPI",
+      "input_bytes": 605,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "d47ff0e18b49f10758f500e0c363b9407a16da12c84f87eccdc85351469288f6",
+      "baseline": {
+        "median_ns": 4988365,
+        "mad_ns": 76860,
+        "min_ns": 4728665,
+        "max_ns": 5361840,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 2521225,
+        "mad_ns": 29575,
+        "min_ns": 2455915,
+        "max_ns": 2553240,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 3417510,
+        "mad_ns": 101460,
+        "min_ns": 3297435,
+        "max_ns": 3802770,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "end-to-end/corpus/qrcode",
+      "category": "end-to-end",
+      "description": "Committed demo fixture; 1 page(s), 812x609 dots, 203 DPI",
+      "input_bytes": 605,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "d47ff0e18b49f10758f500e0c363b9407a16da12c84f87eccdc85351469288f6",
+      "baseline": {
+        "median_ns": 4903365,
+        "mad_ns": 58015,
+        "min_ns": 4774625,
+        "max_ns": 5091235,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 4202500,
+        "mad_ns": 342210,
+        "min_ns": 3090212.5,
+        "max_ns": 6457632.5,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 3984195,
+        "mad_ns": 450375,
+        "min_ns": 3024675,
+        "max_ns": 4434570,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "parse/corpus/shapes",
+      "category": "parse",
+      "description": "Committed demo fixture; 1 page(s), 812x609 dots, 203 DPI",
+      "input_bytes": 778,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "86117a46f5bbaf66eb98d924d9e5bf73e3e107bb7f2224fc9f9edcfbc601b512",
+      "baseline": {
+        "median_ns": 67805.8583106267,
+        "mad_ns": 830.8583106267033,
+        "min_ns": 65729.90463215258,
+        "max_ns": 68683.99182561308,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 67370.91541135573,
+        "mad_ns": 4880.938586326767,
+        "min_ns": 55863.383545770565,
+        "max_ns": 72251.8539976825,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 71464.28571428571,
+        "mad_ns": 5248.7012987013,
+        "min_ns": 56223.7012987013,
+        "max_ns": 82595.34632034632,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/corpus/shapes",
+      "category": "render",
+      "description": "Committed demo fixture; 1 page(s), 812x609 dots, 203 DPI",
+      "input_bytes": 778,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "bc7598b23e7cf21723f56cbee06c643d34b04aaf05216344e996bf473255fe8a",
+      "baseline": {
+        "median_ns": 3697165,
+        "mad_ns": 183275,
+        "min_ns": 3287645,
+        "max_ns": 4151580,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 1663551.5625,
+        "mad_ns": 255032.8125,
+        "min_ns": 1360571.875,
+        "max_ns": 2429968.75,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 1800692.5,
+        "mad_ns": 182390,
+        "min_ns": 1289410,
+        "max_ns": 2154445,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "end-to-end/corpus/shapes",
+      "category": "end-to-end",
+      "description": "Committed demo fixture; 1 page(s), 812x609 dots, 203 DPI",
+      "input_bytes": 778,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "bc7598b23e7cf21723f56cbee06c643d34b04aaf05216344e996bf473255fe8a",
+      "baseline": {
+        "median_ns": 3816572.222222222,
+        "mad_ns": 357355.55555555597,
+        "min_ns": 3310488.888888889,
+        "max_ns": 4314383.333333333,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 2539611.111111111,
+        "mad_ns": 552337.0370370373,
+        "min_ns": 1738303.7037037036,
+        "max_ns": 3760585.185185185,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 2547590,
+        "mad_ns": 687164,
+        "min_ns": 1394496,
+        "max_ns": 3640760,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "parse/corpus/ups",
+      "category": "parse",
+      "description": "Committed demo fixture; 1 page(s), 812x1218 dots, 203 DPI",
+      "input_bytes": 3632,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "7aaae1b4282f836c17f303aca6d3573cbb2f37cb5e1c3778c5f7fab8da96b96a",
+      "baseline": {
+        "median_ns": 142612.6520681265,
+        "mad_ns": 9744.768856447685,
+        "min_ns": 128811.43552311436,
+        "max_ns": 162039.65936739658,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 108090.92409240924,
+        "mad_ns": 2867.8217821782164,
+        "min_ns": 105097.6897689769,
+        "max_ns": 116435.47854785479,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 195532,
+        "mad_ns": 19872.75,
+        "min_ns": 141526.5,
+        "max_ns": 242545,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/corpus/ups",
+      "category": "render",
+      "description": "Committed demo fixture; 1 page(s), 812x1218 dots, 203 DPI",
+      "input_bytes": 3632,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "fa5a2d4ebabdb9530342e4550f22a6a6a76c4cf1daabc44ad4c74c5b636bae01",
+      "baseline": {
+        "median_ns": 33040700,
+        "mad_ns": 1306550,
+        "min_ns": 29260100,
+        "max_ns": 35000250,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 21680975,
+        "mad_ns": 2316175,
+        "min_ns": 17775300,
+        "max_ns": 28532325,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 29332300,
+        "mad_ns": 2599650,
+        "min_ns": 20977350,
+        "max_ns": 32634750,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "end-to-end/corpus/ups",
+      "category": "end-to-end",
+      "description": "Committed demo fixture; 1 page(s), 812x1218 dots, 203 DPI",
+      "input_bytes": 3632,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "fa5a2d4ebabdb9530342e4550f22a6a6a76c4cf1daabc44ad4c74c5b636bae01",
+      "baseline": {
+        "median_ns": 32897850,
+        "mad_ns": 980100,
+        "min_ns": 28248600,
+        "max_ns": 35401100,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 19183150,
+        "mad_ns": 874100,
+        "min_ns": 17517750,
+        "max_ns": 20057250,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 22700025,
+        "mad_ns": 1109150,
+        "min_ns": 21384850,
+        "max_ns": 27627575,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "parse/corpus/usps-apo",
+      "category": "parse",
+      "description": "Committed demo fixture; 1 page(s), 812x1218 dots, 203 DPI",
+      "input_bytes": 11774,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "7d24166eddaeade54e35d182679a5829044bec273cd299d8661e8b65044d6c15",
+      "baseline": {
+        "median_ns": 528962,
+        "mad_ns": 10652,
+        "min_ns": 497774,
+        "max_ns": 614000,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 488466.5,
+        "mad_ns": 27280.5,
+        "min_ns": 453080,
+        "max_ns": 796531.5,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 514287.6404494382,
+        "mad_ns": 29052.247191011207,
+        "min_ns": 464533.1460674157,
+        "max_ns": 611866.2921348314,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/corpus/usps-apo",
+      "category": "render",
+      "description": "Committed demo fixture; 1 page(s), 812x1218 dots, 203 DPI",
+      "input_bytes": 11774,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "3ea4812bdba982c1f73920da786b4ae4a191a344272c635b9134daad166fdde7",
+      "baseline": {
+        "median_ns": 35383850,
+        "mad_ns": 2305300,
+        "min_ns": 31314000,
+        "max_ns": 38177700,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 11176512.5,
+        "mad_ns": 260300,
+        "min_ns": 10810837.5,
+        "max_ns": 12436262.5,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 15738333.333333334,
+        "mad_ns": 2410333.333333334,
+        "min_ns": 11907583.333333334,
+        "max_ns": 20177383.333333332,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "end-to-end/corpus/usps-apo",
+      "category": "end-to-end",
+      "description": "Committed demo fixture; 1 page(s), 812x1218 dots, 203 DPI",
+      "input_bytes": 11774,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "3ea4812bdba982c1f73920da786b4ae4a191a344272c635b9134daad166fdde7",
+      "baseline": {
+        "median_ns": 34396800,
+        "mad_ns": 604000,
+        "min_ns": 33128200,
+        "max_ns": 36037400,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 12200250,
+        "mad_ns": 1100875,
+        "min_ns": 10951125,
+        "max_ns": 14446050,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 18545025,
+        "mad_ns": 4208750,
+        "min_ns": 10751475,
+        "max_ns": 29796125,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "parse/corpus/usps-apo-continuation",
+      "category": "parse",
+      "description": "Committed demo fixture; 2 page(s), 812x1218 dots, 203 DPI",
+      "input_bytes": 16395,
+      "units_per_operation": 2,
+      "unit": "label",
+      "output_fingerprint": "9f233b05e3f3a03af806c71a0ddb1f460739ff06296de51971220f3a3f3a65a4",
+      "baseline": {
+        "median_ns": 887787.6923076923,
+        "mad_ns": 36507.692307692254,
+        "min_ns": 851280,
+        "max_ns": 1029973.8461538461,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 730698.4848484849,
+        "mad_ns": 11469.696969696903,
+        "min_ns": 710883.3333333334,
+        "max_ns": 811009.0909090909,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 854489.5833333334,
+        "mad_ns": 17646.875,
+        "min_ns": 836842.7083333334,
+        "max_ns": 931292.7083333334,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/corpus/usps-apo-continuation",
+      "category": "render",
+      "description": "Committed demo fixture; 2 page(s), 812x1218 dots, 203 DPI",
+      "input_bytes": 16395,
+      "units_per_operation": 2,
+      "unit": "label",
+      "output_fingerprint": "7ab3a01182e84a47d3851244eb02a4b9b39f8ce24e1271d310fc934b9674348c",
+      "baseline": {
+        "median_ns": 67970300,
+        "mad_ns": 13175700,
+        "min_ns": 53515000,
+        "max_ns": 118464400,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 21239675,
+        "mad_ns": 498800,
+        "min_ns": 20735025,
+        "max_ns": 24603500,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 24774350,
+        "mad_ns": 2654625,
+        "min_ns": 21767225,
+        "max_ns": 28106925,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "end-to-end/corpus/usps-apo-continuation",
+      "category": "end-to-end",
+      "description": "Committed demo fixture; 2 page(s), 812x1218 dots, 203 DPI",
+      "input_bytes": 16395,
+      "units_per_operation": 2,
+      "unit": "label",
+      "output_fingerprint": "7ab3a01182e84a47d3851244eb02a4b9b39f8ce24e1271d310fc934b9674348c",
+      "baseline": {
+        "median_ns": 61545300,
+        "mad_ns": 4934400,
+        "min_ns": 53995000,
+        "max_ns": 70804800,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 22808500,
+        "mad_ns": 498625,
+        "min_ns": 22297625,
+        "max_ns": 33495450,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 34074800,
+        "mad_ns": 2337550,
+        "min_ns": 29731150,
+        "max_ns": 40373350,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "parse/corpus/usps-domestic",
+      "category": "parse",
+      "description": "Committed demo fixture; 1 page(s), 812x1218 dots, 203 DPI",
+      "input_bytes": 9595,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "dd59011827b4887c05ea1848d5f7a9a0aa9f213cff38da00f83811ae70229309",
+      "baseline": {
+        "median_ns": 311597.5,
+        "mad_ns": 13891.5,
+        "min_ns": 285253,
+        "max_ns": 332743,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 345746,
+        "mad_ns": 45064.5,
+        "min_ns": 285825,
+        "max_ns": 413003.5,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 333266,
+        "mad_ns": 18012.5,
+        "min_ns": 287586.5,
+        "max_ns": 391025.5,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/corpus/usps-domestic",
+      "category": "render",
+      "description": "Committed demo fixture; 1 page(s), 812x1218 dots, 203 DPI",
+      "input_bytes": 9595,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "8cd7c961dceeb514695cb146f33d43a66f00c4355296818c49828eb524a1bf1f",
+      "baseline": {
+        "median_ns": 17622266.666666668,
+        "mad_ns": 1293566.666666668,
+        "min_ns": 14678500,
+        "max_ns": 20792233.333333332,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 12229985.714285715,
+        "mad_ns": 1493642.8571428582,
+        "min_ns": 10202557.142857144,
+        "max_ns": 14887171.42857143,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 8175433.333333333,
+        "mad_ns": 614616.666666666,
+        "min_ns": 6366983.333333333,
+        "max_ns": 8862166.666666666,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "end-to-end/corpus/usps-domestic",
+      "category": "end-to-end",
+      "description": "Committed demo fixture; 1 page(s), 812x1218 dots, 203 DPI",
+      "input_bytes": 9595,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "8cd7c961dceeb514695cb146f33d43a66f00c4355296818c49828eb524a1bf1f",
+      "baseline": {
+        "median_ns": 17073633.333333332,
+        "mad_ns": 1525433.333333332,
+        "min_ns": 13764466.666666666,
+        "max_ns": 29709966.666666668,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 11506525,
+        "mad_ns": 717425,
+        "min_ns": 9613950,
+        "max_ns": 14486550,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 9313040,
+        "mad_ns": 914070,
+        "min_ns": 6380530,
+        "max_ns": 10751440,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "parse/corpus/usps-intl",
+      "category": "parse",
+      "description": "Committed demo fixture; 1 page(s), 812x1218 dots, 203 DPI",
+      "input_bytes": 11202,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "0fd5b7436c28f853e2ae4edd984981c214712aeb8fb9bfe0efbc347407083a84",
+      "baseline": {
+        "median_ns": 310577.5,
+        "mad_ns": 6188,
+        "min_ns": 297925.5,
+        "max_ns": 319084.5,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 417803,
+        "mad_ns": 47044,
+        "min_ns": 339510.5,
+        "max_ns": 602796,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 332687.5,
+        "mad_ns": 16850.5,
+        "min_ns": 313709,
+        "max_ns": 381024.5,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/corpus/usps-intl",
+      "category": "render",
+      "description": "Committed demo fixture; 1 page(s), 812x1218 dots, 203 DPI",
+      "input_bytes": 11202,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "db769404ad61bb1b87363d09dddfd4f95414a805757d32af0914607c5b7c4c0d",
+      "baseline": {
+        "median_ns": 16668300,
+        "mad_ns": 2079300,
+        "min_ns": 12333850,
+        "max_ns": 18906350,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 13064500,
+        "mad_ns": 585750,
+        "min_ns": 12271800,
+        "max_ns": 15136350,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 8049937.5,
+        "mad_ns": 1199062.5,
+        "min_ns": 6832775,
+        "max_ns": 10036750,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "end-to-end/corpus/usps-intl",
+      "category": "end-to-end",
+      "description": "Committed demo fixture; 1 page(s), 812x1218 dots, 203 DPI",
+      "input_bytes": 11202,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "db769404ad61bb1b87363d09dddfd4f95414a805757d32af0914607c5b7c4c0d",
+      "baseline": {
+        "median_ns": 16248850,
+        "mad_ns": 2081800,
+        "min_ns": 14127900,
+        "max_ns": 25504950,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 12302675,
+        "mad_ns": 1831800,
+        "min_ns": 7715275,
+        "max_ns": 14905425,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 10184585.714285715,
+        "mad_ns": 594414.2857142854,
+        "min_ns": 8781657.142857144,
+        "max_ns": 11234771.42857143,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/synthetic/blank-812x1218",
+      "category": "render",
+      "description": "Allocate and fill a blank four-by-six-inch label",
+      "input_bytes": 6,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "2d1a7ead326babdacc9995fdef2e1901040d15a598c9e454d6513fa79b0dd1d3",
+      "baseline": {
+        "median_ns": 1513312.0689655172,
+        "mad_ns": 181425.86206896557,
+        "min_ns": 1274475.8620689656,
+        "max_ns": 3105715.5172413792,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 2400082.5,
+        "mad_ns": 163982.5,
+        "min_ns": 1868255,
+        "max_ns": 2945677.5,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 1508601.7241379311,
+        "mad_ns": 71370.6896551724,
+        "min_ns": 1335222.4137931035,
+        "max_ns": 1860365.5172413792,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/synthetic/blank-1200x1800",
+      "category": "render",
+      "description": "Allocate and fill a blank four-by-six-inch label",
+      "input_bytes": 6,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "2d5e85638dac2f2b52be70bdb8b8909b4e63ae8e9cc6ff807e7741e2d9491c34",
+      "baseline": {
+        "median_ns": 4119880,
+        "mad_ns": 296260,
+        "min_ns": 3088050,
+        "max_ns": 4422910,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 4197750,
+        "mad_ns": 150385,
+        "min_ns": 3977385,
+        "max_ns": 5850820,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 2897565,
+        "mad_ns": 275120,
+        "min_ns": 1814100,
+        "max_ns": 3269505,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/synthetic/blank-2400x3600",
+      "category": "render",
+      "description": "Allocate and fill a blank four-by-six-inch label",
+      "input_bytes": 6,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "19c6f0bbd16d948d6fcb3d2e3746fe675705c34a96f66d499f2c6a0e45584e33",
+      "baseline": {
+        "median_ns": 18019466.666666668,
+        "mad_ns": 1207066.666666668,
+        "min_ns": 13764333.333333334,
+        "max_ns": 20435800,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 15442716.666666666,
+        "mad_ns": 764700,
+        "min_ns": 13498666.666666666,
+        "max_ns": 17725033.333333332,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 12996200,
+        "mad_ns": 197362.5,
+        "min_ns": 9966737.5,
+        "max_ns": 14096937.5,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/synthetic/font0-1-repeated",
+      "category": "render",
+      "description": "Repeated 21-character text fields, 24x20 dots",
+      "input_bytes": 51,
+      "units_per_operation": 1,
+      "unit": "field",
+      "output_fingerprint": "dfd92094bbb94ca16b79d9b688dcc0e0ac0ba2641f89caee8f63747cec8b1c22",
+      "baseline": {
+        "median_ns": 2078474.0740740742,
+        "mad_ns": 215492.59259259258,
+        "min_ns": 1862981.4814814816,
+        "max_ns": 2992507.407407407,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 3145990,
+        "mad_ns": 375685,
+        "min_ns": 2521655,
+        "max_ns": 4779395,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 2049415.9090909092,
+        "mad_ns": 56820.45454545459,
+        "min_ns": 1854461.3636363635,
+        "max_ns": 2662186.3636363638,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/synthetic/font0-100-repeated",
+      "category": "render",
+      "description": "Repeated 21-character text fields, 24x20 dots",
+      "input_bytes": 4673,
+      "units_per_operation": 100,
+      "unit": "field",
+      "output_fingerprint": "d6393f733fbb39e323d562d0319fc87d0c4402153e0b35adba1b64c7120658e2",
+      "baseline": {
+        "median_ns": 40530950,
+        "mad_ns": 2342300,
+        "min_ns": 38188650,
+        "max_ns": 65181700,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 21487400,
+        "mad_ns": 2753200,
+        "min_ns": 17399600,
+        "max_ns": 31733050,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 13526666.666666666,
+        "mad_ns": 330983.3333333321,
+        "min_ns": 12407650,
+        "max_ns": 15135650,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/synthetic/font0-100-unique",
+      "category": "render",
+      "description": "100 distinct 21-character text fields, 24x20 dots",
+      "input_bytes": 4673,
+      "units_per_operation": 100,
+      "unit": "field",
+      "output_fingerprint": "91c7d93a4b40bab018a91cfba653c8b7256ef4c683f5e442f82ff78592be2f47",
+      "baseline": {
+        "median_ns": 45468050,
+        "mad_ns": 2991950,
+        "min_ns": 42285400,
+        "max_ns": 54748550,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 22667925,
+        "mad_ns": 409425,
+        "min_ns": 21722475,
+        "max_ns": 26477975,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 15054050,
+        "mad_ns": 496550,
+        "min_ns": 13753883.333333334,
+        "max_ns": 16441783.333333334,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/synthetic/fontA-1-repeated",
+      "category": "render",
+      "description": "Repeated 21-character text fields, 24x20 dots",
+      "input_bytes": 51,
+      "units_per_operation": 1,
+      "unit": "field",
+      "output_fingerprint": "b59965f856ef8185e7270e40e8b7afb1ec01dcd85de70c6338f3681afd243bd6",
+      "baseline": {
+        "median_ns": 1533293.75,
+        "mad_ns": 57612.5,
+        "min_ns": 1442441.6666666667,
+        "max_ns": 1712608.3333333333,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 2085352.1739130435,
+        "mad_ns": 122917.39130434766,
+        "min_ns": 1597539.1304347827,
+        "max_ns": 3449673.913043478,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 1851120,
+        "mad_ns": 163243.33333333326,
+        "min_ns": 1437398.3333333333,
+        "max_ns": 2403255,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/synthetic/fontA-100-repeated",
+      "category": "render",
+      "description": "Repeated 21-character text fields, 24x20 dots",
+      "input_bytes": 4673,
+      "units_per_operation": 100,
+      "unit": "field",
+      "output_fingerprint": "700db07487aae6ca9d1dccd70393d05bfd3767cab498075d5d62c0e3dab6354f",
+      "baseline": {
+        "median_ns": 10259512.5,
+        "mad_ns": 943900,
+        "min_ns": 8021137.5,
+        "max_ns": 12197137.5,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 12194075,
+        "mad_ns": 342475,
+        "min_ns": 11600150,
+        "max_ns": 13469550,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 11632750,
+        "mad_ns": 694250,
+        "min_ns": 10398300,
+        "max_ns": 12822750,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/synthetic/fontA-100-unique",
+      "category": "render",
+      "description": "100 distinct 21-character text fields, 24x20 dots",
+      "input_bytes": 4673,
+      "units_per_operation": 100,
+      "unit": "field",
+      "output_fingerprint": "dbf66aa2bc0264a5805b54cba693867d12dc713500991586e8cf6d3fe1e4cb18",
+      "baseline": {
+        "median_ns": 11447625,
+        "mad_ns": 255687.5,
+        "min_ns": 10617637.5,
+        "max_ns": 14871587.5,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 14405100,
+        "mad_ns": 1436533.333333334,
+        "min_ns": 12800566.666666666,
+        "max_ns": 23604266.666666668,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 11564162.5,
+        "mad_ns": 366662.5,
+        "min_ns": 11197500,
+        "max_ns": 14333750,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/synthetic/font0-block-long-word",
+      "category": "render",
+      "description": "1100 characters in a 600-dot Font 0 block, at most 40 lines",
+      "input_bytes": 1145,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "6f12665f1ccc0fb47cd6a27c18238dc47b836c8402a7c806c535f057462f44b9",
+      "baseline": {
+        "median_ns": 47812200,
+        "mad_ns": 2633500,
+        "min_ns": 41062450,
+        "max_ns": 51841150,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 49150500,
+        "mad_ns": 2658600,
+        "min_ns": 45828400,
+        "max_ns": 52290000,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 44061300,
+        "mad_ns": 322400,
+        "min_ns": 40823800,
+        "max_ns": 46168300,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/synthetic/font0-block-words",
+      "category": "render",
+      "description": "1100 characters in a 600-dot Font 0 block, at most 40 lines",
+      "input_bytes": 1145,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "cc9b1fed562e72cc22e363bfadee403f7b659e56c5f3e7762b6353559eb4e728",
+      "baseline": {
+        "median_ns": 14334183.333333334,
+        "mad_ns": 685050,
+        "min_ns": 13255300,
+        "max_ns": 15411216.666666666,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 16713425,
+        "mad_ns": 699775,
+        "min_ns": 15592350,
+        "max_ns": 20293800,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 14612050,
+        "mad_ns": 782075,
+        "min_ns": 13128700,
+        "max_ns": 17518700,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/synthetic/font0-block-long-word-275",
+      "category": "render",
+      "description": "275 characters in a 600-dot Font 0 block, at most 40 lines",
+      "input_bytes": 320,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "6c749b068d1ac145a27d3885bd622ac69aebb6e169396c3717453b30ae485fea",
+      "baseline": {
+        "median_ns": 12739750,
+        "mad_ns": 424475,
+        "min_ns": 11406525,
+        "max_ns": 13352000,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 15809083.333333334,
+        "mad_ns": 1764283.333333334,
+        "min_ns": 13316183.333333334,
+        "max_ns": 17846600,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 12733700,
+        "mad_ns": 521633.33333333395,
+        "min_ns": 11155150,
+        "max_ns": 14229883.333333334,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/synthetic/gf-512-empty",
+      "category": "render",
+      "description": "Uncompressed ASCII-hex ^GF, 512x512 dots",
+      "input_bytes": 65573,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "2d1a7ead326babdacc9995fdef2e1901040d15a598c9e454d6513fa79b0dd1d3",
+      "baseline": {
+        "median_ns": 4079285,
+        "mad_ns": 771010,
+        "min_ns": 2695885,
+        "max_ns": 5275960,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 3098450,
+        "mad_ns": 90365,
+        "min_ns": 2544710,
+        "max_ns": 3214355,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 2754675,
+        "mad_ns": 226735,
+        "min_ns": 2204670,
+        "max_ns": 3144025,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/synthetic/gf-512-solid",
+      "category": "render",
+      "description": "Uncompressed ASCII-hex ^GF, 512x512 dots",
+      "input_bytes": 65573,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "a9bab99a515f064134806c61ce49f1016579e860dac1a4dbf8eefd0b0f8fb379",
+      "baseline": {
+        "median_ns": 22181033.333333332,
+        "mad_ns": 1758400,
+        "min_ns": 16491066.666666666,
+        "max_ns": 23939433.333333332,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 3406175,
+        "mad_ns": 145470,
+        "min_ns": 3021450,
+        "max_ns": 3737945,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 2778080,
+        "mad_ns": 205780,
+        "min_ns": 2353500,
+        "max_ns": 3057975,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/synthetic/gf-512-stripes",
+      "category": "render",
+      "description": "Uncompressed ASCII-hex ^GF, 512x512 dots",
+      "input_bytes": 65573,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "e10aefa6f65f5363d1104929011d9b0c2567b1b791b3502d5dc0e77e59738346",
+      "baseline": {
+        "median_ns": 10838360,
+        "mad_ns": 692820,
+        "min_ns": 9769480,
+        "max_ns": 13355990,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 3573330,
+        "mad_ns": 474525,
+        "min_ns": 3017840,
+        "max_ns": 4775055,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 2525915,
+        "mad_ns": 180380,
+        "min_ns": 2042980,
+        "max_ns": 3095145,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "parse/synthetic/gf-512-stripes",
+      "category": "parse",
+      "description": "65,536 hexadecimal characters in ^GF",
+      "input_bytes": 65573,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "125cafda1a9e3a6aed58730c813061aefc742de295187127e13862c71115a4de",
+      "baseline": {
+        "median_ns": 74119.6335078534,
+        "mad_ns": 3250.130890052358,
+        "min_ns": 70713.87434554973,
+        "max_ns": 78693.97905759163,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 79661.25429553265,
+        "mad_ns": 2764.003436426123,
+        "min_ns": 69279.46735395188,
+        "max_ns": 83590.72164948453,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 65488.11524609844,
+        "mad_ns": 2127.1308523409316,
+        "min_ns": 61443.21728691477,
+        "max_ns": 68864.10564225691,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/synthetic/qr-32-bytes",
+      "category": "render",
+      "description": "QR Model 2, medium ECC, automatic mask, 2-dot modules",
+      "input_bytes": 63,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "1a8facb174a813feb834c573db9585660a2050759acc5ff705c0ebfeaff315b4",
+      "baseline": {
+        "median_ns": 1942022.2222222222,
+        "mad_ns": 137251.8518518519,
+        "min_ns": 1773418.5185185184,
+        "max_ns": 2131422.222222222,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 1409042.5,
+        "mad_ns": 171457.5,
+        "min_ns": 1207827.5,
+        "max_ns": 1964650,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 1733048.076923077,
+        "mad_ns": 92351.92307692324,
+        "min_ns": 1478450,
+        "max_ns": 2120378.846153846,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/synthetic/qr-512-bytes",
+      "category": "render",
+      "description": "QR Model 2, medium ECC, automatic mask, 2-dot modules",
+      "input_bytes": 543,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "93ced45ea199f3cb1fe3373fa21f01a57a03e9cd80a0d24b7b90376960a3ded4",
+      "baseline": {
+        "median_ns": 5483075,
+        "mad_ns": 95825,
+        "min_ns": 4879912.5,
+        "max_ns": 5649800,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 7196162.5,
+        "mad_ns": 634718.75,
+        "min_ns": 5909650,
+        "max_ns": 8182300,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 4489000,
+        "mad_ns": 70515,
+        "min_ns": 4418485,
+        "max_ns": 5124670,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/synthetic/maxicode-ups",
+      "category": "render",
+      "description": "One MaxiCode mode 2 with the committed UPS fixture payload",
+      "input_bytes": 146,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "659080fc832fd1513cafeccf500201649850726a9a986142167f8d1ddaec5783",
+      "baseline": {
+        "median_ns": 18982775,
+        "mad_ns": 1361675,
+        "min_ns": 16063250,
+        "max_ns": 20695075,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 26315050,
+        "mad_ns": 1132900,
+        "min_ns": 22535600,
+        "max_ns": 33360350,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 19627050,
+        "mad_ns": 1330025,
+        "min_ns": 16312750,
+        "max_ns": 23413900,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "parse/synthetic/fields-100",
+      "category": "parse",
+      "description": "Parse field origin, font, data and separator for each field",
+      "input_bytes": 4673,
+      "units_per_operation": 100,
+      "unit": "field",
+      "output_fingerprint": "c19d19938b484435fb3215a14f4c2766d7f496c7fbc2d15763d9040dda7a4d16",
+      "baseline": {
+        "median_ns": 313974,
+        "mad_ns": 3985,
+        "min_ns": 292395.5,
+        "max_ns": 330303.5,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 474482,
+        "mad_ns": 45594,
+        "min_ns": 378988,
+        "max_ns": 554853,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 316393,
+        "mad_ns": 5729.5,
+        "min_ns": 291235,
+        "max_ns": 355618,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "parse/synthetic/fields-1000",
+      "category": "parse",
+      "description": "Parse field origin, font, data and separator for each field",
+      "input_bytes": 47696,
+      "units_per_operation": 1000,
+      "unit": "field",
+      "output_fingerprint": "fd2a56f669bae4652cba43f8cd59a5c4d9a485356bfbdd8143dede9aa8722218",
+      "baseline": {
+        "median_ns": 3553100,
+        "mad_ns": 260970,
+        "min_ns": 3100775,
+        "max_ns": 4104070,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 5860010,
+        "mad_ns": 1042970,
+        "min_ns": 4485870,
+        "max_ns": 7275340,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 3486707.1428571427,
+        "mad_ns": 202050,
+        "min_ns": 3056178.5714285714,
+        "max_ns": 4048367.8571428573,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "parse/synthetic/fd-64k-plain",
+      "category": "parse",
+      "description": "One 65,536-character ^FD; commas belong to field data",
+      "input_bytes": 65548,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "e453224d00db3b4d540129d0d238614cbdf8d9514eda32fc9c2f484007b43c59",
+      "baseline": {
+        "median_ns": 88304.85436893204,
+        "mad_ns": 16051.213592233005,
+        "min_ns": 71436.81229773462,
+        "max_ns": 116909.70873786407,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 75797.16599190283,
+        "mad_ns": 3882.2874493927084,
+        "min_ns": 71092.71255060729,
+        "max_ns": 82100.40485829959,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 65848.9932885906,
+        "mad_ns": 1233.109619686802,
+        "min_ns": 61217.67337807606,
+        "max_ns": 67082.1029082774,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "parse/synthetic/fd-64k-commas",
+      "category": "parse",
+      "description": "One 65,536-character ^FD; commas belong to field data",
+      "input_bytes": 65548,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "4b656f5ab7a6277447a3bcc96783032e9f55bdc02f8ea1633353690e9578f97a",
+      "baseline": {
+        "median_ns": 3386440,
+        "mad_ns": 358065,
+        "min_ns": 3028375,
+        "max_ns": 6110815,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 68112.54801536491,
+        "mad_ns": 1217.0294494238187,
+        "min_ns": 65997.8233034571,
+        "max_ns": 83816.38924455826,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 63705.23097826087,
+        "mad_ns": 1607.6766304347839,
+        "min_ns": 60320.04076086957,
+        "max_ns": 65429.00815217391,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "parse/synthetic/fh-16k-bytes",
+      "category": "parse",
+      "description": "16,384 hexadecimal byte escapes in one ^FH/^FD field",
+      "input_bytes": 49167,
+      "units_per_operation": 1,
+      "unit": "label",
+      "output_fingerprint": "c44b3e6b642631d0eaa67e1b24722ec15fbcc1713418f3efed3df8ca627b5617",
+      "baseline": {
+        "median_ns": 1171052.1739130435,
+        "mad_ns": 13865.217391304439,
+        "min_ns": 1133258.6956521738,
+        "max_ns": 1254276.0869565217,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 149006.80100755667,
+        "mad_ns": 4777.078085642308,
+        "min_ns": 142602.77078085643,
+        "max_ns": 166231.98992443326,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 158242.91187739462,
+        "mad_ns": 4409.386973180051,
+        "min_ns": 146562.4521072797,
+        "max_ns": 165369.73180076628,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "parse/synthetic/labels-100",
+      "category": "parse",
+      "description": "100 separate one-field labels in one input stream",
+      "input_bytes": 5100,
+      "units_per_operation": 100,
+      "unit": "label",
+      "output_fingerprint": "2cded269b294ae4f37d3b312b1e012090ea6d5a7b9825590617fa93076a909c2",
+      "baseline": {
+        "median_ns": 417579,
+        "mad_ns": 7450,
+        "min_ns": 410030,
+        "max_ns": 491989.5,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 446253,
+        "mad_ns": 11493.5,
+        "min_ns": 400797.5,
+        "max_ns": 486777,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 407525.5,
+        "mad_ns": 7861.5,
+        "min_ns": 389014,
+        "max_ns": 423858.5,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/synthetic/code128-1",
+      "category": "render",
+      "description": "Numeric Code 128 auto subset, 20 digits, no interpretation",
+      "input_bytes": 61,
+      "units_per_operation": 1,
+      "unit": "barcode",
+      "output_fingerprint": "d3735d39623a68e1d51210cefccbd60e25e6d0821c3f20669d754439c5189e8e",
+      "baseline": {
+        "median_ns": 1466503.2258064516,
+        "mad_ns": 28985.483870967757,
+        "min_ns": 1341285.4838709678,
+        "max_ns": 1524166.1290322582,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 1878950,
+        "mad_ns": 174264.705882353,
+        "min_ns": 1320385.294117647,
+        "max_ns": 2080270.5882352942,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 1602263.2653061224,
+        "mad_ns": 86604.08163265325,
+        "min_ns": 1262144.8979591837,
+        "max_ns": 1785618.3673469387,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "render/synthetic/code128-100",
+      "category": "render",
+      "description": "Numeric Code 128 auto subset, 20 digits, no interpretation",
+      "input_bytes": 4920,
+      "units_per_operation": 100,
+      "unit": "barcode",
+      "output_fingerprint": "4904b8f71f7c95185bcec44a43296c2beba93b92ef97c6369a61c61e7f93ec38",
+      "baseline": {
+        "median_ns": 2730280,
+        "mad_ns": 227150,
+        "min_ns": 2453305,
+        "max_ns": 2990020,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 2556585,
+        "mad_ns": 81892.5,
+        "min_ns": 2026980,
+        "max_ns": 2864265,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 2650735,
+        "mad_ns": 241700,
+        "min_ns": 2103745,
+        "max_ns": 2897205,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "algorithm/ean13/full",
+      "category": "algorithms",
+      "description": "EAN-13: validate 13 digits and produce 95 modules",
+      "input_bytes": 13,
+      "units_per_operation": 1,
+      "unit": "operation",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 786.8514395393474,
+        "mad_ns": 7.821880998080587,
+        "min_ns": 746.8015355086372,
+        "max_ns": 798.1612284069098,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 803.9564726232923,
+        "mad_ns": 17.523034560666474,
+        "min_ns": 786.4334380626258,
+        "max_ns": 1131.56882126593,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 835.1226247822881,
+        "mad_ns": 13.869231614128125,
+        "min_ns": 809.5730492225134,
+        "max_ns": 976.971960270512,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "algorithm/code128/b-short",
+      "category": "algorithms",
+      "description": "Subset B: short mixed ASCII, complete modules",
+      "input_bytes": 12,
+      "units_per_operation": 1,
+      "unit": "operation",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 841.6961100142021,
+        "mad_ns": 14.75111711524471,
+        "min_ns": 801.8090339118086,
+        "max_ns": 920.6571062385258,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 1092.0627166719194,
+        "mad_ns": 152.4298770879293,
+        "min_ns": 907.5307280176489,
+        "max_ns": 1413.5959659628113,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 870.8031074754334,
+        "mad_ns": 25.163348253331264,
+        "min_ns": 816.8064344634803,
+        "max_ns": 935.0568503369861,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "algorithm/code128/b-large",
+      "category": "algorithms",
+      "description": "Subset B: 1024 mixed ASCII bytes, complete modules",
+      "input_bytes": 1088,
+      "units_per_operation": 1,
+      "unit": "operation",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 40320.95,
+        "mad_ns": 579.5,
+        "min_ns": 38524.7,
+        "max_ns": 42411.15,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 39012.35662148071,
+        "mad_ns": 567.2575599582924,
+        "min_ns": 37381.960375391034,
+        "max_ns": 44184.775808133476,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 40256.75,
+        "mad_ns": 2367.4000000000015,
+        "min_ns": 36511.4,
+        "max_ns": 43395.7,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "algorithm/code128/auto-mixed-short",
+      "category": "algorithms",
+      "description": "Automatic subset: short mixed ASCII, complete modules",
+      "input_bytes": 12,
+      "units_per_operation": 1,
+      "unit": "operation",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 847.0012879622197,
+        "mad_ns": 17.665615141955755,
+        "min_ns": 821.2971086181471,
+        "max_ns": 921.5061691523715,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 871.063305923389,
+        "mad_ns": 15.456367682570772,
+        "min_ns": 834.2350731545637,
+        "max_ns": 990.6469483419877,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 848.3379475990539,
+        "mad_ns": 53.15817458425772,
+        "min_ns": 776.9549513210245,
+        "max_ns": 978.5665829376065,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "algorithm/code128/auto-mixed-large",
+      "category": "algorithms",
+      "description": "Automatic subset: 1024 mixed ASCII bytes, complete modules",
+      "input_bytes": 1088,
+      "units_per_operation": 1,
+      "unit": "operation",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 43704.05,
+        "mad_ns": 3500.5,
+        "min_ns": 39851.5,
+        "max_ns": 51604.2,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 40674.7,
+        "mad_ns": 978.5500000000029,
+        "min_ns": 38827.5,
+        "max_ns": 44943.4,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 41411.2,
+        "mad_ns": 2544.649999999994,
+        "min_ns": 37403.65,
+        "max_ns": 47533.45,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "algorithm/code128/gs1-short",
+      "category": "algorithms",
+      "description": "GS1: GTIN with leading FNC1 and numeric packing",
+      "input_bytes": 18,
+      "units_per_operation": 1,
+      "unit": "operation",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 835.5523703789623,
+        "mad_ns": 17.805597441548343,
+        "min_ns": 781.5879302059686,
+        "max_ns": 862.0267112959618,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 786.6398604051286,
+        "mad_ns": 26.689932478567698,
+        "min_ns": 737.2430012897353,
+        "max_ns": 965.240877019953,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 819.6145359260792,
+        "mad_ns": 45.51958350572329,
+        "min_ns": 770.945386843194,
+        "max_ns": 902.7944421459109,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "algorithm/code128/gs1-fields",
+      "category": "algorithms",
+      "description": "GS1: GTIN, dates, lot and serial, with a field separator",
+      "input_bytes": 56,
+      "units_per_operation": 1,
+      "unit": "operation",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 2152.762648985713,
+        "mad_ns": 176.86478806535615,
+        "min_ns": 1939.6558528692083,
+        "max_ns": 2862.163548819954,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 1791.876043924802,
+        "mad_ns": 17.203880734923132,
+        "min_ns": 1769.974057358115,
+        "max_ns": 2242.9244109598776,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 2019.7027841954812,
+        "mad_ns": 159.5469319027295,
+        "min_ns": 1815.371813447155,
+        "max_ns": 2387.635587578807,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "algorithm/code128/auto-numeric-words-128",
+      "category": "algorithms",
+      "description": "Automatic subset: one uninterrupted numeric run, high-level codewords only",
+      "input_bytes": 128,
+      "units_per_operation": 1,
+      "unit": "operation",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 4720.69876091814,
+        "mad_ns": 54.346942920982656,
+        "min_ns": 3935.9892342067847,
+        "max_ns": 4962.431444241316,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 1022.4251853947342,
+        "mad_ns": 15.043747095314075,
+        "min_ns": 951.3103922083695,
+        "max_ns": 1076.356362019843,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 976.7216344103491,
+        "mad_ns": 16.461891513169917,
+        "min_ns": 950.0467090432769,
+        "max_ns": 1002.5233037509392,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "algorithm/code128/auto-numeric-words-512",
+      "category": "algorithms",
+      "description": "Automatic subset: one uninterrupted numeric run, high-level codewords only",
+      "input_bytes": 512,
+      "units_per_operation": 1,
+      "unit": "operation",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 44343.05,
+        "mad_ns": 600.5500000000029,
+        "min_ns": 43161.4,
+        "max_ns": 46177.1,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 3067.085,
+        "mad_ns": 43.86999999999989,
+        "min_ns": 2902.285,
+        "max_ns": 3279.645,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 2946.855,
+        "mad_ns": 44.24000000000024,
+        "min_ns": 2834.155,
+        "max_ns": 3071.335,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "algorithm/code128/auto-numeric-words-2048",
+      "category": "algorithms",
+      "description": "Automatic subset: one uninterrupted numeric run, high-level codewords only",
+      "input_bytes": 2048,
+      "units_per_operation": 1,
+      "unit": "operation",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 611510.7142857143,
+        "mad_ns": 2263.0952380951494,
+        "min_ns": 598128.5714285715,
+        "max_ns": 623194.0476190476,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 10774.430783242258,
+        "mad_ns": 277.09471766848765,
+        "min_ns": 10052.003642987249,
+        "max_ns": 11383.902550091074,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 10564.236706689537,
+        "mad_ns": 264.0437392795884,
+        "min_ns": 9836.685248713551,
+        "max_ns": 12548.64922813036,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "algorithm/code128/auto-numeric-words-8192",
+      "category": "algorithms",
+      "description": "Automatic subset: one uninterrupted numeric run, high-level codewords only",
+      "input_bytes": 8192,
+      "units_per_operation": 1,
+      "unit": "operation",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 10231850,
+        "mad_ns": 461925,
+        "min_ns": 9702575,
+        "max_ns": 11309937.5,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 42047,
+        "mad_ns": 537.8499999999985,
+        "min_ns": 40963.15,
+        "max_ns": 46471.85,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 42880.5,
+        "mad_ns": 1154.4000000000015,
+        "min_ns": 41377.7,
+        "max_ns": 47555.05,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "algorithm/code128/c-numeric-words-8192",
+      "category": "algorithms",
+      "description": "Strict subset C: same 8192 digits as automatic case, high-level codewords only",
+      "input_bytes": 8192,
+      "units_per_operation": 1,
+      "unit": "operation",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 38598.57293868922,
+        "mad_ns": 1786.7336152219868,
+        "min_ns": 35097.14587737843,
+        "max_ns": 40777.536997885836,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 36904.1,
+        "mad_ns": 1755.5,
+        "min_ns": 34480.2,
+        "max_ns": 43026.5,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 36712.05,
+        "mad_ns": 1267.6499999999942,
+        "min_ns": 34076.15,
+        "max_ns": 38137.85,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "algorithm/datamatrix/full-16",
+      "category": "algorithms",
+      "description": "ECC200 ASCII encoding, padding, Reed-Solomon and module placement",
+      "input_bytes": 16,
+      "units_per_operation": 1,
+      "unit": "operation",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 4619.75205750599,
+        "mad_ns": 66.09542660693842,
+        "min_ns": 4404.146265235962,
+        "max_ns": 4779.612459631212,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 5709.995,
+        "mad_ns": 628.585,
+        "min_ns": 4761.295,
+        "max_ns": 6705.665,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 4514.245,
+        "mad_ns": 51.345000000000255,
+        "min_ns": 4351.75,
+        "max_ns": 4715.075,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "algorithm/datamatrix/full-128",
+      "category": "algorithms",
+      "description": "ECC200 ASCII encoding, padding, Reed-Solomon and module placement",
+      "input_bytes": 128,
+      "units_per_operation": 1,
+      "unit": "operation",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 40989.5,
+        "mad_ns": 1670.449999999997,
+        "min_ns": 38607.15,
+        "max_ns": 44134.95,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 45090.25,
+        "mad_ns": 3444.550000000003,
+        "min_ns": 40503.6,
+        "max_ns": 54646.8,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 37562.05,
+        "mad_ns": 549.8000000000029,
+        "min_ns": 36670.3,
+        "max_ns": 41173.9,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "algorithm/datamatrix/full-1024",
+      "category": "algorithms",
+      "description": "ECC200 ASCII encoding, padding, Reed-Solomon and module placement",
+      "input_bytes": 1024,
+      "units_per_operation": 1,
+      "unit": "operation",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 305519.5,
+        "mad_ns": 5617,
+        "min_ns": 298775.5,
+        "max_ns": 322964,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 350042,
+        "mad_ns": 30288,
+        "min_ns": 319754,
+        "max_ns": 430990,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 324923.5,
+        "mad_ns": 19702,
+        "min_ns": 292034.5,
+        "max_ns": 358336.5,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "algorithm/datamatrix/highlevel-1024",
+      "category": "algorithms",
+      "description": "ECC200 ASCII codewords only, same data as full-1024",
+      "input_bytes": 1024,
+      "units_per_operation": 1,
+      "unit": "operation",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 4428.285,
+        "mad_ns": 190,
+        "min_ns": 4175.27,
+        "max_ns": 4875.705,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 5817.200674536256,
+        "mad_ns": 891.2591343451377,
+        "min_ns": 4582.953906689151,
+        "max_ns": 6837.408656548623,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 4564.994259471871,
+        "mad_ns": 177.17566016073488,
+        "min_ns": 4211.894374282434,
+        "max_ns": 4982.749712973594,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "algorithm/qr/auto-24",
+      "category": "algorithms",
+      "description": "QR byte data, ECC M, automatic selection across eight Zebra-scored masks",
+      "input_bytes": 24,
+      "units_per_operation": 1,
+      "unit": "operation",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 236430.3317535545,
+        "mad_ns": 4849.289099526068,
+        "min_ns": 225125.59241706162,
+        "max_ns": 243500.9478672986,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 235731.79723502306,
+        "mad_ns": 1673.7327188939962,
+        "min_ns": 225170.5069124424,
+        "max_ns": 250135.48387096773,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 186116.85393258426,
+        "mad_ns": 1050.3745318352012,
+        "min_ns": 181191.01123595505,
+        "max_ns": 190707.8651685393,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "algorithm/qr/mask0-24",
+      "category": "algorithms",
+      "description": "Same QR byte data and ECC M with fixed mask 0",
+      "input_bytes": 24,
+      "units_per_operation": 1,
+      "unit": "operation",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 18505.555555555555,
+        "mad_ns": 221.83297947629035,
+        "min_ns": 17518.011323425337,
+        "max_ns": 19151.238499646144,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 18518.083079268294,
+        "mad_ns": 371.684451219513,
+        "min_ns": 17657.679115853658,
+        "max_ns": 19487.995426829268,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 18963.696369636964,
+        "mad_ns": 916.8976897689754,
+        "min_ns": 18046.79867986799,
+        "max_ns": 21587.6897689769,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "algorithm/qr/auto-1024",
+      "category": "algorithms",
+      "description": "QR byte data, ECC M, automatic selection across eight Zebra-scored masks",
+      "input_bytes": 1024,
+      "units_per_operation": 1,
+      "unit": "operation",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 6663962.5,
+        "mad_ns": 189600,
+        "min_ns": 6295387.5,
+        "max_ns": 7042037.5,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 6955828.571428572,
+        "mad_ns": 21864.28571428545,
+        "min_ns": 6750957.142857143,
+        "max_ns": 7246778.571428572,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 5310111.111111111,
+        "mad_ns": 53166.66666666698,
+        "min_ns": 5231811.111111111,
+        "max_ns": 5483377.777777778,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "algorithm/qr/mask0-1024",
+      "category": "algorithms",
+      "description": "Same QR byte data and ECC M with fixed mask 0",
+      "input_bytes": 1024,
+      "units_per_operation": 1,
+      "unit": "operation",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 608640.9090909091,
+        "mad_ns": 10319.696969696903,
+        "min_ns": 580862.8787878788,
+        "max_ns": 639509.0909090909,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 615813.6363636364,
+        "mad_ns": 5923.863636363647,
+        "min_ns": 589296.5909090909,
+        "max_ns": 635959.0909090909,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 620882,
+        "mad_ns": 9190,
+        "min_ns": 585944.6666666666,
+        "max_ns": 656885.3333333334,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "algorithm/pdf417/full-32",
+      "category": "algorithms",
+      "description": "PDF417 mixed text, ECC level 2, automatic rows/columns, full symbol",
+      "input_bytes": 34,
+      "units_per_operation": 1,
+      "unit": "operation",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 5212.15,
+        "mad_ns": 85.42000000000007,
+        "min_ns": 4914.77,
+        "max_ns": 5456.44,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 5305.785818304022,
+        "mad_ns": 45.87767447070655,
+        "min_ns": 4987.470594824689,
+        "max_ns": 5447.188305141705,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 4468.97,
+        "mad_ns": 143.58500000000004,
+        "min_ns": 4310.93,
+        "max_ns": 4963.275,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "algorithm/pdf417/full-1024",
+      "category": "algorithms",
+      "description": "PDF417 mixed text, ECC level 2, automatic rows/columns, full symbol",
+      "input_bytes": 1088,
+      "units_per_operation": 1,
+      "unit": "operation",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 85824,
+        "mad_ns": 6193.655172413797,
+        "min_ns": 70353.10344827586,
+        "max_ns": 96856,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 91896.35258358663,
+        "mad_ns": 10039.513677811556,
+        "min_ns": 70018.69300911853,
+        "max_ns": 114759.726443769,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 68534.27041499331,
+        "mad_ns": 584.6050870147155,
+        "min_ns": 66131.32530120482,
+        "max_ns": 70878.58099062918,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "algorithm/pdf417/highlevel-text-1024",
+      "category": "algorithms",
+      "description": "PDF417 text compaction only, same data as full-1024",
+      "input_bytes": 1088,
+      "units_per_operation": 1,
+      "unit": "operation",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 39436.3,
+        "mad_ns": 1751.800000000003,
+        "min_ns": 35733.15,
+        "max_ns": 42553.6,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 32015.95,
+        "mad_ns": 176.79999999999927,
+        "min_ns": 31820.75,
+        "max_ns": 33425.8,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 33973.75,
+        "mad_ns": 449.09999999999854,
+        "min_ns": 33092.95,
+        "max_ns": 35595.3,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "algorithm/pdf417/highlevel-numeric-1024",
+      "category": "algorithms",
+      "description": "PDF417 numeric compaction only, 1024 digits",
+      "input_bytes": 1024,
+      "units_per_operation": 1,
+      "unit": "operation",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 76121.5748031496,
+        "mad_ns": 3114.4881889763783,
+        "min_ns": 67741.5748031496,
+        "max_ns": 96163.46456692913,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 66281.20617110799,
+        "mad_ns": 1441.2342215988683,
+        "min_ns": 64387.16690042076,
+        "max_ns": 69505.75035063113,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 67397.78434268833,
+        "mad_ns": 1718.0206794682454,
+        "min_ns": 63861.44756277696,
+        "max_ns": 75379.4682422452,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "algorithm/pdf417/ecc-level2",
+      "category": "algorithms",
+      "description": "PDF417 Reed-Solomon for the same 256 input codewords; includes generator construction",
+      "input_bytes": 1024,
+      "units_per_operation": 1,
+      "unit": "operation",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 6089.708019553442,
+        "mad_ns": 580.0369929977542,
+        "min_ns": 5341.749240322368,
+        "max_ns": 7296.710265556877,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 5732.116867600738,
+        "mad_ns": 57.35853155207951,
+        "min_ns": 5631.345715216683,
+        "max_ns": 7121.375040729879,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 5454.786976519003,
+        "mad_ns": 261.98257080609983,
+        "min_ns": 5075.405470830307,
+        "max_ns": 6062.8177196804645,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "algorithm/pdf417/ecc-level5",
+      "category": "algorithms",
+      "description": "PDF417 Reed-Solomon for the same 256 input codewords; includes generator construction",
+      "input_bytes": 1024,
+      "units_per_operation": 1,
+      "unit": "operation",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 52415.6,
+        "mad_ns": 2201.4000000000015,
+        "min_ns": 49773.2,
+        "max_ns": 66346.7,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 56490.29374201788,
+        "mad_ns": 2268.4546615581057,
+        "min_ns": 54221.83908045977,
+        "max_ns": 65974.58492975734,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 39552.65,
+        "mad_ns": 1388.6500000000015,
+        "min_ns": 37442.25,
+        "max_ns": 43997.9,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "algorithm/pdf417/ecc-level8",
+      "category": "algorithms",
+      "description": "PDF417 Reed-Solomon for the same 256 input codewords; includes generator construction",
+      "input_bytes": 1024,
+      "units_per_operation": 1,
+      "unit": "operation",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 1014160,
+        "mad_ns": 43847.77777777775,
+        "min_ns": 956547.7777777778,
+        "max_ns": 1225443.3333333333,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 994136.3636363636,
+        "mad_ns": 10830.90909090906,
+        "min_ns": 939074.5454545454,
+        "max_ns": 1046801.8181818182,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 335188.5,
+        "mad_ns": 6696.5,
+        "min_ns": 316222.5,
+        "max_ns": 413309,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "algorithm/maxicode/mode2",
+      "category": "algorithms",
+      "description": "MaxiCode mode 2 carrier envelope, compaction, ECC and 30x33 module grid",
+      "input_bytes": 43,
+      "units_per_operation": 1,
+      "unit": "operation",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 13128.511141120864,
+        "mad_ns": 204.0513166779201,
+        "min_ns": 12463.538149898717,
+        "max_ns": 14079.591492234977,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 13951.012621074258,
+        "mad_ns": 460.05283240387325,
+        "min_ns": 13386.028764308776,
+        "max_ns": 14777.516877017904,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 14744.758879584175,
+        "mad_ns": 834.7964192896325,
+        "min_ns": 12945.293098469536,
+        "max_ns": 16473.577822697083,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "component/font0/construct",
+      "category": "component",
+      "description": "Construct QRawFont from preloaded TTF at 1000 units; query validity and cap height; destroy face.",
+      "input_bytes": 43572,
+      "units_per_operation": 1,
+      "unit": "font",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 218707.25,
+        "mad_ns": 8432.25,
+        "min_ns": 206001,
+        "max_ns": 262594.5,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 330733,
+        "mad_ns": 82573,
+        "min_ns": 236906,
+        "max_ns": 862425,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 227648.5,
+        "mad_ns": 32212.5,
+        "min_ns": 174293,
+        "max_ns": 352966,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "component/font0/outline-new-repeated",
+      "category": "component",
+      "description": "32 glyphs; construct face, compute glyph indices/advances, transform and assemble outlines. No rasterization.",
+      "input_bytes": 32,
+      "units_per_operation": 32,
+      "unit": "glyph",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 264281.5789473684,
+        "mad_ns": 4703.508771929832,
+        "min_ns": 251507.8947368421,
+        "max_ns": 275126.3157894737,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 396041.5,
+        "mad_ns": 146744.5,
+        "min_ns": 249297,
+        "max_ns": 974140.5,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 258309.5,
+        "mad_ns": 7964.5,
+        "min_ns": 229932.5,
+        "max_ns": 347404,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "component/font0/outline-reused-repeated",
+      "category": "component",
+      "description": "Same 32-glyph outline work; reuse closure-owned QRawFont across iterations. No rasterization.",
+      "input_bytes": 32,
+      "units_per_operation": 32,
+      "unit": "glyph",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 35380.6,
+        "mad_ns": 210.79999999999563,
+        "min_ns": 34726.5,
+        "max_ns": 39860.85,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 36602.2,
+        "mad_ns": 1489.0999999999985,
+        "min_ns": 34888.65,
+        "max_ns": 39156.05,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 35158.1,
+        "mad_ns": 1893.75,
+        "min_ns": 32287.9,
+        "max_ns": 37885.55,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "component/font0/outline-new-varied",
+      "category": "component",
+      "description": "32 glyphs; construct face, compute glyph indices/advances, transform and assemble outlines. No rasterization.",
+      "input_bytes": 32,
+      "units_per_operation": 32,
+      "unit": "glyph",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 346129.5,
+        "mad_ns": 58093,
+        "min_ns": 288036.5,
+        "max_ns": 480062,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 294428,
+        "mad_ns": 6176.5,
+        "min_ns": 228401,
+        "max_ns": 320734,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 312122.5,
+        "mad_ns": 33097.5,
+        "min_ns": 265873.5,
+        "max_ns": 453954.5,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "component/font0/outline-reused-varied",
+      "category": "component",
+      "description": "Same 32-glyph outline work; reuse closure-owned QRawFont across iterations. No rasterization.",
+      "input_bytes": 32,
+      "units_per_operation": 32,
+      "unit": "glyph",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 73336.83473389356,
+        "mad_ns": 2151.680672268907,
+        "min_ns": 65770.3081232493,
+        "max_ns": 84418.06722689075,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 71400.59523809524,
+        "mad_ns": 5945.357142857145,
+        "min_ns": 65455.23809523809,
+        "max_ns": 103895.71428571429,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 73820.05208333333,
+        "mad_ns": 2798.1770833333285,
+        "min_ns": 69569.27083333333,
+        "max_ns": 81402.47395833333,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "component/image/allocate-fill-812x1218",
+      "category": "component",
+      "description": "Allocate ARGB32 premultiplied image, fill white, sample two pixels, destroy. No label rendering.",
+      "input_bytes": 0,
+      "units_per_operation": 989016,
+      "unit": "pixel",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 1440633.8235294118,
+        "mad_ns": 25010.29411764699,
+        "min_ns": 1407463.2352941176,
+        "max_ns": 1508683.8235294118,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 1833610,
+        "mad_ns": 58630,
+        "min_ns": 1579766.6666666667,
+        "max_ns": 2538286.6666666665,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 1618589.5833333333,
+        "mad_ns": 133160.4166666665,
+        "min_ns": 1089683.3333333333,
+        "max_ns": 1889845.8333333333,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "component/image/refill-812x1218",
+      "category": "component",
+      "description": "Fill closure-owned ARGB32 premultiplied image white and sample two pixels. No allocation or rendering.",
+      "input_bytes": 0,
+      "units_per_operation": 989016,
+      "unit": "pixel",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 99866.8549905838,
+        "mad_ns": 1580.225988700564,
+        "min_ns": 97791.14877589454,
+        "max_ns": 137306.4030131827,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 115145.86614173229,
+        "mad_ns": 7940.354330708666,
+        "min_ns": 96575.9842519685,
+        "max_ns": 151434.84251968504,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 109032.30240549828,
+        "mad_ns": 11160.137457044679,
+        "min_ns": 97872.1649484536,
+        "max_ns": 182305.3264604811,
+        "diagnostics": 0
+      }
+    },
+    {
+      "name": "component/harness-dispatch",
+      "category": "components",
+      "description": "std::function dispatch and checksum baseline, no production work",
+      "input_bytes": 0,
+      "units_per_operation": 1,
+      "unit": "call",
+      "output_fingerprint": "",
+      "baseline": {
+        "median_ns": 0.87624,
+        "mad_ns": 0.02212000000000003,
+        "min_ns": 0.85412,
+        "max_ns": 0.92335,
+        "diagnostics": 0
+      },
+      "variant_a": {
+        "median_ns": 1.02001,
+        "mad_ns": 0.04252000000000011,
+        "min_ns": 0.96636,
+        "max_ns": 1.36923,
+        "diagnostics": 0
+      },
+      "variant_b": {
+        "median_ns": 0.87834,
+        "mad_ns": 0.005920000000000036,
+        "min_ns": 0.86494,
+        "max_ns": 0.90886,
+        "diagnostics": 0
+      }
+    }
+  ],
+  "paired_runs": [
+    {
+      "name": "render/corpus/barcodes",
+      "base_us": 24544.139583333337,
+      "base_trial_us": [
+        25086.966666666667,
+        24001.3125
+      ],
+      "a_us": 21736.30625,
+      "a_trial_us": [
+        22139.8,
+        21332.8125
+      ],
+      "b_us": 22295.99375,
+      "b_trial_us": [
+        22021.5125,
+        22570.475
+      ],
+      "base_to_b": 1.1008318291860544,
+      "a_to_b": 0.9748973960848908
+    },
+    {
+      "name": "render/corpus/fedex-ground",
+      "base_us": 14589.116666666669,
+      "base_trial_us": [
+        15115.008333333333,
+        14063.225
+      ],
+      "a_us": 8987.658888888887,
+      "a_trial_us": [
+        9363.99,
+        8611.327777777778
+      ],
+      "b_us": 9091.727222222222,
+      "b_trial_us": [
+        9727.21,
+        8456.244444444445
+      ],
+      "base_to_b": 1.6046584229900336,
+      "a_to_b": 0.9885535134535308
+    },
+    {
+      "name": "render/corpus/hello",
+      "base_us": 2303.026313405797,
+      "base_trial_us": [
+        2342.4395833333333,
+        2263.613043478261
+      ],
+      "a_us": 2357.5990118577074,
+      "a_trial_us": [
+        2693.2045454545455,
+        2021.9934782608696
+      ],
+      "b_us": 2010.2522947475775,
+      "b_trial_us": [
+        2133.2027027027025,
+        1887.3018867924527
+      ],
+      "base_to_b": 1.1456404349957388,
+      "a_to_b": 1.1727876237314507
+    },
+    {
+      "name": "render/corpus/usps-apo-continuation",
+      "base_us": 76140.85,
+      "base_trial_us": [
+        79172.5,
+        73109.2
+      ],
+      "a_us": 29824.916666666664,
+      "a_trial_us": [
+        30502.733333333334,
+        29147.1
+      ],
+      "b_us": 26484.6375,
+      "b_trial_us": [
+        27742.1,
+        25227.175
+      ],
+      "base_to_b": 2.8749062546164734,
+      "a_to_b": 1.1261213851489063
+    },
+    {
+      "name": "render/synthetic/font0-1-repeated",
+      "base_us": 2027.2463877338876,
+      "base_trial_us": [
+        2043.6216216216214,
+        2010.8711538461537
+      ],
+      "a_us": 2104.547544750847,
+      "a_trial_us": [
+        2145.9064102564107,
+        2063.1886792452833
+      ],
+      "b_us": 2044.9125,
+      "b_trial_us": [
+        2023.1375,
+        2066.6875
+      ],
+      "base_to_b": 0.9913609446535672,
+      "a_to_b": 1.0291626388663804
+    },
+    {
+      "name": "render/synthetic/font0-100-repeated",
+      "base_us": 46668.4375,
+      "base_trial_us": [
+        51023.075,
+        42313.8
+      ],
+      "a_us": 16890.708333333336,
+      "a_trial_us": [
+        17193.216666666667,
+        16588.2
+      ],
+      "b_us": 14747.255833333333,
+      "b_trial_us": [
+        14456.341666666665,
+        15038.17
+      ],
+      "base_to_b": 3.1645506138514925,
+      "a_to_b": 1.1453458544575554
+    },
+    {
+      "name": "render/synthetic/font0-100-unique",
+      "base_us": 47369.125,
+      "base_trial_us": [
+        53065.0,
+        41673.25
+      ],
+      "a_us": 17611.065,
+      "a_trial_us": [
+        17197.28,
+        18024.85
+      ],
+      "b_us": 14728.255,
+      "b_trial_us": [
+        14844.75,
+        14611.76
+      ],
+      "base_to_b": 3.216207554798583,
+      "a_to_b": 1.1957333030966668
+    },
+    {
+      "name": "render/synthetic/gf-512-solid",
+      "base_us": 16657.708333333332,
+      "base_trial_us": [
+        16680.6,
+        16634.816666666666
+      ],
+      "a_us": 3010.159099099099,
+      "a_trial_us": [
+        2952.8533333333335,
+        3067.464864864865
+      ],
+      "b_us": 3026.4010752688173,
+      "b_trial_us": [
+        3040.835483870968,
+        3011.9666666666667
+      ],
+      "base_to_b": 5.504131117800943,
+      "a_to_b": 0.9946332373780711
+    },
+    {
+      "name": "parse/synthetic/fields-100",
+      "base_us": 305.1921496815287,
+      "base_trial_us": [
+        305.4792993630573,
+        304.905
+      ],
+      "a_us": 303.5796528761458,
+      "a_trial_us": [
+        315.88870056497177,
+        291.27060518731986
+      ],
+      "b_us": 318.1148346994536,
+      "b_trial_us": [
+        302.1431693989071,
+        334.0865
+      ],
+      "base_to_b": 0.9593772952143715,
+      "a_to_b": 0.9543083810063739
+    },
+    {
+      "name": "parse/synthetic/fields-1000",
+      "base_us": 3572.7929629629625,
+      "base_trial_us": [
+        3720.875925925926,
+        3424.71
+      ],
+      "a_us": 3587.8623563218393,
+      "a_trial_us": [
+        3583.041379310345,
+        3592.6833333333334
+      ],
+      "b_us": 3528.4612535612537,
+      "b_trial_us": [
+        3429.4148148148147,
+        3627.5076923076927
+      ],
+      "base_to_b": 1.0125640346360514,
+      "a_to_b": 1.016834846266381
+    },
+    {
+      "name": "parse/synthetic/fd-64k-plain",
+      "base_us": 72.78784418976545,
+      "base_trial_us": [
+        70.44765,
+        75.12803837953092
+      ],
+      "a_us": 65.93235,
+      "a_trial_us": [
+        69.15795,
+        62.70675
+      ],
+      "b_us": 59.870225000000005,
+      "b_trial_us": [
+        59.6254,
+        60.115050000000004
+      ],
+      "base_to_b": 1.2157603247651976,
+      "a_to_b": 1.1012544215425948
+    },
+    {
+      "name": "parse/synthetic/fd-64k-commas",
+      "base_us": 3173.1513176638177,
+      "base_trial_us": [
+        2950.821153846154,
+        3395.4814814814813
+      ],
+      "a_us": 60.9595,
+      "a_trial_us": [
+        60.6233,
+        61.2957
+      ],
+      "b_us": 59.23502499999999,
+      "b_trial_us": [
+        59.193349999999995,
+        59.2767
+      ],
+      "base_to_b": 53.56883562830974,
+      "a_to_b": 1.0291124212406428
+    },
+    {
+      "name": "parse/synthetic/fh-16k-bytes",
+      "base_us": 1231.798418803419,
+      "base_trial_us": [
+        1247.9122222222222,
+        1215.6846153846154
+      ],
+      "a_us": 162.50839936378208,
+      "a_trial_us": [
+        184.1449081803005,
+        140.87189054726366
+      ],
+      "b_us": 151.52961091982766,
+      "b_trial_us": [
+        152.25906940063092,
+        150.80015243902437
+      ],
+      "base_to_b": 8.129093787848156,
+      "a_to_b": 1.072453089381739
+    },
+    {
+      "name": "algorithm/code128/auto-numeric-words-8192",
+      "base_us": 9828.902777777776,
+      "base_trial_us": [
+        9603.416666666666,
+        10054.388888888889
+      ],
+      "a_us": 42.953503104938115,
+      "a_trial_us": [
+        44.499165539016694,
+        41.407840670859535
+      ],
+      "b_us": 42.855849768313846,
+      "b_trial_us": [
+        43.16746794871795,
+        42.54423158790975
+      ],
+      "base_to_b": 229.34798471887802,
+      "a_to_b": 1.0022786466060574
+    },
+    {
+      "name": "algorithm/qr/auto-24",
+      "base_us": 244.0957506503159,
+      "base_trial_us": [
+        241.8492307692308,
+        246.34227053140097
+      ],
+      "a_us": 238.15981408783352,
+      "a_trial_us": [
+        238.56689008042895,
+        237.7527380952381
+      ],
+      "b_us": 199.45091398446172,
+      "b_trial_us": [
+        193.7549411764706,
+        205.14688679245282
+      ],
+      "base_to_b": 1.2238387168751317,
+      "a_to_b": 1.194077326245732
+    },
+    {
+      "name": "algorithm/qr/mask0-24",
+      "base_us": 18.155622023393185,
+      "base_trial_us": [
+        20.0629886385519,
+        16.24825540823447
+      ],
+      "a_us": 18.820586667130872,
+      "a_trial_us": [
+        18.48252869375114,
+        19.15864464051061
+      ],
+      "b_us": 18.411184286353265,
+      "b_trial_us": [
+        18.35995290708205,
+        18.462415665624484
+      ],
+      "base_to_b": 0.9861191839164031,
+      "a_to_b": 1.0222366130505285
+    },
+    {
+      "name": "algorithm/qr/auto-1024",
+      "base_us": 6860.42,
+      "base_trial_us": [
+        6637.535,
+        7083.305
+      ],
+      "a_us": 6896.4325,
+      "a_trial_us": [
+        6724.04,
+        7068.825
+      ],
+      "b_us": 5056.895,
+      "b_trial_us": [
+        5070.245,
+        5043.545
+      ],
+      "base_to_b": 1.3566467170071752,
+      "a_to_b": 1.3637681818586305
+    },
+    {
+      "name": "algorithm/qr/mask0-1024",
+      "base_us": 678.6925,
+      "base_trial_us": [
+        606.5295,
+        750.8555
+      ],
+      "a_us": 609.441,
+      "a_trial_us": [
+        609.391,
+        609.491
+      ],
+      "b_us": 608.531,
+      "b_trial_us": [
+        612.3945,
+        604.6675
+      ],
+      "base_to_b": 1.1152965091342923,
+      "a_to_b": 1.0014954045069193
+    },
+    {
+      "name": "algorithm/pdf417/ecc-level2",
+      "base_us": 5.812264999999999,
+      "base_trial_us": [
+        5.77846,
+        5.84607
+      ],
+      "a_us": 5.754535,
+      "a_trial_us": [
+        5.819305,
+        5.689765
+      ],
+      "b_us": 5.1301525,
+      "b_trial_us": [
+        5.16697,
+        5.093335
+      ],
+      "base_to_b": 1.1329614470524996,
+      "a_to_b": 1.1217083702677453
+    },
+    {
+      "name": "algorithm/pdf417/ecc-level5",
+      "base_us": 54.81475,
+      "base_trial_us": [
+        55.4326,
+        54.1969
+      ],
+      "a_us": 55.113425,
+      "a_trial_us": [
+        54.563449999999996,
+        55.6634
+      ],
+      "b_us": 40.10681673373575,
+      "b_trial_us": [
+        40.47303822937626,
+        39.74059523809524
+      ],
+      "base_to_b": 1.3667190384095655,
+      "a_to_b": 1.3741660268350713
+    },
+    {
+      "name": "algorithm/pdf417/ecc-level8",
+      "base_us": 951.031,
+      "base_trial_us": [
+        952.8665,
+        949.1955
+      ],
+      "a_us": 959.6670543478261,
+      "a_trial_us": [
+        987.414,
+        931.9201086956522
+      ],
+      "b_us": 303.53979940660474,
+      "b_trial_us": [
+        300.5145833333333,
+        306.56501547987614
+      ],
+      "base_to_b": 3.133134441872819,
+      "a_to_b": 3.1615855852309847
+    },
+    {
+      "name": "algorithm/maxicode/mode2",
+      "base_us": 13.799054919183554,
+      "base_trial_us": [
+        14.60885839882776,
+        12.989251439539348
+      ],
+      "a_us": 14.10981087312755,
+      "a_trial_us": [
+        14.730262310910847,
+        13.489359435344253
+      ],
+      "b_us": 10.128783006955906,
+      "b_trial_us": [
+        10.150048250904705,
+        10.107517763007104
+      ],
+      "base_to_b": 1.3623606024245065,
+      "a_to_b": 1.3930410853345052
+    }
+  ]
+}

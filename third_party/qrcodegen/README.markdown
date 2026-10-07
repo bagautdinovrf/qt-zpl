@@ -66,6 +66,19 @@ for (int y = 0; y < qr1.size; y++) {
 ```
 
 
+Local QtZpl extension
+---------------------
+
+The vendored C++ `QrCode::encodeSegments()` and constructor accept an optional
+`MaskPenaltyEvaluator` function pointer, defaulting to `nullptr`. QtZpl supplies
+its existing Zebra-compatible penalty function when selecting a mask. The
+library evaluates all eight masked candidates after generating data codewords,
+Reed-Solomon correction, and module placement once. The callback sees each
+candidate's format bits and mask number. Equal scores retain the earlier mask.
+Fixed masks and a null evaluator preserve the upstream behavior. The candidate
+reference is valid only during the callback and must not be retained.
+
+
 License
 -------
 

@@ -257,7 +257,7 @@ QrCode QrCode::encodeBinary(const vector<uint8_t> &data, Ecc ecl) {
 
 
 QrCode QrCode::encodeSegments(const vector<QrSegment> &segs, Ecc ecl,
-		int minVersion, int maxVersion, int mask, bool boostEcl) {
+		int minVersion, int maxVersion, int mask, bool boostEcl, MaskPenaltyEvaluator maskPenalty) {
 	if (!(MIN_VERSION <= minVersion && minVersion <= maxVersion && maxVersion <= MAX_VERSION) || mask < -1 || mask > 7)
 		throw std::invalid_argument("Invalid value");
 	
@@ -313,11 +313,12 @@ QrCode QrCode::encodeSegments(const vector<QrSegment> &segs, Ecc ecl,
 		dataCodewords.at(i >> 3) |= (bb.at(i) ? 1 : 0) << (7 - (i & 7));
 	
 	// Create the QR Code object
-	return QrCode(version, ecl, dataCodewords, mask);
+	return QrCode(version, ecl, dataCodewords, mask, maskPenalty);
 }
 
 
-QrCode::QrCode(int ver, Ecc ecl, const vector<uint8_t> &dataCodewords, int msk) :
+QrCode::QrCode(int ver, Ecc ecl, const vector<uint8_t> &dataCodewords, int msk,
+		MaskPenaltyEvaluator maskPenalty) :
 		// Initialize fields and check arguments
 		version(ver),
 		errorCorrectionLevel(ecl) {
@@ -341,7 +342,10 @@ QrCode::QrCode(int ver, Ecc ecl, const vector<uint8_t> &dataCodewords, int msk) 
 		for (int i = 0; i < 8; i++) {
 			applyMask(i);
 			drawFormatBits(i);
-			long penalty = getPenaltyScore();
+			// Local QtZpl extension: the callback sees this complete candidate,
+			// including its format bits, and may query its current mask number.
+			mask = i;
+			long penalty = maskPenalty != nullptr ? maskPenalty(*this) : getPenaltyScore();
 			if (penalty < minPenalty) {
 				msk = i;
 				minPenalty = penalty;

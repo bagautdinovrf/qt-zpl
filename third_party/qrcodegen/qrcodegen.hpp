@@ -246,6 +246,10 @@ class QrCode final {
 		QUARTILE,  // The QR Code can tolerate about 25% erroneous codewords
 		HIGH    ,  // The QR Code can tolerate about 30% erroneous codewords
 	};
+
+	// Local QtZpl extension: score already-masked modules without repeating
+	// segment encoding, Reed-Solomon correction, and module placement.
+	public: using MaskPenaltyEvaluator = long (*)(const QrCode &candidate);
 	
 	
 	// Returns a value in the range 0 to 3 (unsigned 2-bit integer).
@@ -286,9 +290,13 @@ class QrCode final {
 	 * This function allows the user to create a custom sequence of segments that switches
 	 * between modes (such as alphanumeric and byte) to encode text in less space.
 	 * This is a mid-level API; the high-level API is encodeText() and encodeBinary().
+	 * Local QtZpl extension: a non-null maskPenalty replaces only the automatic
+	 * mask scoring function. Fixed masks and the default null evaluator retain
+	 * upstream behavior. Lower scores win; equal scores keep the earlier mask.
 	 */
 	public: static QrCode encodeSegments(const std::vector<QrSegment> &segs, Ecc ecl,
-		int minVersion=1, int maxVersion=40, int mask=-1, bool boostEcl=true);  // All optional parameters
+		int minVersion=1, int maxVersion=40, int mask=-1, bool boostEcl=true,
+		MaskPenaltyEvaluator maskPenalty=nullptr);  // All optional parameters
 	
 	
 	
@@ -330,8 +338,10 @@ class QrCode final {
 	 * error correction level, data codeword bytes, and mask number.
 	 * This is a low-level API that most users should not use directly.
 	 * A mid-level API is the encodeSegments() function.
+	 * The optional maskPenalty is the local QtZpl extension described there.
 	 */
-	public: QrCode(int ver, Ecc ecl, const std::vector<std::uint8_t> &dataCodewords, int msk);
+	public: QrCode(int ver, Ecc ecl, const std::vector<std::uint8_t> &dataCodewords, int msk,
+		MaskPenaltyEvaluator maskPenalty=nullptr);
 	
 	
 	

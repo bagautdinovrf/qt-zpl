@@ -227,14 +227,18 @@ std::expected<QVector<int>,QString> code128Auto(QStringView data,bool gs1=false)
   if(gs1)words.append(fnc1);
   while(i<data.size()){
     if(gs1&&data[i]==code128Fnc1Token){words.append(fnc1);++i;continue;}
+    if(subset=='C'){
+      // Staying in C depends only on the next pair. Scanning the remaining
+      // numeric suffix for every pair makes long digit runs quadratic.
+      if(i+1<data.size()&&code128Digit(data[i])&&code128Digit(data[i+1])){
+        words.append(data[i].digitValue()*10+data[i+1].digitValue());i+=2;continue;
+      }
+      words.append(codeB);subset='B';continue;
+    }
     const auto run=digitRun(i);
-    if(subset=='B'&&run>=4){
+    if(run>=4){
       if(run%2!=0){auto value=code128DataValue(data[i++],'B');if(!value)return std::unexpected(value.error());words.append(*value);}
       words.append(codeC);subset='C';continue;
-    }
-    if(subset=='C'){
-      if(run>=2){words.append(data[i].digitValue()*10+data[i+1].digitValue());i+=2;continue;}
-      words.append(codeB);subset='B';continue;
     }
     auto value=code128DataValue(data[i++],'B');
     if(!value)return std::unexpected(value.error());
@@ -338,15 +342,12 @@ std::expected<Matrix,QString> qrCode(const QByteArray& data,QChar errorCorrectio
   }
   try{
     const auto segments=qrcodegen::QrSegment::makeSegments(data.constData());
-    const auto encode=[&](int selectedMask){return QrCode::encodeSegments(segments,ecc,1,40,selectedMask,true);};
-    if(mask>=0)return qrMatrix(encode(mask));
-    Matrix best;int bestPenalty=std::numeric_limits<int>::max();
-    for(int candidate=0;candidate<8;++candidate){
-      auto matrix=qrMatrix(encode(candidate));
-      const int penalty=zebraQrPenalty(matrix);
-      if(penalty<bestPenalty){bestPenalty=penalty;best=std::move(matrix);}
-    }
-    return best;
+    if(mask>=0)return qrMatrix(QrCode::encodeSegments(segments,ecc,1,40,mask,true));
+    // Keep the Zebra scoring and ascending-mask tie break, while computing
+    // data codewords, error correction and placement only once.
+    const auto qr=QrCode::encodeSegments(segments,ecc,1,40,-1,true,
+      [](const QrCode& candidate)->long{return zebraQrPenalty(qrMatrix(candidate));});
+    return qrMatrix(qr);
   }catch(const std::exception& error){
     return std::unexpected(QString::fromUtf8(error.what()));
   }

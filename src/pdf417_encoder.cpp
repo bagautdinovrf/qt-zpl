@@ -157,7 +157,7 @@ int powerMod(int base,int exponent) {
   return result;
 }
 
-QVector<int> correctionFactors(int count) {
+QVector<int> makeCorrectionFactors(int count) {
   QVector<int> polynomial{1};
   for(int i=1;i<=count;++i){
     const int root=powerMod(3,i);QVector<int> next(polynomial.size()+1);
@@ -170,6 +170,30 @@ QVector<int> correctionFactors(int count) {
   QVector<int> factors;factors.reserve(count);
   for(int i=count;i>=1;--i)factors.append(polynomial[i]);
   return factors;
+}
+
+template<int Count>
+const QVector<int>& cachedCorrectionFactors() {
+  // Only the requested security level is initialized. C++ static initialization
+  // is synchronized, and the shared polynomial is immutable afterward.
+  static const QVector<int> factors=makeCorrectionFactors(Count);
+  return factors;
+}
+
+QVector<int> correctionFactors(int count) {
+  // QVector shares these read-only factors without copying their elements.
+  switch(count){
+    case 2:return cachedCorrectionFactors<2>();
+    case 4:return cachedCorrectionFactors<4>();
+    case 8:return cachedCorrectionFactors<8>();
+    case 16:return cachedCorrectionFactors<16>();
+    case 32:return cachedCorrectionFactors<32>();
+    case 64:return cachedCorrectionFactors<64>();
+    case 128:return cachedCorrectionFactors<128>();
+    case 256:return cachedCorrectionFactors<256>();
+    case 512:return cachedCorrectionFactors<512>();
+    default:return makeCorrectionFactors(count);
+  }
 }
 
 std::optional<QPair<int,int>> resolveDimensions(int dataWords,int ecWords,int columns,int rows) {

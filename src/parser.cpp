@@ -131,15 +131,31 @@ private:
 
   QString decodeHex(QString value) {
     if (hexIndicator_.isNull()) return value;
+    const QStringView encoded{value};
+    const auto hexDigit=[](QChar c)->int {
+      const auto code=c.unicode();
+      if(code>='0'&&code<='9')return code-'0';
+      if(code>='A'&&code<='F')return code-'A'+10;
+      if(code>='a'&&code<='f')return code-'a'+10;
+      return -1;
+    };
     QString decoded;
     decoded.reserve(value.size());
-    for (qsizetype i = 0; i < value.size(); ++i) {
-      if (value[i] == hexIndicator_ && i + 2 < value.size()) {
-        bool ok = false;
-        const auto byte = value.mid(i + 1, 2).toUInt(&ok, 16);
+    for (qsizetype i = 0; i < encoded.size(); ++i) {
+      if (encoded[i] == hexIndicator_ && i + 2 < encoded.size()) {
+        const int high=hexDigit(encoded[i+1]),low=hexDigit(encoded[i+2]);
+        if(high>=0&&low>=0){
+          decoded.append(QChar::fromLatin1(static_cast<char>((high<<4)|low)));
+          i+=2;continue;
+        }
+        // Keep the existing conversion for unusual pairs accepted by Qt
+        // (for example a leading space or '+'), without allocating for the
+        // ordinary two-hex-digit case.
+        bool ok=false;
+        const auto byte=encoded.mid(i+1,2).toUInt(&ok,16);
         if (ok) { decoded.append(QChar::fromLatin1(static_cast<char>(byte))); i += 2; continue; }
       }
-      decoded.append(value[i]);
+      decoded.append(encoded[i]);
     }
     hexIndicator_ = {};
     return decoded;
@@ -168,19 +184,26 @@ private:
     }
     if (!inFormat_ || !current_) return true;
 
+    // Field text and raw compatibility commands are not comma-separated
+    // parameters. Splitting a large ^FD needlessly allocates one QString per
+    // comma; keep the original payload and source intact instead.
+    if(op==u"FD"||op==u"FV"){add(FieldData{decodeHex(raw)},offset,prefix,op,raw);return true;}
+    if(op==u"FS"){add(FieldSeparator{},offset,prefix,op,raw);return true;}
+    if(op==u"FR"){add(FieldReverse{},offset,prefix,op,raw);return true;}
+    if(op==u"FH"){hexIndicator_=raw.isEmpty()?u'_':raw.front();return true;}
+    if(op==u"FX"){add(Comment{raw},offset,prefix,op,raw);return true;}
+    if(op==u"F8"){add(FieldEncoding{raw},offset,prefix,op,raw);return true;}
+    if(op==u"PR"){add(PrintRate{raw},offset,prefix,op,raw);return true;}
+    if(op==u"GF"){parseGraphicField(offset,raw);return true;}
+
     const auto p = split(raw);
     if (op == u"FO") add(FieldOrigin{intValue(p,0), intValue(p,1), justificationValue(p,2)}, offset,prefix,op,raw);
     else if (op == u"FT") add(FieldTypeset{intValue(p,0), intValue(p,1), justificationValue(p,2)}, offset,prefix,op,raw);
-    else if (op == u"FD" || op == u"FV") add(FieldData{decodeHex(raw)}, offset,prefix,op,raw);
-    else if (op == u"FS") add(FieldSeparator{}, offset,prefix,op,raw);
-    else if (op == u"FR") add(FieldReverse{}, offset,prefix,op,raw);
     else if (op == u"FW" || op == u"FP") add(FieldDirection{orientationValue(p)}, offset,prefix,op,raw);
-    else if (op == u"FH") hexIndicator_ = raw.isEmpty() ? u'_' : raw.front();
     else if (op == u"A@") parseDownloadedFont(p,offset,raw);
     else if (op.size() == 2 && op.front() == u'A') parseFont(op, p, offset, raw);
     else if (op == u"CF") add(ChangeFont{charValue(p,0,u'0'), intValue(p,1,30), intValue(p,2,0)}, offset,prefix,op,raw);
     else if (op == u"FB") add(FieldBlock{intValue(p,0), intValue(p,1,1), intValue(p,2), justificationValue(p,3), intValue(p,4)}, offset,prefix,op,raw);
-    else if (op == u"F8") add(FieldEncoding{raw},offset,prefix,op,raw);
     else if (op == u"CI") add(CharacterSet{intValue(p,0)}, offset,prefix,op,raw);
     else if (op == u"BY") add(BarcodeDefault{intValue(p,0,2), doubleValue(p,1,3.0), intValue(p,2,10)}, offset,prefix,op,raw);
     else if (op == u"PW") { current_->width_ = intValue(p,0); add(PrintWidth{current_->width_}, offset,prefix,op,raw); }
@@ -189,15 +212,12 @@ private:
     else if (op == u"LS") add(LabelShift{intValue(p,0)},offset,prefix,op,raw);
     else if (op == u"MM") add(PrintMode{charValue(p,0,u'T'),charValue(p,1,u'N')==u'Y'},offset,prefix,op,raw);
     else if (op == u"PO") add(PrintOrientation{orientationValue(p)},offset,prefix,op,raw);
-    else if (op == u"PR") add(PrintRate{raw},offset,prefix,op,raw);
     else if (op == u"MD") add(MediaDarkness{intValue(p,0)},offset,prefix,op,raw);
     else if (op == u"PQ") add(PrintQuantity{std::max(1,intValue(p,0,1)),intValue(p,1),intValue(p,2),charValue(p,3,u'N')==u'Y'},offset,prefix,op,raw);
     else if (op == u"GB") add(GraphicBox{intValue(p,0),intValue(p,1),std::max(1,intValue(p,2,1)),colorValue(p,3),intValue(p,4)},offset,prefix,op,raw);
     else if (op == u"GC") add(GraphicCircle{intValue(p,0),std::max(1,intValue(p,1,1)),colorValue(p,2)},offset,prefix,op,raw);
     else if (op == u"GD") add(GraphicDiagonal{intValue(p,0),intValue(p,1),std::max(1,intValue(p,2,1)),colorValue(p,3),charValue(p,4,u'R')},offset,prefix,op,raw);
     else if (op == u"GE") add(GraphicEllipse{intValue(p,0),intValue(p,1),std::max(1,intValue(p,2,1)),colorValue(p,3)},offset,prefix,op,raw);
-    else if (op == u"GF") parseGraphicField(p, offset, raw);
-    else if (op == u"FX") add(Comment{raw},offset,prefix,op,raw);
     else if (isBarcode(op)) parseBarcode(op, p, offset, raw);
     else return unknown(prefix, op, raw, offset);
     return true;
@@ -222,15 +242,21 @@ private:
     add(ScalableFont{u'0',orientationValue(p),intValue(p,1,30),intValue(p,2,0)},offset,caret_,u"A@"_s,raw);
   }
 
-  void parseGraphicField(const QList<QString>& p, qsizetype offset, const QString& raw) {
-    const auto firstComma = raw.indexOf(u',');
-    const auto dataStart = [&] { qsizetype pos=-1; for(int i=0;i<4;++i) pos=raw.indexOf(u',',pos+1); return pos; }();
+  void parseGraphicField(qsizetype offset, const QString& raw) {
+    bool completeHeader=true;
+    const auto dataStart = [&] {
+      qsizetype pos=-1;
+      for(int i=0;i<4;++i){pos=raw.indexOf(u',',pos+1);if(pos<0)completeHeader=false;}
+      return pos;
+    }();
+    // Preserve the existing recovery of malformed/incomplete headers. Only a
+    // complete four-parameter header may omit the data from parameter splitting.
+    const auto p=split(completeHeader?raw.first(dataStart):raw);
     GraphicField gf{charValue(p,0,u'A'),intValue(p,2),intValue(p,1),intValue(p,3),{}};
     if (dataStart >= 0) {
       const auto data=raw.mid(dataStart+1);
       gf.data = gf.compression == u'A' ? data.trimmed().toLatin1() : data.toLatin1();
     }
-    Q_UNUSED(firstComma);
     add(std::move(gf),offset,caret_,u"GF"_s,raw);
   }
 

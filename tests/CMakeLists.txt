@@ -71,6 +71,14 @@ qt_add_resources(qtzpl_tests "qtzpl_test_goldens"
 # Always keep the detailed result in the build tree, including failed rows.
 add_test(NAME qtzpl_tests COMMAND qtzpl_tests -o "${CMAKE_CURRENT_BINARY_DIR}/test_results.txt,txt")
 
+# Correctness guards for measured optimization paths. Timings remain opt-in.
+foreach(area IN ITEMS encoder parser renderer qr)
+  add_executable(qtzpl_${area}_performance_tests test_${area}_performance.cpp)
+  target_link_libraries(qtzpl_${area}_performance_tests PRIVATE QtZpl::QtZpl Qt6::Test)
+  add_test(NAME qtzpl_${area}_performance_tests COMMAND qtzpl_${area}_performance_tests
+    -o "${CMAKE_CURRENT_BINARY_DIR}/${area}_performance_results.txt,txt")
+endforeach()
+
 file(GLOB QTZPL_DEMO_CORPUS_FIXTURES CONFIGURE_DEPENDS
   "${CMAKE_CURRENT_SOURCE_DIR}/corpus/go-zpl-demo/*.zpl"
 )

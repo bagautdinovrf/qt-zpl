@@ -119,6 +119,18 @@ cmake --build build_release
 По умолчанию в `build_helper.py` используется Qt **6.11.2**, комплект **msvc2022_64**.
 Параметры `--qt-version` и `--compiler` переключают другой kit из `C:\Qt`.
 
+## Бенчмарки
+
+```text
+py -3 tools/build_helper.py benchmark --config Release
+py -3 tools/build_helper.py benchmark --benchmark-filter algorithm/
+```
+
+Стенд измеряет парсинг, рендер, полный конвейер и внутренние алгоритмы на
+локальном корпусе; JSON сохраняется в каталоге сборки. Методика и сравнение
+версий описаны в [benchmarks/README.md](benchmarks/README.md), измеренные
+результаты и оставшиеся узкие места — в [benchmarks/RESULTS.md](benchmarks/RESULTS.md).
+
 ## Примеры рендеринга
 
 Пример `qtzpl_gallery` создаёт несколько PNG-файлов из реальных строк ZPL:
