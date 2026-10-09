@@ -1,0 +1,16 @@
+{
+  "source": "Labelary API",
+  "url": "https://api.labelary.com/v1/printers/8dpmm/labels/6x6/0/",
+  "requestHeaders": {
+    "Accept": "image/png",
+    "X-Quality": "Bitonal",
+    "Content-Type": "application/x-www-form-urlencoded",
+    "X-Linter": "On"
+  },
+  "sourceSha256": "80df3ce93f527e155ff8559df62cda0b35936489be716acb4cbd8e8db747beca",
+  "pngSha256": "c28fad3e90ee230b3ad36fa9bb0d1352ddd32a91fa97decf00959748945627dd",
+  "response": {
+    "date": "Fri, 09 Oct 2026 15:45:24 GMT",
+    "warnings": null
+  }
+}

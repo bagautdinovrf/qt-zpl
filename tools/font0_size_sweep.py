@@ -404,7 +404,7 @@ def main():
     parser.add_argument("--score", action="store_true", help="Compare all selected sizes offline using the native probe; resume by input hashes")
     parser.add_argument("--probe", type=Path, help="Built qtzpl_font0_probe executable; never built by this tool")
     parser.add_argument("--font", type=Path, help="Candidate font for offline scoring")
-    parser.add_argument("--score-output", type=Path, default=ROOT / "build_font0_research/size-sweep-scores")
+    parser.add_argument("--score-output", type=Path, default=ROOT / "build_agent/build_font0_research/size-sweep-scores")
     parser.add_argument("--workers", type=int, default=3, choices=range(1, 4))
     parser.add_argument("--qt-bin", type=Path, help="Optional Qt runtime bin directory (normally read from the probe's CMake cache)")
     parser.add_argument("--max-requests", type=int, default=2500, help="Cumulative budget including retries and resumed runs")

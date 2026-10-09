@@ -29,15 +29,15 @@ ZPL = f"""^XA
 ^XZ
 """.strip()
 
-OUTPUT_DIR = Path(__file__).resolve().parent / "rendered"
+OUTPUT_DIR = Path(__file__).resolve().parent / "build_agent" / "rendered"
 BUILD_CONFIG = "Debug"
-QT_VERSION = "6.11.1"
+QT_VERSION = "6.11.2"
 QT_COMPILER = "msvc2022_64"
 
 
 def main() -> int:
     project_root = Path(__file__).resolve().parent
-    build_dir = build_helper.DEFAULT_BUILD_DIR
+    build_dir = build_helper.build_dir_for_config(BUILD_CONFIG)
 
     build_command = [
         sys.executable,
@@ -63,7 +63,7 @@ def main() -> int:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     temporary_path: Path | None = None
     try:
-        with tempfile.NamedTemporaryFile(suffix=".zpl", delete=False) as temporary:
+        with tempfile.NamedTemporaryFile(suffix=".zpl", dir=OUTPUT_DIR, delete=False) as temporary:
             temporary.write(ZPL.encode("utf-8"))
             temporary_path = Path(temporary.name)
         completed = subprocess.run(

@@ -179,13 +179,17 @@ private slots:
     const auto& i=inverted->labels.front();
     const auto& b=bottomUp->labels.front();
 
+    // The independent font0-anchors/block-anchors Labelary fixture establishes
+    // that FT rotates around a pixel edge, including multiline FB fields.
+    // A dot occupies a cell: around (130,130), its index maps to 259-y, not
+    // 260-y. The old expectations encoded the renderer's one-dot anchor bug.
     qsizetype inkCount=0;
     for(int y=0;y<n.height();++y)for(int x=0;x<n.width();++x){
       if(n.pixelColor(x,y).value()>=128)continue;
       ++inkCount;
-      QCOMPARE(r.pixelColor(260-y,x),QColor(Qt::black));
-      QCOMPARE(i.pixelColor(260-x,260-y),QColor(Qt::black));
-      QCOMPARE(b.pixelColor(y,260-x),QColor(Qt::black));
+      QCOMPARE(r.pixelColor(n.height()-1-y,x),QColor(Qt::black));
+      QCOMPARE(i.pixelColor(n.width()-1-x,n.height()-1-y),QColor(Qt::black));
+      QCOMPARE(b.pixelColor(y,n.width()-1-x),QColor(Qt::black));
     }
     const auto countInk=[](const QImage& image){
       qsizetype count=0;

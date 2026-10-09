@@ -1,0 +1,3 @@
+*.png binary
+*.zpl text eol=lf
+*.json text eol=lf

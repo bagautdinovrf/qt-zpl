@@ -1,0 +1,450 @@
+{
+  "cases": [
+    {
+      "anchor": "FT",
+      "orientation": "N",
+      "direction": "H",
+      "justification": 0,
+      "fontHeight": 14,
+      "fontWidth": 31,
+      "spacing": 0,
+      "text": "A",
+      "cell": [
+        0,
+        0,
+        800,
+        350
+      ],
+      "anchorX": 400,
+      "anchorY": 80
+    },
+    {
+      "anchor": "FT",
+      "orientation": "N",
+      "direction": "H",
+      "justification": 1,
+      "fontHeight": 14,
+      "fontWidth": 31,
+      "spacing": 0,
+      "text": "A",
+      "cell": [
+        800,
+        0,
+        800,
+        350
+      ],
+      "anchorX": 1200,
+      "anchorY": 80
+    },
+    {
+      "anchor": "FT",
+      "orientation": "N",
+      "direction": "V",
+      "justification": 0,
+      "fontHeight": 14,
+      "fontWidth": 31,
+      "spacing": 0,
+      "text": "A",
+      "cell": [
+        1600,
+        0,
+        800,
+        350
+      ],
+      "anchorX": 2000,
+      "anchorY": 80
+    },
+    {
+      "anchor": "FT",
+      "orientation": "N",
+      "direction": "V",
+      "justification": 1,
+      "fontHeight": 14,
+      "fontWidth": 31,
+      "spacing": 0,
+      "text": "A",
+      "cell": [
+        0,
+        350,
+        800,
+        350
+      ],
+      "anchorX": 400,
+      "anchorY": 430
+    },
+    {
+      "anchor": "FT",
+      "orientation": "N",
+      "direction": "R",
+      "justification": 0,
+      "fontHeight": 14,
+      "fontWidth": 31,
+      "spacing": 0,
+      "text": "A",
+      "cell": [
+        800,
+        350,
+        800,
+        350
+      ],
+      "anchorX": 1200,
+      "anchorY": 430
+    },
+    {
+      "anchor": "FT",
+      "orientation": "N",
+      "direction": "R",
+      "justification": 1,
+      "fontHeight": 14,
+      "fontWidth": 31,
+      "spacing": 0,
+      "text": "A",
+      "cell": [
+        1600,
+        350,
+        800,
+        350
+      ],
+      "anchorX": 2000,
+      "anchorY": 430
+    },
+    {
+      "anchor": "FT",
+      "orientation": "N",
+      "direction": "H",
+      "justification": 0,
+      "fontHeight": 37,
+      "fontWidth": 13,
+      "spacing": 1,
+      "text": "Test12",
+      "cell": [
+        0,
+        700,
+        800,
+        350
+      ],
+      "anchorX": 400,
+      "anchorY": 780
+    },
+    {
+      "anchor": "FT",
+      "orientation": "N",
+      "direction": "H",
+      "justification": 1,
+      "fontHeight": 37,
+      "fontWidth": 13,
+      "spacing": 1,
+      "text": "Test12",
+      "cell": [
+        800,
+        700,
+        800,
+        350
+      ],
+      "anchorX": 1200,
+      "anchorY": 780
+    },
+    {
+      "anchor": "FT",
+      "orientation": "N",
+      "direction": "V",
+      "justification": 0,
+      "fontHeight": 37,
+      "fontWidth": 13,
+      "spacing": 1,
+      "text": "Test12",
+      "cell": [
+        1600,
+        700,
+        800,
+        350
+      ],
+      "anchorX": 2000,
+      "anchorY": 780
+    },
+    {
+      "anchor": "FT",
+      "orientation": "N",
+      "direction": "V",
+      "justification": 1,
+      "fontHeight": 37,
+      "fontWidth": 13,
+      "spacing": 1,
+      "text": "Test12",
+      "cell": [
+        0,
+        1050,
+        800,
+        350
+      ],
+      "anchorX": 400,
+      "anchorY": 1130
+    },
+    {
+      "anchor": "FT",
+      "orientation": "N",
+      "direction": "R",
+      "justification": 0,
+      "fontHeight": 37,
+      "fontWidth": 13,
+      "spacing": 1,
+      "text": "Test12",
+      "cell": [
+        800,
+        1050,
+        800,
+        350
+      ],
+      "anchorX": 1200,
+      "anchorY": 1130
+    },
+    {
+      "anchor": "FT",
+      "orientation": "N",
+      "direction": "R",
+      "justification": 1,
+      "fontHeight": 37,
+      "fontWidth": 13,
+      "spacing": 1,
+      "text": "Test12",
+      "cell": [
+        1600,
+        1050,
+        800,
+        350
+      ],
+      "anchorX": 2000,
+      "anchorY": 1130
+    },
+    {
+      "anchor": "FT",
+      "orientation": "N",
+      "direction": "H",
+      "justification": 0,
+      "fontHeight": 19,
+      "fontWidth": 47,
+      "spacing": 5,
+      "text": "Мир",
+      "cell": [
+        0,
+        1400,
+        800,
+        350
+      ],
+      "anchorX": 400,
+      "anchorY": 1480
+    },
+    {
+      "anchor": "FT",
+      "orientation": "N",
+      "direction": "H",
+      "justification": 1,
+      "fontHeight": 19,
+      "fontWidth": 47,
+      "spacing": 5,
+      "text": "Мир",
+      "cell": [
+        800,
+        1400,
+        800,
+        350
+      ],
+      "anchorX": 1200,
+      "anchorY": 1480
+    },
+    {
+      "anchor": "FT",
+      "orientation": "N",
+      "direction": "V",
+      "justification": 0,
+      "fontHeight": 19,
+      "fontWidth": 47,
+      "spacing": 5,
+      "text": "Мир",
+      "cell": [
+        1600,
+        1400,
+        800,
+        350
+      ],
+      "anchorX": 2000,
+      "anchorY": 1480
+    },
+    {
+      "anchor": "FT",
+      "orientation": "N",
+      "direction": "V",
+      "justification": 1,
+      "fontHeight": 19,
+      "fontWidth": 47,
+      "spacing": 5,
+      "text": "Мир",
+      "cell": [
+        0,
+        1750,
+        800,
+        350
+      ],
+      "anchorX": 400,
+      "anchorY": 1830
+    },
+    {
+      "anchor": "FT",
+      "orientation": "N",
+      "direction": "R",
+      "justification": 0,
+      "fontHeight": 19,
+      "fontWidth": 47,
+      "spacing": 5,
+      "text": "Мир",
+      "cell": [
+        800,
+        1750,
+        800,
+        350
+      ],
+      "anchorX": 1200,
+      "anchorY": 1830
+    },
+    {
+      "anchor": "FT",
+      "orientation": "N",
+      "direction": "R",
+      "justification": 1,
+      "fontHeight": 19,
+      "fontWidth": 47,
+      "spacing": 5,
+      "text": "Мир",
+      "cell": [
+        1600,
+        1750,
+        800,
+        350
+      ],
+      "anchorX": 2000,
+      "anchorY": 1830
+    },
+    {
+      "anchor": "FT",
+      "orientation": "N",
+      "direction": "H",
+      "justification": 0,
+      "fontHeight": 26,
+      "fontWidth": 17,
+      "spacing": 0,
+      "text": "Milk",
+      "cell": [
+        0,
+        2100,
+        800,
+        350
+      ],
+      "anchorX": 400,
+      "anchorY": 2180
+    },
+    {
+      "anchor": "FT",
+      "orientation": "N",
+      "direction": "H",
+      "justification": 1,
+      "fontHeight": 26,
+      "fontWidth": 17,
+      "spacing": 0,
+      "text": "Milk",
+      "cell": [
+        800,
+        2100,
+        800,
+        350
+      ],
+      "anchorX": 1200,
+      "anchorY": 2180
+    },
+    {
+      "anchor": "FT",
+      "orientation": "N",
+      "direction": "V",
+      "justification": 0,
+      "fontHeight": 26,
+      "fontWidth": 17,
+      "spacing": 0,
+      "text": "Milk",
+      "cell": [
+        1600,
+        2100,
+        800,
+        350
+      ],
+      "anchorX": 2000,
+      "anchorY": 2180
+    },
+    {
+      "anchor": "FT",
+      "orientation": "N",
+      "direction": "V",
+      "justification": 1,
+      "fontHeight": 26,
+      "fontWidth": 17,
+      "spacing": 0,
+      "text": "Milk",
+      "cell": [
+        0,
+        2450,
+        800,
+        350
+      ],
+      "anchorX": 400,
+      "anchorY": 2530
+    },
+    {
+      "anchor": "FT",
+      "orientation": "N",
+      "direction": "R",
+      "justification": 0,
+      "fontHeight": 26,
+      "fontWidth": 17,
+      "spacing": 0,
+      "text": "Milk",
+      "cell": [
+        800,
+        2450,
+        800,
+        350
+      ],
+      "anchorX": 1200,
+      "anchorY": 2530
+    },
+    {
+      "anchor": "FT",
+      "orientation": "N",
+      "direction": "R",
+      "justification": 1,
+      "fontHeight": 26,
+      "fontWidth": 17,
+      "spacing": 0,
+      "text": "Milk",
+      "cell": [
+        1600,
+        2450,
+        800,
+        350
+      ],
+      "anchorX": 2000,
+      "anchorY": 2530
+    }
+  ],
+  "response": {
+    "url": "https://api.labelary.com/v1/printers/8dpmm/labels/11.823891626x13.794334975/0/",
+    "headers": {
+      "Accept": "image/png",
+      "Content-Type": "application/x-www-form-urlencoded",
+      "X-Quality": "Bitonal",
+      "X-Linter": "On"
+    },
+    "retrievedUtc": "2026-10-09T16:06:23.057923+00:00",
+    "responseDate": "Fri, 09 Oct 2026 16:06:23 GMT",
+    "warnings": "",
+    "pngSha256": "d75a7314d732295867f6ecb393ea07276d6db1ee2e3b28327ac1d110516dd648",
+    "zplSha256": "f8e96b81a686c2116c605e4e91b752f8c6ecce1a33d63af257f0ff35f0caf500"
+  }
+}

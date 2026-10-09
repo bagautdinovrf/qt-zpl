@@ -1,0 +1,1362 @@
+{
+  "cases": [
+    {
+      "anchor": "FO",
+      "orientation": "N",
+      "direction": "R",
+      "justification": 0,
+      "fontHeight": 14,
+      "fontWidth": 31,
+      "spacing": 0,
+      "text": "A",
+      "cell": [
+        0,
+        0,
+        600,
+        270
+      ],
+      "anchorX": 300,
+      "anchorY": 120,
+      "markerRects": [
+        [
+          294,
+          9,
+          3,
+          11
+        ],
+        [
+          20,
+          119,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "N",
+      "direction": "R",
+      "justification": 1,
+      "fontHeight": 14,
+      "fontWidth": 31,
+      "spacing": 0,
+      "text": "A",
+      "cell": [
+        600,
+        0,
+        600,
+        270
+      ],
+      "anchorX": 900,
+      "anchorY": 120,
+      "markerRects": [
+        [
+          871,
+          9,
+          3,
+          11
+        ],
+        [
+          620,
+          119,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "R",
+      "direction": "R",
+      "justification": 0,
+      "fontHeight": 14,
+      "fontWidth": 31,
+      "spacing": 0,
+      "text": "A",
+      "cell": [
+        1200,
+        0,
+        600,
+        270
+      ],
+      "anchorX": 1500,
+      "anchorY": 120,
+      "markerRects": [
+        [
+          1504,
+          9,
+          3,
+          11
+        ],
+        [
+          1220,
+          103,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "R",
+      "direction": "R",
+      "justification": 1,
+      "fontHeight": 14,
+      "fontWidth": 31,
+      "spacing": 0,
+      "text": "A",
+      "cell": [
+        1800,
+        0,
+        600,
+        270
+      ],
+      "anchorX": 2100,
+      "anchorY": 120,
+      "markerRects": [
+        [
+          2104,
+          9,
+          3,
+          11
+        ],
+        [
+          1820,
+          80,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "I",
+      "direction": "R",
+      "justification": 0,
+      "fontHeight": 14,
+      "fontWidth": 31,
+      "spacing": 0,
+      "text": "A",
+      "cell": [
+        0,
+        270,
+        600,
+        270
+      ],
+      "anchorX": 300,
+      "anchorY": 390,
+      "markerRects": [
+        [
+          282,
+          279,
+          3,
+          11
+        ],
+        [
+          20,
+          383,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "I",
+      "direction": "R",
+      "justification": 1,
+      "fontHeight": 14,
+      "fontWidth": 31,
+      "spacing": 0,
+      "text": "A",
+      "cell": [
+        600,
+        270,
+        600,
+        270
+      ],
+      "anchorX": 900,
+      "anchorY": 390,
+      "markerRects": [
+        [
+          905,
+          279,
+          3,
+          11
+        ],
+        [
+          620,
+          383,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "B",
+      "direction": "R",
+      "justification": 0,
+      "fontHeight": 14,
+      "fontWidth": 31,
+      "spacing": 0,
+      "text": "A",
+      "cell": [
+        1200,
+        270,
+        600,
+        270
+      ],
+      "anchorX": 1500,
+      "anchorY": 390,
+      "markerRects": [
+        [
+          1510,
+          279,
+          3,
+          11
+        ],
+        [
+          1220,
+          361,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "B",
+      "direction": "R",
+      "justification": 1,
+      "fontHeight": 14,
+      "fontWidth": 31,
+      "spacing": 0,
+      "text": "A",
+      "cell": [
+        1800,
+        270,
+        600,
+        270
+      ],
+      "anchorX": 2100,
+      "anchorY": 390,
+      "markerRects": [
+        [
+          2110,
+          279,
+          3,
+          11
+        ],
+        [
+          1820,
+          384,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "R",
+      "direction": "V",
+      "justification": 0,
+      "fontHeight": 14,
+      "fontWidth": 31,
+      "spacing": 0,
+      "text": "A",
+      "cell": [
+        0,
+        540,
+        600,
+        270
+      ],
+      "anchorX": 300,
+      "anchorY": 580,
+      "markerRects": [
+        [
+          300,
+          549,
+          3,
+          11
+        ],
+        [
+          20,
+          586,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "R",
+      "direction": "V",
+      "justification": 1,
+      "fontHeight": 14,
+      "fontWidth": 31,
+      "spacing": 0,
+      "text": "A",
+      "cell": [
+        600,
+        540,
+        600,
+        270
+      ],
+      "anchorX": 900,
+      "anchorY": 580,
+      "markerRects": [
+        [
+          900,
+          549,
+          3,
+          11
+        ],
+        [
+          620,
+          555,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "I",
+      "direction": "V",
+      "justification": 0,
+      "fontHeight": 14,
+      "fontWidth": 31,
+      "spacing": 0,
+      "text": "A",
+      "cell": [
+        1200,
+        540,
+        600,
+        270
+      ],
+      "anchorX": 1500,
+      "anchorY": 580,
+      "markerRects": [
+        [
+          1505,
+          549,
+          3,
+          11
+        ],
+        [
+          1220,
+          573,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "I",
+      "direction": "V",
+      "justification": 1,
+      "fontHeight": 14,
+      "fontWidth": 31,
+      "spacing": 0,
+      "text": "A",
+      "cell": [
+        1800,
+        540,
+        600,
+        270
+      ],
+      "anchorX": 2100,
+      "anchorY": 580,
+      "markerRects": [
+        [
+          2137,
+          549,
+          3,
+          11
+        ],
+        [
+          1820,
+          573,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "N",
+      "direction": "R",
+      "justification": 0,
+      "fontHeight": 37,
+      "fontWidth": 13,
+      "spacing": 1,
+      "text": "Test12",
+      "cell": [
+        0,
+        810,
+        600,
+        270
+      ],
+      "anchorX": 300,
+      "anchorY": 930,
+      "markerRects": [
+        [
+          330,
+          819,
+          3,
+          11
+        ],
+        [
+          20,
+          946,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "N",
+      "direction": "R",
+      "justification": 1,
+      "fontHeight": 37,
+      "fontWidth": 13,
+      "spacing": 1,
+      "text": "Test12",
+      "cell": [
+        600,
+        810,
+        600,
+        270
+      ],
+      "anchorX": 900,
+      "anchorY": 930,
+      "markerRects": [
+        [
+          920,
+          819,
+          3,
+          11
+        ],
+        [
+          620,
+          946,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "R",
+      "direction": "R",
+      "justification": 0,
+      "fontHeight": 37,
+      "fontWidth": 13,
+      "spacing": 1,
+      "text": "Test12",
+      "cell": [
+        1200,
+        810,
+        600,
+        270
+      ],
+      "anchorX": 1500,
+      "anchorY": 930,
+      "markerRects": [
+        [
+          1510,
+          819,
+          3,
+          11
+        ],
+        [
+          1220,
+          949,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "R",
+      "direction": "R",
+      "justification": 1,
+      "fontHeight": 37,
+      "fontWidth": 13,
+      "spacing": 1,
+      "text": "Test12",
+      "cell": [
+        1800,
+        810,
+        600,
+        270
+      ],
+      "anchorX": 2100,
+      "anchorY": 930,
+      "markerRects": [
+        [
+          2110,
+          819,
+          3,
+          11
+        ],
+        [
+          1820,
+          939,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "I",
+      "direction": "R",
+      "justification": 0,
+      "fontHeight": 37,
+      "fontWidth": 13,
+      "spacing": 1,
+      "text": "Test12",
+      "cell": [
+        0,
+        1080,
+        600,
+        270
+      ],
+      "anchorX": 300,
+      "anchorY": 1200,
+      "markerRects": [
+        [
+          259,
+          1089,
+          3,
+          11
+        ],
+        [
+          20,
+          1199,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "I",
+      "direction": "R",
+      "justification": 1,
+      "fontHeight": 37,
+      "fontWidth": 13,
+      "spacing": 1,
+      "text": "Test12",
+      "cell": [
+        600,
+        1080,
+        600,
+        270
+      ],
+      "anchorX": 900,
+      "anchorY": 1200,
+      "markerRects": [
+        [
+          869,
+          1089,
+          3,
+          11
+        ],
+        [
+          620,
+          1199,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "B",
+      "direction": "R",
+      "justification": 0,
+      "fontHeight": 37,
+      "fontWidth": 13,
+      "spacing": 1,
+      "text": "Test12",
+      "cell": [
+        1200,
+        1080,
+        600,
+        270
+      ],
+      "anchorX": 1500,
+      "anchorY": 1200,
+      "markerRects": [
+        [
+          1527,
+          1089,
+          3,
+          11
+        ],
+        [
+          1220,
+          1148,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "B",
+      "direction": "R",
+      "justification": 1,
+      "fontHeight": 37,
+      "fontWidth": 13,
+      "spacing": 1,
+      "text": "Test12",
+      "cell": [
+        1800,
+        1080,
+        600,
+        270
+      ],
+      "anchorX": 2100,
+      "anchorY": 1200,
+      "markerRects": [
+        [
+          2127,
+          1089,
+          3,
+          11
+        ],
+        [
+          1820,
+          1158,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "R",
+      "direction": "V",
+      "justification": 0,
+      "fontHeight": 37,
+      "fontWidth": 13,
+      "spacing": 1,
+      "text": "Test12",
+      "cell": [
+        0,
+        1350,
+        600,
+        270
+      ],
+      "anchorX": 300,
+      "anchorY": 1390,
+      "markerRects": [
+        [
+          485,
+          1359,
+          3,
+          11
+        ],
+        [
+          20,
+          1419,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "R",
+      "direction": "V",
+      "justification": 1,
+      "fontHeight": 37,
+      "fontWidth": 13,
+      "spacing": 1,
+      "text": "Test12",
+      "cell": [
+        600,
+        1350,
+        600,
+        270
+      ],
+      "anchorX": 900,
+      "anchorY": 1390,
+      "markerRects": [
+        [
+          1085,
+          1359,
+          3,
+          11
+        ],
+        [
+          620,
+          1342,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "I",
+      "direction": "V",
+      "justification": 0,
+      "fontHeight": 37,
+      "fontWidth": 13,
+      "spacing": 1,
+      "text": "Test12",
+      "cell": [
+        1200,
+        1350,
+        600,
+        270
+      ],
+      "anchorX": 1500,
+      "anchorY": 1390,
+      "markerRects": [
+        [
+          1469,
+          1359,
+          3,
+          11
+        ],
+        [
+          1220,
+          1574,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "I",
+      "direction": "V",
+      "justification": 1,
+      "fontHeight": 37,
+      "fontWidth": 13,
+      "spacing": 1,
+      "text": "Test12",
+      "cell": [
+        1800,
+        1350,
+        600,
+        270
+      ],
+      "anchorX": 2100,
+      "anchorY": 1390,
+      "markerRects": [
+        [
+          2147,
+          1359,
+          3,
+          11
+        ],
+        [
+          1820,
+          1574,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "N",
+      "direction": "R",
+      "justification": 0,
+      "fontHeight": 19,
+      "fontWidth": 47,
+      "spacing": 5,
+      "text": "Мир",
+      "cell": [
+        0,
+        1620,
+        600,
+        270
+      ],
+      "anchorX": 300,
+      "anchorY": 1740,
+      "markerRects": [
+        [
+          362,
+          1629,
+          3,
+          11
+        ],
+        [
+          20,
+          1743,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "N",
+      "direction": "R",
+      "justification": 1,
+      "fontHeight": 19,
+      "fontWidth": 47,
+      "spacing": 5,
+      "text": "Мир",
+      "cell": [
+        600,
+        1620,
+        600,
+        270
+      ],
+      "anchorX": 900,
+      "anchorY": 1740,
+      "markerRects": [
+        [
+          926,
+          1629,
+          3,
+          11
+        ],
+        [
+          620,
+          1743,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "R",
+      "direction": "R",
+      "justification": 0,
+      "fontHeight": 19,
+      "fontWidth": 47,
+      "spacing": 5,
+      "text": "Мир",
+      "cell": [
+        1200,
+        1620,
+        600,
+        270
+      ],
+      "anchorX": 1500,
+      "anchorY": 1740,
+      "markerRects": [
+        [
+          1505,
+          1629,
+          3,
+          11
+        ],
+        [
+          1220,
+          1791,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "R",
+      "direction": "R",
+      "justification": 1,
+      "fontHeight": 19,
+      "fontWidth": 47,
+      "spacing": 5,
+      "text": "Мир",
+      "cell": [
+        1800,
+        1620,
+        600,
+        270
+      ],
+      "anchorX": 2100,
+      "anchorY": 1740,
+      "markerRects": [
+        [
+          2105,
+          1629,
+          3,
+          11
+        ],
+        [
+          1820,
+          1755,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "I",
+      "direction": "R",
+      "justification": 0,
+      "fontHeight": 19,
+      "fontWidth": 47,
+      "spacing": 5,
+      "text": "Мир",
+      "cell": [
+        0,
+        1890,
+        600,
+        270
+      ],
+      "anchorX": 300,
+      "anchorY": 2010,
+      "markerRects": [
+        [
+          201,
+          1899,
+          3,
+          11
+        ],
+        [
+          20,
+          2004,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "I",
+      "direction": "R",
+      "justification": 1,
+      "fontHeight": 19,
+      "fontWidth": 47,
+      "spacing": 5,
+      "text": "Мир",
+      "cell": [
+        600,
+        1890,
+        600,
+        270
+      ],
+      "anchorX": 900,
+      "anchorY": 2010,
+      "markerRects": [
+        [
+          837,
+          1899,
+          3,
+          11
+        ],
+        [
+          620,
+          2004,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "B",
+      "direction": "R",
+      "justification": 0,
+      "fontHeight": 19,
+      "fontWidth": 47,
+      "spacing": 5,
+      "text": "Мир",
+      "cell": [
+        1200,
+        1890,
+        600,
+        270
+      ],
+      "anchorX": 1500,
+      "anchorY": 2010,
+      "markerRects": [
+        [
+          1514,
+          1899,
+          3,
+          11
+        ],
+        [
+          1220,
+          1900,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "B",
+      "direction": "R",
+      "justification": 1,
+      "fontHeight": 19,
+      "fontWidth": 47,
+      "spacing": 5,
+      "text": "Мир",
+      "cell": [
+        1800,
+        1890,
+        600,
+        270
+      ],
+      "anchorX": 2100,
+      "anchorY": 2010,
+      "markerRects": [
+        [
+          2114,
+          1899,
+          3,
+          11
+        ],
+        [
+          1820,
+          1936,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "R",
+      "direction": "V",
+      "justification": 0,
+      "fontHeight": 19,
+      "fontWidth": 47,
+      "spacing": 5,
+      "text": "Мир",
+      "cell": [
+        0,
+        2160,
+        600,
+        270
+      ],
+      "anchorX": 300,
+      "anchorY": 2200,
+      "markerRects": [
+        [
+          338,
+          2169,
+          3,
+          11
+        ],
+        [
+          20,
+          2287,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "R",
+      "direction": "V",
+      "justification": 1,
+      "fontHeight": 19,
+      "fontWidth": 47,
+      "spacing": 5,
+      "text": "Мир",
+      "cell": [
+        600,
+        2160,
+        600,
+        270
+      ],
+      "anchorX": 900,
+      "anchorY": 2200,
+      "markerRects": [
+        [
+          938,
+          2169,
+          3,
+          11
+        ],
+        [
+          620,
+          2170,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "I",
+      "direction": "V",
+      "justification": 0,
+      "fontHeight": 19,
+      "fontWidth": 47,
+      "spacing": 5,
+      "text": "Мир",
+      "cell": [
+        1200,
+        2160,
+        600,
+        270
+      ],
+      "anchorX": 1500,
+      "anchorY": 2200,
+      "markerRects": [
+        [
+          1437,
+          2169,
+          3,
+          11
+        ],
+        [
+          1220,
+          2232,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FO",
+      "orientation": "I",
+      "direction": "V",
+      "justification": 1,
+      "fontHeight": 19,
+      "fontWidth": 47,
+      "spacing": 5,
+      "text": "Мир",
+      "cell": [
+        1800,
+        2160,
+        600,
+        270
+      ],
+      "anchorX": 2100,
+      "anchorY": 2200,
+      "markerRects": [
+        [
+          2155,
+          2169,
+          3,
+          11
+        ],
+        [
+          1820,
+          2232,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FT",
+      "orientation": "N",
+      "direction": "H",
+      "justification": 0,
+      "fontHeight": 26,
+      "fontWidth": 17,
+      "spacing": 3,
+      "text": "",
+      "cell": [
+        0,
+        2430,
+        600,
+        270
+      ],
+      "anchorX": 300,
+      "anchorY": 2510,
+      "markerRects": [
+        [
+          300,
+          2439,
+          3,
+          11
+        ],
+        [
+          20,
+          2499,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FT",
+      "orientation": "N",
+      "direction": "H",
+      "justification": 1,
+      "fontHeight": 26,
+      "fontWidth": 17,
+      "spacing": 3,
+      "text": "",
+      "cell": [
+        600,
+        2430,
+        600,
+        270
+      ],
+      "anchorX": 900,
+      "anchorY": 2510,
+      "markerRects": [
+        [
+          900,
+          2439,
+          3,
+          11
+        ],
+        [
+          620,
+          2499,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FT",
+      "orientation": "N",
+      "direction": "V",
+      "justification": 0,
+      "fontHeight": 26,
+      "fontWidth": 17,
+      "spacing": 3,
+      "text": "",
+      "cell": [
+        1200,
+        2430,
+        600,
+        270
+      ],
+      "anchorX": 1500,
+      "anchorY": 2510,
+      "markerRects": [
+        [
+          1500,
+          2439,
+          3,
+          11
+        ],
+        [
+          1220,
+          2499,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FT",
+      "orientation": "N",
+      "direction": "V",
+      "justification": 1,
+      "fontHeight": 26,
+      "fontWidth": 17,
+      "spacing": 3,
+      "text": "",
+      "cell": [
+        1800,
+        2430,
+        600,
+        270
+      ],
+      "anchorX": 2100,
+      "anchorY": 2510,
+      "markerRects": [
+        [
+          2100,
+          2439,
+          3,
+          11
+        ],
+        [
+          1820,
+          2499,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FT",
+      "orientation": "N",
+      "direction": "R",
+      "justification": 0,
+      "fontHeight": 26,
+      "fontWidth": 17,
+      "spacing": 3,
+      "text": "",
+      "cell": [
+        0,
+        2700,
+        600,
+        270
+      ],
+      "anchorX": 300,
+      "anchorY": 2780,
+      "markerRects": [
+        [
+          300,
+          2709,
+          3,
+          11
+        ],
+        [
+          20,
+          2769,
+          3,
+          11
+        ]
+      ]
+    },
+    {
+      "anchor": "FT",
+      "orientation": "N",
+      "direction": "R",
+      "justification": 1,
+      "fontHeight": 26,
+      "fontWidth": 17,
+      "spacing": 3,
+      "text": "",
+      "cell": [
+        600,
+        2700,
+        600,
+        270
+      ],
+      "anchorX": 900,
+      "anchorY": 2780,
+      "markerRects": [
+        [
+          900,
+          2709,
+          3,
+          11
+        ],
+        [
+          620,
+          2769,
+          3,
+          11
+        ]
+      ]
+    }
+  ],
+  "response": {
+    "url": "https://api.labelary.com/v1/printers/8dpmm/labels/11.823891626x14.631773399/0/",
+    "headers": {
+      "Accept": "image/png",
+      "Content-Type": "application/x-www-form-urlencoded",
+      "X-Quality": "Bitonal",
+      "X-Linter": "On"
+    },
+    "retrievedUtc": "2026-10-09T16:18:10.104256+00:00",
+    "responseDate": "Fri, 09 Oct 2026 16:18:10 GMT",
+    "warnings": "",
+    "pngSha256": "610e4135eefa963cbdf94e73792397b4cc5e19c6308243c329c1a396c54f885a",
+    "zplSha256": "56b2b5456fc9278385b224888b58cd377baa140bcee36d6691d9a1a10962148a"
+  }
+}

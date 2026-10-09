@@ -62,13 +62,13 @@ SHA-256 описывает
 размера можно передать его манифест `qtzpl_font0_probe`:
 
 ```text
-qtzpl_font0_probe --font candidate.ttf --manifest tests/golden/font0-size-sweep/h096/manifest.json --output-dir build_font0_research/sweep-h096 --no-hinting --role validation
+qtzpl_font0_probe --font candidate.ttf --manifest tests/golden/font0-size-sweep/h096/manifest.json --output-dir build_agent/build_font0_research/sweep-h096 --no-hinting --role validation
 ```
 
 Все 509 размеров можно сравнить без сети и без дополнительных сборок:
 
 ```text
-py -3 tools/font0_size_sweep.py --score --probe build_agent_release/examples/qtzpl_font0_probe.exe --font build_font0_research/QtZplFontZeroResearch-Refined.ttf --score-output build_font0_research/size-sweep-scores --workers 3
+py -3 tools/font0_size_sweep.py --score --probe build_agent/build_agent_release/examples/qtzpl_font0_probe.exe --font build_agent/build_font0_research/QtZplFontZeroResearch-Refined.ttf --score-output build_agent/build_font0_research/size-sweep-scores --workers 3
 ```
 
 `summary.json` содержит общие и отдельные для каждого размера количества

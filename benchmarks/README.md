@@ -11,15 +11,15 @@ py -3 tools/build_helper.py benchmark
 py -3 tools/build_helper.py benchmark --benchmark-filter parse/
 py -3 tools/build_helper.py benchmark --benchmark-filter algorithm/qr/
 py -3 tools/build_helper.py benchmark --benchmark-filter designer/
-py -3 tools/build_helper.py benchmark --benchmark-samples 15 --benchmark-min-ms 100 --benchmark-output build_agent_release/after.json
-py -3 tools/compare_benchmarks.py build_agent_release/before.json build_agent_release/after.json
+py -3 tools/build_helper.py benchmark --benchmark-samples 15 --benchmark-min-ms 100 --benchmark-output build_agent/build_agent_release/after.json
+py -3 tools/compare_benchmarks.py build_agent/build_agent_release/before.json build_agent/build_agent_release/after.json
 ```
 
 `benchmark` по умолчанию выбирает Release и записывает JSON в
-`build_agent_release/benchmark-results.json`. Сохраните исходный JSON под
+`build_agent/build_agent_release/benchmark-results.json`. Сохраните исходный JSON под
 другим именем до следующего запуска. `--config Debug` предназначен для
 проверки стенда, а не для выводов о производительности. Для статической
-библиотеки используйте `--static --build-dir build_agent_release_static`.
+библиотеки используйте `--static --build-dir build_agent/build_agent_release_static`.
 
 Для обычного CMake: `-DQTZPL_BUILD_BENCHMARKS=ON`, затем цель
 `qtzpl_benchmarks`. Это не требует Qt Test при `QTZPL_BUILD_TESTS=OFF`.

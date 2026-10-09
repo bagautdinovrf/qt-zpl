@@ -79,11 +79,22 @@ PDF417; `^BY` переопределяет это значение, а `^BX` с�
 проверяет привязку и центрирование; полное пиксельное совпадение Font 0 пока
 остаётся отдельной нерешённой задачей.
 
-Font 0 рисуется из контуров встроенного Triumvirate Cond Bold. Высота и ширина
-масштабируются независимо в координатах принтера; системные шрифты и
-`QFont::setStretch` для него не используются. Базовая линия `^FO` равна
-`floor(0,75 × высота)`, а `^FT` задаёт её непосредственно. Повороты учитывают
-полную высоту и суммарную ширину символов, сохраняя выносные элементы.
+Font 0 рисуется из контуров встроенного Triumvirate Cond Bold. FreeType читает
+исходные контуры без hinting, а QPainter заливает их без сглаживания; системный
+шрифтовой движок и `QFont::setStretch` в этом пути не используются. Высота и
+ширина масштабируются независимо в координатах принтера и ограничиваются
+снизу 10 точками, включая размер ячейки для поворотов. Базовая линия `^FO`
+равна `floor(0,75 × эффективная высота)`, а `^FT` задаёт её непосредственно.
+Повороты учитывают полную высоту и суммарную ширину символов, сохраняя
+выносные элементы. Контуры кэшируются в пределах одного вызова рендеринга.
+
+Шаги 304 доступных глифов исправлены по точным числовым метрикам, независимо
+проверенным длинными строками в оригинальных bitonal-эталонах Labelary.
+Таблица хранит целые числители с знаменателем 2048 и не округляет шаг каждой
+буквы до целых точек. Для остальных глифов сохранены метрики встроенного
+шрифта. Исходные измерения, ограничения и тесты находятся в
+[font0-metrics](tests/golden/font0-metrics/) и
+[font0-grid-semantics](tests/golden/font0-grid-semantics/).
 Семь пар размеров из этикетки проверяются по синтетическим латинским и
 кириллическим `^FO`/`^FT`-эталонам `font0-h*-w*`. Они получены 2026-10-07
 через Labelary 12 dpmm, размер `7.89474x3.9474`, `X-Quality: Bitonal`
@@ -92,9 +103,10 @@ Font 0 рисуется из контуров встроенного Triumvirate
 
 Сравнение встроенных контуров с Font 0 в PDF Labelary (2026-10-07)
 показало различия самих глифов, а не только привязки или общего масштаба.
-Например, у `e`, `o` и `g` отличаются контуры; дефис в Labelary имеет
-ширину продвижения около 0,903 em против 0,600 em у встроенного шрифта.
-Поэтому расхождение `hello.zpl` нельзя устранить одним смещением `^FO`.
+Например, у `e`, `o` и `g` отличаются контуры. Ширина продвижения дефиса
+теперь равна 1850/2048 em вместо прежних 0,600 em, но исправление метрик
+не меняет саму форму глифа. Поэтому расхождение `hello.zpl` нельзя устранить
+одним смещением `^FO`.
 
 Проверка `qtzpl_font_glyphs_tests` охватывает 371 уникальный символ:
 латиницу и кириллицу обоих регистров, `Ёё`, знаки препинания и распространённые
@@ -348,7 +360,7 @@ SOVERSION включает major/minor; старую DLL нельзя подст
 декодирование bitmap через публичный header:
 
 ```text
-build_agent_debug\examples\qtzpl_inspect.exe input.zpl 0 preview.png
+build_agent\build_agent_debug\examples\qtzpl_inspect.exe input.zpl 0 preview.png
 ```
 
 Потребительские регрессии находятся в `tests/test_designer_api.cpp`, контракты
@@ -371,7 +383,11 @@ py -3 tools/build_helper.py
 py -3 tools/build_helper.py all --clean
 ```
 
-Каталоги: `build_agent_debug`, `build_agent_release`.
+Все каталоги сборки и сгенерированные артефакты находятся внутри `build_agent/`.
+Стандартные каталоги: `build_agent/build_agent_debug`, `build_agent/build_agent_release`.
+Прежние корневые `build_*` перенесены туда с сохранением имён; корневой
+`build/` соответствует `build_agent/build/`. После переноса CMake-сборке
+нужна свежая конфигурация: абсолютные пути в старом кэше не переносятся.
 
 **Одна конфигурация** — укажите `--config` (каталог подбирается автоматически):
 
@@ -384,13 +400,13 @@ py -3 tools/build_helper.py all --clean --config Release
 py -3 tools/build_helper.py build --config Release --target QtZpl
 ```
 
-Подробный протокол QtTest сохраняется в `build_agent_debug/tests/test_results.txt`
+Подробный протокол QtTest сохраняется в `build_agent/build_agent_debug/tests/test_results.txt`
 (или в соответствующем каталоге другой конфигурации), включая строки ошибок.
 
-Свой каталог сборки — только если нужен нестандартный путь:
+Свой каталог сборки также должен находиться внутри `build_agent/`:
 
 ```text
-py -3 tools/build_helper.py build --config Release --build-dir build_custom
+py -3 tools/build_helper.py build --config Release --build-dir build_agent/build_custom
 ```
 
 Повторная сборка без переконфигурации:
@@ -404,7 +420,7 @@ py -3 tools/build_helper.py build --config Release
 
 ```text
 set QTZPL_ROOT=C:\QtZpl\Release
-py -3 tools/build_helper.py install --clean --config Release --build-dir build_agent_release --install-prefix C:\QtZpl\Release
+py -3 tools/build_helper.py install --clean --config Release --build-dir build_agent/build_agent_release --install-prefix C:\QtZpl\Release
 ```
 
 Debug-установка — `--config Debug`. Другой kit Qt — `--qt-version` и `--compiler`.
@@ -414,12 +430,12 @@ Debug-установка — `--config Debug`. Другой kit Qt — `--qt-ver
 Если окружение Qt и MSVC уже настроено в терминале:
 
 ```text
-cmake -S . -B build_debug -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH=C:/Qt/6.11.1/msvc2022_64
-cmake --build build_debug
-ctest --test-dir build_debug --output-on-failure
+cmake -S . -B build_agent/build_debug -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH=C:/Qt/6.11.2/msvc2022_64
+cmake --build build_agent/build_debug
+ctest --test-dir build_agent/build_debug --output-on-failure
 
-cmake -S . -B build_release -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=C:/Qt/6.11.1/msvc2022_64
-cmake --build build_release
+cmake -S . -B build_agent/build_release -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=C:/Qt/6.11.2/msvc2022_64
+cmake --build build_agent/build_release
 ```
 
 По умолчанию в `build_helper.py` используется Qt **6.11.2**, комплект **msvc2022_64**.
@@ -447,7 +463,7 @@ py -3 tools/build_helper.py benchmark --benchmark-filter algorithm/
 py -3 tools/build_helper.py gallery
 ```
 
-Сгенерированные примеры сохраняются в каталоге `examples/rendered`.
+Сгенерированные примеры сохраняются в каталоге `build_agent/rendered`.
 
 Для рендеринга собственного ZPL вставьте его в переменную `ZPL` в корневом
 файле `render_helper.py`, затем выполните:
@@ -456,7 +472,7 @@ py -3 tools/build_helper.py gallery
 py -3 render_helper.py
 ```
 
-Каждый блок `^XA...^XZ` сохраняется отдельным файлом `rendered/label_N.png`.
+Каждый блок `^XA...^XZ` сохраняется отдельным файлом `build_agent/rendered/label_N.png`.
 
 ### Сравнение с Labelary golden
 
@@ -466,15 +482,16 @@ PNG (ink bounds, число расхождающихся пикселей, Jacca
 ```text
 py -3 tools/build_helper.py build --config Debug --target qtzpl_compare_golden
 
-build_agent_debug\examples\qtzpl_compare_golden.exe ^
+build_agent\build_agent_debug\examples\qtzpl_compare_golden.exe ^
   tests\corpus\go-zpl-demo\hello.zpl ^
   tests\golden\go-zpl-demo\hello-page-1-labelary-bitonal.png ^
-  build_agent_debug\hello-actual.png ^
-  build_agent_debug\hello-diff.png ^
+  build_agent\build_agent_debug\hello-actual.png ^
+  build_agent\build_agent_debug\hello-diff.png ^
   --width 812 --height 609 --dpi 203 --ignore-label-home
 ```
 
 Параметры `--width`, `--height`, `--dpi` и `--ignore-label-home` берите из
 `tests/corpus/go-zpl-demo/manifest.json` для соответствующей фикстуры. На
-2026-08-12 для `hello.zpl` QR совпадает с Labelary, а текст Font 0 (`^A0` при
-`^FO`) — нет; см. `AGENTS.md`.
+2026-10-09 для `hello.zpl` QR и общие границы чернил совпадают с Labelary,
+но контуры Font 0 дают 805 отличающихся пикселей; см. `AGENTS.md` и
+[отчёт проверки NORTHLINE](benchmarks/NORTHLINE-RASTER-2026-10-09.md).

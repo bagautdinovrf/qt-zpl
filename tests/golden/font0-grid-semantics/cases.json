@@ -1,0 +1,650 @@
+[
+  {
+    "origin": "FO",
+    "orientation": "N",
+    "y": 100,
+    "x": 80,
+    "small": [
+      4,
+      30
+    ],
+    "clamped": [
+      10,
+      30
+    ],
+    "differentPixels": 0,
+    "smallBounds": [
+      63,
+      60,
+      99,
+      67
+    ],
+    "clampedBounds": [
+      63,
+      60,
+      99,
+      67
+    ]
+  },
+  {
+    "origin": "FO",
+    "orientation": "R",
+    "y": 100,
+    "x": 384,
+    "small": [
+      4,
+      30
+    ],
+    "clamped": [
+      10,
+      30
+    ],
+    "differentPixels": 0,
+    "smallBounds": [
+      63,
+      63,
+      70,
+      99
+    ],
+    "clampedBounds": [
+      63,
+      63,
+      70,
+      99
+    ]
+  },
+  {
+    "origin": "FO",
+    "orientation": "I",
+    "y": 100,
+    "x": 688,
+    "small": [
+      4,
+      30
+    ],
+    "clamped": [
+      10,
+      30
+    ],
+    "differentPixels": 0,
+    "smallBounds": [
+      61,
+      63,
+      97,
+      70
+    ],
+    "clampedBounds": [
+      61,
+      63,
+      97,
+      70
+    ]
+  },
+  {
+    "origin": "FO",
+    "orientation": "B",
+    "y": 100,
+    "x": 992,
+    "small": [
+      4,
+      30
+    ],
+    "clamped": [
+      10,
+      30
+    ],
+    "differentPixels": 0,
+    "smallBounds": [
+      60,
+      61,
+      67,
+      97
+    ],
+    "clampedBounds": [
+      60,
+      61,
+      67,
+      97
+    ]
+  },
+  {
+    "origin": "FO",
+    "orientation": "N",
+    "y": 300,
+    "x": 80,
+    "small": [
+      30,
+      4
+    ],
+    "clamped": [
+      30,
+      10
+    ],
+    "differentPixels": 0,
+    "smallBounds": [
+      61,
+      60,
+      73,
+      82
+    ],
+    "clampedBounds": [
+      61,
+      60,
+      73,
+      82
+    ]
+  },
+  {
+    "origin": "FO",
+    "orientation": "R",
+    "y": 300,
+    "x": 384,
+    "small": [
+      30,
+      4
+    ],
+    "clamped": [
+      30,
+      10
+    ],
+    "differentPixels": 0,
+    "smallBounds": [
+      68,
+      61,
+      90,
+      73
+    ],
+    "clampedBounds": [
+      68,
+      61,
+      90,
+      73
+    ]
+  },
+  {
+    "origin": "FO",
+    "orientation": "I",
+    "y": 300,
+    "x": 688,
+    "small": [
+      30,
+      4
+    ],
+    "clamped": [
+      30,
+      10
+    ],
+    "differentPixels": 0,
+    "smallBounds": [
+      60,
+      68,
+      72,
+      90
+    ],
+    "clampedBounds": [
+      60,
+      68,
+      72,
+      90
+    ]
+  },
+  {
+    "origin": "FO",
+    "orientation": "B",
+    "y": 300,
+    "x": 992,
+    "small": [
+      30,
+      4
+    ],
+    "clamped": [
+      30,
+      10
+    ],
+    "differentPixels": 0,
+    "smallBounds": [
+      60,
+      60,
+      82,
+      72
+    ],
+    "clampedBounds": [
+      60,
+      60,
+      82,
+      72
+    ]
+  },
+  {
+    "origin": "FO",
+    "orientation": "N",
+    "y": 500,
+    "x": 80,
+    "small": [
+      4,
+      4
+    ],
+    "clamped": [
+      10,
+      10
+    ],
+    "differentPixels": 0,
+    "smallBounds": [
+      61,
+      60,
+      73,
+      67
+    ],
+    "clampedBounds": [
+      61,
+      60,
+      73,
+      67
+    ]
+  },
+  {
+    "origin": "FO",
+    "orientation": "R",
+    "y": 500,
+    "x": 384,
+    "small": [
+      4,
+      4
+    ],
+    "clamped": [
+      10,
+      10
+    ],
+    "differentPixels": 0,
+    "smallBounds": [
+      63,
+      61,
+      70,
+      73
+    ],
+    "clampedBounds": [
+      63,
+      61,
+      70,
+      73
+    ]
+  },
+  {
+    "origin": "FO",
+    "orientation": "I",
+    "y": 500,
+    "x": 688,
+    "small": [
+      4,
+      4
+    ],
+    "clamped": [
+      10,
+      10
+    ],
+    "differentPixels": 0,
+    "smallBounds": [
+      60,
+      63,
+      72,
+      70
+    ],
+    "clampedBounds": [
+      60,
+      63,
+      72,
+      70
+    ]
+  },
+  {
+    "origin": "FO",
+    "orientation": "B",
+    "y": 500,
+    "x": 992,
+    "small": [
+      4,
+      4
+    ],
+    "clamped": [
+      10,
+      10
+    ],
+    "differentPixels": 0,
+    "smallBounds": [
+      60,
+      60,
+      67,
+      72
+    ],
+    "clampedBounds": [
+      60,
+      60,
+      67,
+      72
+    ]
+  },
+  {
+    "origin": "FT",
+    "orientation": "N",
+    "y": 700,
+    "x": 80,
+    "small": [
+      4,
+      30
+    ],
+    "clamped": [
+      10,
+      30
+    ],
+    "differentPixels": 0,
+    "smallBounds": [
+      63,
+      53,
+      99,
+      60
+    ],
+    "clampedBounds": [
+      63,
+      53,
+      99,
+      60
+    ]
+  },
+  {
+    "origin": "FT",
+    "orientation": "R",
+    "y": 700,
+    "x": 384,
+    "small": [
+      4,
+      30
+    ],
+    "clamped": [
+      10,
+      30
+    ],
+    "differentPixels": 0,
+    "smallBounds": [
+      60,
+      63,
+      67,
+      99
+    ],
+    "clampedBounds": [
+      60,
+      63,
+      67,
+      99
+    ]
+  },
+  {
+    "origin": "FT",
+    "orientation": "I",
+    "y": 700,
+    "x": 688,
+    "small": [
+      4,
+      30
+    ],
+    "clamped": [
+      10,
+      30
+    ],
+    "differentPixels": 0,
+    "smallBounds": [
+      21,
+      60,
+      57,
+      67
+    ],
+    "clampedBounds": [
+      21,
+      60,
+      57,
+      67
+    ]
+  },
+  {
+    "origin": "FT",
+    "orientation": "B",
+    "y": 700,
+    "x": 992,
+    "small": [
+      4,
+      30
+    ],
+    "clamped": [
+      10,
+      30
+    ],
+    "differentPixels": 0,
+    "smallBounds": [
+      53,
+      21,
+      60,
+      57
+    ],
+    "clampedBounds": [
+      53,
+      21,
+      60,
+      57
+    ]
+  },
+  {
+    "origin": "FT",
+    "orientation": "N",
+    "y": 900,
+    "x": 80,
+    "small": [
+      30,
+      4
+    ],
+    "clamped": [
+      30,
+      10
+    ],
+    "differentPixels": 0,
+    "smallBounds": [
+      61,
+      38,
+      73,
+      60
+    ],
+    "clampedBounds": [
+      61,
+      38,
+      73,
+      60
+    ]
+  },
+  {
+    "origin": "FT",
+    "orientation": "R",
+    "y": 900,
+    "x": 384,
+    "small": [
+      30,
+      4
+    ],
+    "clamped": [
+      30,
+      10
+    ],
+    "differentPixels": 0,
+    "smallBounds": [
+      60,
+      61,
+      82,
+      73
+    ],
+    "clampedBounds": [
+      60,
+      61,
+      82,
+      73
+    ]
+  },
+  {
+    "origin": "FT",
+    "orientation": "I",
+    "y": 900,
+    "x": 688,
+    "small": [
+      30,
+      4
+    ],
+    "clamped": [
+      30,
+      10
+    ],
+    "differentPixels": 0,
+    "smallBounds": [
+      47,
+      60,
+      59,
+      82
+    ],
+    "clampedBounds": [
+      47,
+      60,
+      59,
+      82
+    ]
+  },
+  {
+    "origin": "FT",
+    "orientation": "B",
+    "y": 900,
+    "x": 992,
+    "small": [
+      30,
+      4
+    ],
+    "clamped": [
+      30,
+      10
+    ],
+    "differentPixels": 0,
+    "smallBounds": [
+      38,
+      47,
+      60,
+      59
+    ],
+    "clampedBounds": [
+      38,
+      47,
+      60,
+      59
+    ]
+  },
+  {
+    "origin": "FT",
+    "orientation": "N",
+    "y": 1100,
+    "x": 80,
+    "small": [
+      4,
+      4
+    ],
+    "clamped": [
+      10,
+      10
+    ],
+    "differentPixels": 0,
+    "smallBounds": [
+      61,
+      53,
+      73,
+      60
+    ],
+    "clampedBounds": [
+      61,
+      53,
+      73,
+      60
+    ]
+  },
+  {
+    "origin": "FT",
+    "orientation": "R",
+    "y": 1100,
+    "x": 384,
+    "small": [
+      4,
+      4
+    ],
+    "clamped": [
+      10,
+      10
+    ],
+    "differentPixels": 0,
+    "smallBounds": [
+      60,
+      61,
+      67,
+      73
+    ],
+    "clampedBounds": [
+      60,
+      61,
+      67,
+      73
+    ]
+  },
+  {
+    "origin": "FT",
+    "orientation": "I",
+    "y": 1100,
+    "x": 688,
+    "small": [
+      4,
+      4
+    ],
+    "clamped": [
+      10,
+      10
+    ],
+    "differentPixels": 0,
+    "smallBounds": [
+      47,
+      60,
+      59,
+      67
+    ],
+    "clampedBounds": [
+      47,
+      60,
+      59,
+      67
+    ]
+  },
+  {
+    "origin": "FT",
+    "orientation": "B",
+    "y": 1100,
+    "x": 992,
+    "small": [
+      4,
+      4
+    ],
+    "clamped": [
+      10,
+      10
+    ],
+    "differentPixels": 0,
+    "smallBounds": [
+      53,
+      47,
+      60,
+      59
+    ],
+    "clampedBounds": [
+      53,
+      47,
+      60,
+      59
+    ]
+  }
+]

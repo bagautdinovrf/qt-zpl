@@ -13,6 +13,15 @@ add_executable(qtzpl_benchmarks
 )
 target_link_libraries(qtzpl_benchmarks PRIVATE QtZpl::QtZpl)
 target_include_directories(qtzpl_benchmarks PRIVATE "${PROJECT_SOURCE_DIR}/src")
+
+qt_add_resources(qtzpl_benchmarks "designer_default_fixtures"
+  PREFIX "/qtzpl/benchmarks/designer-default"
+  BASE "${PROJECT_SOURCE_DIR}/tests/golden/designer-default"
+  FILES
+    "${PROJECT_SOURCE_DIR}/tests/golden/designer-default/northline.zpl"
+    "${PROJECT_SOURCE_DIR}/tests/golden/designer-default/northline-text.zpl"
+    "${PROJECT_SOURCE_DIR}/tests/golden/designer-default/northline-graphics.zpl"
+)
 target_compile_definitions(qtzpl_benchmarks PRIVATE
   QTZPL_STATIC
   QTZPL_BENCH_CORPUS_DIR="${PROJECT_SOURCE_DIR}/tests/corpus/go-zpl-demo"

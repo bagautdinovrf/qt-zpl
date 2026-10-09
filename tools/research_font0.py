@@ -49,13 +49,13 @@ def grouped_scores(report):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--probe", type=Path, default=ROOT / "build_agent_debug/examples/qtzpl_font0_probe.exe")
+    parser.add_argument("--probe", type=Path, default=ROOT / "build_agent/build_agent_debug/examples/qtzpl_font0_probe.exe")
     parser.add_argument("--qt-bin", type=Path)
     parser.add_argument("--manifest", type=Path, default=ROOT / "tests/golden/font-glyphs/manifest.json")
     parser.add_argument("--sources", type=Path, default=ROOT / "third_party/font0-native/sources.json")
-    parser.add_argument("--candidates", type=Path, default=ROOT / "build_font0_research/donors/candidates.json")
+    parser.add_argument("--candidates", type=Path, default=ROOT / "build_agent/build_font0_research/donors/candidates.json")
     parser.add_argument("--metrics", type=Path, default=ROOT / "tests/golden/font-glyphs/metrics.json")
-    parser.add_argument("--output", type=Path, default=ROOT / "build_font0_research")
+    parser.add_argument("--output", type=Path, default=ROOT / "build_agent/build_font0_research")
     parser.add_argument("--jobs", type=int, default=3)
     parser.add_argument("--force", action="store_true", help="Refit even if cached fitting inputs match")
     parser.add_argument("--select", nargs="+", help="Only fit the listed candidate IDs")

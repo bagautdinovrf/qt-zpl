@@ -38,6 +38,10 @@
 
 ## Воспроизведение без сети
 
+Все рабочие каталоги размещаются в `build_agent/`. Исторические JSON-отчёты
+в `research/` сохраняют пути на момент измерений: их прежние `build_*`
+теперь находятся в `build_agent/` с теми же именами. Замеры и SHA не изменены.
+
 Нужны Python с fontTools 4.63+, Pillow и инструментарий проекта
 (C++23, Qt 6.11+, FreeType). Библиотека QtZpl не получает Python-зависимость.
 Из корня репозитория:
@@ -47,7 +51,7 @@ py -3 -X utf8 tools/fetch_font0_sources.py --verify-only --check-fonts
 py -3 -X utf8 tools/generate_font0_native.py prepare
 py -3 tools/build_helper.py configure --config Release
 py -3 tools/build_helper.py build --config Release --target qtzpl_font0_probe
-py -3 -X utf8 tools/research_font0.py --probe build_agent_release/examples/qtzpl_font0_probe.exe --jobs 3 --refine-outlines
+py -3 -X utf8 tools/research_font0.py --probe build_agent/build_agent_release/examples/qtzpl_font0_probe.exe --jobs 3 --refine-outlines
 ```
 
 Подбор сравнивает 24 экземпляра свободных шрифтов. Для каждого глифа
@@ -56,7 +60,7 @@ py -3 -X utf8 tools/research_font0.py --probe build_agent_release/examples/qtzpl
 проверки, не участвуют в выборе донора или редактировании. Итоговый шрифт
 хранит векторные контуры; эталонные растры в него не встраиваются.
 
-`build_font0_research/summary.json` разделяет результаты обучения,
+`build_agent/build_font0_research/summary.json` разделяет результаты обучения,
 независимой проверки и старых диагностических атласов. `differentPixels=0`
 означает точное совпадение ячейки; IoU — отношение пересечения чёрных
 пикселей к их объединению, а не доля правильных букв. Пропущенный глиф
@@ -70,9 +74,9 @@ py -3 -X utf8 tools/research_font0.py --probe build_agent_release/examples/qtzpl
 Повторная сборка сохранённого результата после `prepare`, без нового подбора:
 
 ```text
-py -3 tools/generate_font0_native.py build --recipe third_party/font0-native/research/glyph-recipe.json --candidates build_font0_research/donors/candidates.json --output build_font0_research/rebuilt.ttf
-py -3 tools/extend_font0_research.py --recipe third_party/font0-native/research/glyph-recipe.json --candidates build_font0_research/donors/candidates.json --outputdir build_font0_research/extended
-py -3 tools/export_font0_glyphs.py --font third_party/font0-native/research/QtZplFontZeroExtended.ttf --recipe third_party/font0-native/research/glyph-recipe-extended.json --output build_font0_research/svg
+py -3 tools/generate_font0_native.py build --recipe third_party/font0-native/research/glyph-recipe.json --candidates build_agent/build_font0_research/donors/candidates.json --output build_agent/build_font0_research/rebuilt.ttf
+py -3 tools/extend_font0_research.py --recipe third_party/font0-native/research/glyph-recipe.json --candidates build_agent/build_font0_research/donors/candidates.json --outputdir build_agent/build_font0_research/extended
+py -3 tools/export_font0_glyphs.py --font third_party/font0-native/research/QtZplFontZeroExtended.ttf --recipe third_party/font0-native/research/glyph-recipe-extended.json --output build_agent/build_font0_research/svg
 ```
 
 SVG содержат редактируемые пути в единицах исходного контура. Обратный импорт
@@ -95,7 +99,7 @@ PNG Labelary, ZPL и манифест на каждый размер. Прове
 
 ```text
 py -3 tools/font0_size_sweep.py --check
-py -3 tools/font0_size_sweep.py --score --probe build_agent_release/examples/qtzpl_font0_probe.exe --font third_party/font0-native/research/QtZplFontZeroResearch.ttf --score-output build_font0_research/size-sweep-score --workers 3
+py -3 tools/font0_size_sweep.py --score --probe build_agent/build_agent_release/examples/qtzpl_font0_probe.exe --font third_party/font0-native/research/QtZplFontZeroResearch.ttf --score-output build_agent/build_font0_research/size-sweep-score --workers 3
 ```
 
 Сохранённый [полный отчёт 4–512](research/size-sweep.json): 755 страниц,

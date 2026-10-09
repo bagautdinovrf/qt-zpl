@@ -44,7 +44,10 @@ add a focused test, and document the remaining discrepancy.
   and run the relevant tests together. Additional intermediate verification is
   appropriate only when it is needed to diagnose a failure or de-risk a
   substantial change.
-- Use the isolated `build_agent_debug` directory for the default Debug build. Do not modify or depend on Qt
+- Keep all build directories and generated build artifacts under the repository's
+  `build_agent/` directory. Use `build_agent/build_agent_debug` for the default
+  Debug build and `build_agent/build_agent_release` for Release. Custom and static
+  builds must also stay under `build_agent/`. Do not modify or depend on Qt
   Creator build directories.
 - Do not commit generated build trees, DLLs, executables, CMake caches, or test
   output images. Versioned reference images under `tests/golden` are test input,
@@ -253,26 +256,28 @@ public demo catalog, **not** that go-zpl produces the expected raster.
 
   ```text
   py -3 tools/build_helper.py build --config Debug --target qtzpl_compare_golden
-  build_agent_debug\examples\qtzpl_compare_golden.exe ^
+  build_agent\build_agent_debug\examples\qtzpl_compare_golden.exe ^
     tests\corpus\go-zpl-demo\hello.zpl ^
     tests\golden\go-zpl-demo\hello-page-1-labelary-bitonal.png ^
-    build_agent_debug\hello-actual.png ^
-    build_agent_debug\hello-diff.png ^
+    build_agent\build_agent_debug\hello-actual.png ^
+    build_agent\build_agent_debug\hello-diff.png ^
     --width 812 --height 609 --dpi 203 --ignore-label-home
   ```
 
   The tool writes the rendered PNG, an optional red diff overlay, and prints ink
   bounds, different pixel count, and ink Jaccard. On Windows, `qtzpl_tests` may
   not emit useful stdout under CTest; use `qtzpl_compare_golden` or run
-  `qtzpl_tests -o build_agent_debug\test_results.txt -v2` when diagnosing
+  `qtzpl_tests -o build_agent\build_agent_debug\test_results.txt -v2` when diagnosing
   failures.
-- Known open discrepancy (2026-08-12): `hello.zpl` QR (`^BQN`) matches Labelary
-  pixel-perfect, but Font 0 text at `^FO` does not. With manifest options
-  (812×609, `ignoreLabelHome=true`), ink bounds are actual `(50,51 397×204)`
-  vs golden `(50,49 413×206)`, 2558 different pixels, ink Jaccard 0.826. The
-  diff is confined to the two `^A0` fields; suspect `^FO` Y anchor and Font 0
-  glyph width/stretch in `drawText` (`src/renderer.cpp`). Fix with
-  `font0TextMatchesHelloDemoGolden` and re-check `demoCorpusGoldenParity`.
+- Known open discrepancy (2026-10-09): `hello.zpl` QR (`^BQN`) matches Labelary
+  pixel-perfect, but Font 0 contours still differ. With manifest options
+  (812×609, `ignoreLabelHome=true`), both ink bounds are `(50,49 413×206)`,
+  with 805 different pixels and ink Jaccard 0.941877. Font 0 advances and
+  FO/FT anchors now have independent ruler, rotation and continuation fixtures
+  under `tests/golden/font0-metrics`, `font0-anchors` and `font0-grid-semantics`.
+  Do not compensate for remaining contour differences with a global shift.
+  Keep `font0TextMatchesHelloDemoGolden` and `demoCorpusGoldenParity` strict;
+  see `benchmarks/NORTHLINE-RASTER-2026-10-09.md` for measured limitations.
 - Preserve the current EAN-13 golden matrix: module widths 1 through 5,
   interpretation above and below, and orientations N, R, I, and B. Preserve the
   DataMatrix N/R/I/B pixel-exact golden matrix.

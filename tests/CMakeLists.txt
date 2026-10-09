@@ -135,6 +135,20 @@ foreach(group IN ITEMS retail-native-fonts font-glyphs)
 endforeach()
 
 # Correctness guards for measured optimization paths. Timings remain opt-in.
+add_executable(qtzpl_font0_raster_tests test_font0_raster.cpp)
+target_link_libraries(qtzpl_font0_raster_tests PRIVATE QtZpl::QtZpl Qt6::Test)
+qt_add_resources(qtzpl_font0_raster_tests "northline_raster" PREFIX "/northline"
+  BASE "${CMAKE_CURRENT_SOURCE_DIR}/golden/designer-default"
+  FILES golden/designer-default/northline.zpl
+        golden/designer-default/northline-graphics.zpl
+        golden/designer-default/northline-graphics-labelary-bitonal.png)
+add_test(NAME qtzpl_font0_raster_tests COMMAND qtzpl_font0_raster_tests
+  -o "${CMAKE_CURRENT_BINARY_DIR}/font0_raster_results.txt,txt")
+qt_add_resources(qtzpl_font0_raster_tests "font0_grid_semantics" PREFIX "/font0-semantics"
+  BASE "${CMAKE_CURRENT_SOURCE_DIR}/golden/font0-grid-semantics"
+  FILES golden/font0-grid-semantics/minimum-size.zpl
+        golden/font0-grid-semantics/minimum-size-labelary-bitonal.png)
+
 foreach(area IN ITEMS encoder parser renderer qr)
   add_executable(qtzpl_${area}_performance_tests test_${area}_performance.cpp)
   target_link_libraries(qtzpl_${area}_performance_tests PRIVATE QtZpl::QtZpl Qt6::Test)
@@ -197,3 +211,46 @@ add_executable(qtzpl_designer_api_tests test_designer_api.cpp)
 target_link_libraries(qtzpl_designer_api_tests PRIVATE QtZpl::QtZpl Qt6::Test)
 add_test(NAME qtzpl_designer_api_tests COMMAND qtzpl_designer_api_tests
   -o "${CMAKE_CURRENT_BINARY_DIR}/designer_api_results.txt,txt")
+
+# Original Font 0 advance rulers and independent FO/FT anchor fixtures.
+add_executable(qtzpl_font0_metrics_tests test_font0_metrics.cpp)
+target_link_libraries(qtzpl_font0_metrics_tests PRIVATE QtZpl::QtZpl Qt6::Test)
+file(GLOB font0_metric_goldens CONFIGURE_DEPENDS
+  "${CMAKE_CURRENT_SOURCE_DIR}/golden/font0-metrics/*.zpl"
+  "${CMAKE_CURRENT_SOURCE_DIR}/golden/font0-metrics/*.png"
+  "${CMAKE_CURRENT_SOURCE_DIR}/golden/font0-metrics/*.json")
+qt_add_resources(qtzpl_font0_metrics_tests "font0_metric_goldens"
+  PREFIX "/font0-metrics" BASE "${CMAKE_CURRENT_SOURCE_DIR}/golden/font0-metrics"
+  FILES ${font0_metric_goldens})
+file(GLOB font0_anchor_goldens CONFIGURE_DEPENDS
+  "${CMAKE_CURRENT_SOURCE_DIR}/golden/font0-h*-w*.zpl"
+  "${CMAKE_CURRENT_SOURCE_DIR}/golden/font0-h*-w*-labelary-bitonal.png")
+qt_add_resources(qtzpl_font0_metrics_tests "font0_anchor_goldens"
+  PREFIX "/font0-metrics" BASE "${CMAKE_CURRENT_SOURCE_DIR}/golden"
+  FILES ${font0_anchor_goldens})
+qt_add_resources(qtzpl_font0_metrics_tests "font0_metric_font"
+  PREFIX "/font0-metrics" BASE "${PROJECT_SOURCE_DIR}/resources/fonts"
+  FILES "${PROJECT_SOURCE_DIR}/resources/fonts/font0.ttf")
+add_test(NAME qtzpl_font0_metrics_tests COMMAND qtzpl_font0_metrics_tests
+  -o "${CMAKE_CURRENT_BINARY_DIR}/font0_metrics_results.txt,txt")
+
+# Direct design-data contracts: no GUI/platform font backend is required.
+add_executable(qtzpl_font0_face_tests test_font0_face.cpp)
+target_link_libraries(qtzpl_font0_face_tests PRIVATE Qt6::Core Qt6::Gui Qt6::Test ${QTZPL_FREETYPE_TARGETS})
+qt_add_resources(qtzpl_font0_face_tests "font0_face_font"
+  PREFIX "/font0-face" BASE "${PROJECT_SOURCE_DIR}/resources/fonts"
+  FILES "${PROJECT_SOURCE_DIR}/resources/fonts/font0.ttf")
+qt_add_resources(qtzpl_font0_face_tests "font0_face_coverage"
+  PREFIX "/font0-face" BASE "${CMAKE_CURRENT_SOURCE_DIR}/golden/font0-metrics"
+  FILES golden/font0-metrics/embedded-font-coverage.json)
+add_test(NAME qtzpl_font0_face_tests COMMAND qtzpl_font0_face_tests
+  -o "${CMAKE_CURRENT_BINARY_DIR}/font0_face_results.txt,txt")
+
+qt_add_resources(qtzpl_font0_raster_tests "font0_rotation_anchors"
+  PREFIX "/font0-anchors" BASE "${CMAKE_CURRENT_SOURCE_DIR}/golden/font0-anchors"
+  FILES golden/font0-anchors/anchors-h17-w17.zpl
+        golden/font0-anchors/anchors-h17-w17-labelary-bitonal.png
+        golden/font0-anchors/anchors-h64-w23.zpl
+        golden/font0-anchors/anchors-h64-w23-labelary-bitonal.png
+        golden/font0-anchors/block-anchors.zpl
+        golden/font0-anchors/block-anchors-labelary-bitonal.png)

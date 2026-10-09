@@ -17,26 +17,83 @@ import copy
 import os
 from pathlib import Path
 import shutil
+import stat
 import subprocess
 import sys
 from uuid import uuid4
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+BUILD_ROOT = PROJECT_ROOT / "build_agent"
 QT_ROOT = Path(os.environ.get("QT_ROOT", "C:/Qt"))
 QT_TOOLS = QT_ROOT / "Tools"
 
 ALL_BUILD_CONFIGS: tuple[tuple[str, Path], ...] = (
-    ("Debug", PROJECT_ROOT / "build_agent_debug"),
-    ("Release", PROJECT_ROOT / "build_agent_release"),
+    ("Debug", BUILD_ROOT / "build_agent_debug"),
+    ("Release", BUILD_ROOT / "build_agent_release"),
 )
 
 
 def build_dir_for_config(config: str) -> Path:
-    for preset_config, build_dir in ALL_BUILD_CONFIGS:
-        if preset_config == config:
-            return build_dir
-    return PROJECT_ROOT / f"build_agent_{config.casefold()}"
+    return BUILD_ROOT / f"build_agent_{config.casefold()}"
+
+
+def is_directory_link(path: Path) -> bool:
+    """Detect symlinks and Windows reparse points, including junctions."""
+    if path.is_symlink():
+        return True
+    try:
+        attributes = getattr(path.lstat(), "st_file_attributes", 0)
+    except FileNotFoundError:
+        return False
+    return bool(attributes & getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400))
+
+
+def checked_build_dir(path: Path) -> Path:
+    """Only direct, non-redirected build_* children may contain build trees."""
+    path = path.absolute()
+    resolved = path.resolve(strict=False)
+    if (BUILD_ROOT.resolve(strict=False) != BUILD_ROOT
+            or resolved.parent != BUILD_ROOT or not resolved.name.startswith("build_")
+            or resolved.name == "build_" or ".." in path.parts
+            or any(is_directory_link(part) for part in (path, *path.parents))):
+        raise ValueError(f"Build directory must be a direct build_* child of {BUILD_ROOT}: {path}")
+    if resolved.exists() and not resolved.is_dir():
+        raise ValueError(f"Build directory is not a directory: {resolved}")
+    return resolved
+
+
+def build_cache_values(build_dir: Path) -> dict[str, str]:
+    cache = build_dir / "CMakeCache.txt"
+    if not cache.is_file():
+        return {}
+    values = {}
+    for line in cache.read_text(encoding="utf-8", errors="replace").splitlines():
+        if not line or line.startswith(("#", "//")):
+            continue
+        name, separator, value = line.partition("=")
+        if separator:
+            values[name.partition(":")[0]] = value.strip()
+    return values
+
+
+def cache_needs_refresh(build_dir: Path) -> bool:
+    values = build_cache_values(build_dir)
+    previous_dir = values.get("CMAKE_CACHEFILE_DIR")
+    compiler = values.get("CMAKE_CXX_COMPILER")
+    return bool((previous_dir and Path(previous_dir).resolve() != build_dir)
+                or (compiler and not Path(compiler).exists()))
+
+
+def checked_cache_owner(build_dir: Path) -> None:
+    """Do not clean or refresh an unrelated cache or linked CMake metadata."""
+    for name in ("CMakeCache.txt", "CMakeFiles"):
+        if is_directory_link(build_dir / name):
+            raise ValueError(f"Refusing linked CMake metadata: {build_dir / name}")
+    values = build_cache_values(build_dir)
+    source = values.get("CMAKE_HOME_DIRECTORY")
+    if not source or Path(source).resolve() != PROJECT_ROOT or values.get("CMAKE_PROJECT_NAME") != "QtZpl":
+        raise ValueError(f"Refusing to remove or refresh an unrecognized QtZpl build: {build_dir}")
 
 
 def find_vcvars64() -> Path:
@@ -93,13 +150,8 @@ def capture_environment(qt_dir: Path, compiler: str) -> dict[str, str]:
 
 
 def cached_compiler(build_dir: Path) -> Path | None:
-    cache = build_dir / "CMakeCache.txt"
-    if not cache.is_file():
-        return None
-    for line in cache.read_text(encoding="utf-8", errors="ignore").splitlines():
-        if line.startswith("CMAKE_CXX_COMPILER:FILEPATH="):
-            return Path(line.split("=", 1)[1].strip())
-    return None
+    compiler = build_cache_values(build_dir).get("CMAKE_CXX_COMPILER")
+    return Path(compiler) if compiler else None
 
 
 def run(command: list[str], environment: dict[str, str]) -> None:
@@ -110,11 +162,19 @@ def run(command: list[str], environment: dict[str, str]) -> None:
 
 
 def configure(args: argparse.Namespace, environment: dict[str, str], qt_dir: Path) -> None:
+    args.build_dir = checked_build_dir(args.build_dir)
+    fresh = []
+    if (args.build_dir / "CMakeCache.txt").exists():
+        checked_cache_owner(args.build_dir)
+    if cache_needs_refresh(args.build_dir):
+        # Moved caches hold absolute binary paths. --fresh removes only CMake's
+        # cache/metadata, retaining diagnostic artifacts in the build directory.
+        fresh = ["--fresh"]
     qt_cmake = qt_dir / "bin" / "qt-cmake.bat"
     if not qt_cmake.exists():
         qt_cmake = qt_dir / "bin" / "qt-cmake"
     command = [
-        str(qt_cmake), "-S", str(PROJECT_ROOT), "-B", str(args.build_dir),
+        str(qt_cmake), *fresh, "-S", str(PROJECT_ROOT), "-B", str(args.build_dir),
         "-G", "Ninja", f"-DCMAKE_BUILD_TYPE={args.config}",
         f"-DQTZPL_BUILD_TESTS={'ON' if args.tests else 'OFF'}",
         f"-DQTZPL_BUILD_EXAMPLES={'ON' if args.examples else 'OFF'}",
@@ -127,18 +187,21 @@ def configure(args: argparse.Namespace, environment: dict[str, str], qt_dir: Pat
 
 
 def prepare_build_dir(args: argparse.Namespace) -> None:
+    args.build_dir = checked_build_dir(args.build_dir)
     if args.clean and args.build_dir.exists():
-        print(f"Removing {args.build_dir}")
-        shutil.rmtree(args.build_dir)
-    compiler = cached_compiler(args.build_dir)
-    if compiler and not compiler.exists():
-        print(f"Removing stale build directory (missing compiler: {compiler})")
-        shutil.rmtree(args.build_dir)
+        if any(args.build_dir.iterdir()):
+            checked_cache_owner(args.build_dir)
+        # Revalidate immediately before recursive deletion, even when the
+        # command-line argument was checked before toolchain initialization.
+        safe_directory = checked_build_dir(args.build_dir)
+        print(f"Removing generated build directory: {safe_directory}", flush=True)
+        shutil.rmtree(safe_directory)
 
 
 def run_action(args: argparse.Namespace, environment: dict[str, str], qt_dir: Path) -> None:
     prepare_build_dir(args)
     if (args.action in ("configure", "all", "benchmark") or args.benchmarks
+            or cache_needs_refresh(args.build_dir)
             or not (args.build_dir / "CMakeCache.txt").exists()):
         configure(args, environment, qt_dir)
     if args.action == "configure":
@@ -173,11 +236,17 @@ def run_action(args: argparse.Namespace, environment: dict[str, str], qt_dir: Pa
 def wants_all_configs(argv: list[str], action: str) -> bool:
     if action in ("install", "gallery", "configure", "test", "benchmark"):
         return False
-    return "--config" not in argv and "--build-dir" not in argv
+    return not any(argument == option or argument.startswith(option + "=")
+                   for argument in argv for option in ("--config", "--build-dir"))
 
 
 def resolve_build_dir(config: str, build_dir: Path | None) -> Path:
-    return build_dir.resolve() if build_dir is not None else build_dir_for_config(config)
+    path = build_dir if build_dir is not None else build_dir_for_config(config)
+    if not path.is_absolute():
+        path = (BUILD_ROOT / path if len(path.parts) == 1 and path.name.startswith("build_")
+                and path.name != "build_agent"
+                else PROJECT_ROOT / path)
+    return checked_build_dir(path)
 
 
 def main() -> int:
@@ -186,7 +255,8 @@ def main() -> int:
     parser.add_argument("--qt-version", default="6.11.2")
     parser.add_argument("--compiler", default="msvc2022_64")
     parser.add_argument("--config", choices=("Debug", "Release", "RelWithDebInfo"))
-    parser.add_argument("--build-dir", type=Path)
+    parser.add_argument("--build-dir", type=Path,
+                        help="Direct build_* child of build_agent; a bare build_* name is placed there")
     parser.add_argument(
         "--install-prefix",
         type=Path,
@@ -195,7 +265,7 @@ def main() -> int:
     )
     parser.add_argument("--target", default="all")
     parser.add_argument("--parallel", type=int, default=4)
-    parser.add_argument("--output-dir", type=Path, default=PROJECT_ROOT / "examples" / "rendered")
+    parser.add_argument("--output-dir", type=Path, default=BUILD_ROOT / "rendered")
     parser.add_argument("--clean", action="store_true")
     parser.add_argument("--static", dest="shared", action="store_false")
     parser.add_argument("--no-tests", dest="tests", action="store_false")
@@ -216,6 +286,11 @@ def main() -> int:
     if args.action == "install" and args.install_prefix is None:
         parser.error("install requires --install-prefix or the QTZPL_ROOT environment variable")
 
+    try:
+        args.build_dir = resolve_build_dir(args.config or "Debug", args.build_dir)
+    except ValueError as error:
+        parser.error(str(error))
+
     qt_dir = QT_ROOT / args.qt_version / args.compiler
     if not qt_dir.is_dir():
         parser.error(f"Qt kit does not exist: {qt_dir}")
@@ -224,10 +299,10 @@ def main() -> int:
 
     if wants_all_configs(sys.argv[1:], args.action):
         print("Building all preset configurations: Debug, Release")
-        for config, build_dir in ALL_BUILD_CONFIGS:
+        for config, _ in ALL_BUILD_CONFIGS:
             variant = copy.copy(args)
             variant.config = config
-            variant.build_dir = build_dir
+            variant.build_dir = resolve_build_dir(config, None)
             if args.action in ("test", "all"):
                 variant.tests = False
             run_action(variant, environment, qt_dir)

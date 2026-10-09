@@ -10,6 +10,8 @@
 #include "printer_font_raster.hpp"
 #include "retail_font.hpp"
 #include "graphic_geometry.hpp"
+#include "font0_advance_data.hpp"
+#include "font0_face.hpp"
 
 #include <QtCore/QByteArray>
 #include <QtCore/QFile>
@@ -19,7 +21,6 @@
 #include <QtGui/QPainterPath>
 #include <QtGui/QFontDatabase>
 #include <QtGui/QTransform>
-#include <QtGui/QRawFont>
 #include <algorithm>
 #include <bit>
 #include <cmath>
@@ -161,6 +162,17 @@ QSize builtInFontDefaults(QChar font) {
   }
 }
 
+QSize resolvedFontSize(const ScalableFont& font) {
+  const auto defaults=builtInFontDefaults(font.font);
+  const int height=font.height>0?font.height:defaults.height();
+  const int width=font.width>0?font.width:
+    font.font.toUpper()==u'A'?std::max(1,qRound(height/9.0))*5:defaults.width();
+  // Font 0 clamps each axis independently. The effective cell size also
+  // controls FO/FT anchors and rotation, not just the glyph outline scale.
+  if(font.font==u'0')return {std::max(10,width>0?width:height),std::max(10,height)};
+  return {width,height};
+}
+
 QImage rotateImage(const QImage& source, Orientation orientation) {
   QTransform transform;
   switch (orientation) {
@@ -195,20 +207,30 @@ struct BlockLine {
   bool paragraphEnd = false;
 };
 
-// A QRawFont owns a font engine for the current rendering thread. Keep one
-// lazily-created face per render call, including all labels in that call,
-// without sharing a mutable font engine between concurrent document renders.
+// Keep one lazily-created native face per render call, including all labels
+// in that call, without sharing mutable font data between concurrent renders.
 class RenderFonts {
 public:
-  const QRawFont& font0() {
-    if(!font0_)font0_.emplace(font0Bytes(),1000,QFont::PreferNoHinting);
+  Font0Face& font0() {
+    if(!font0_)font0_.emplace(font0Bytes());
+    if(!font0_->isValid())font0Error_=font0_->errorString();
     return *font0_;
   }
-  const QPainterPath& font0Glyph(quint32 glyph) {
-    const auto found=font0Glyphs_.constFind(glyph);
-    if(found!=font0Glyphs_.cend())return found.value();
-    return font0Glyphs_.insert(glyph,font0().pathForGlyph(glyph)).value();
+  QPainterPath font0Glyph(quint32 glyph) {
+    const auto result=font0().glyph(glyph);
+    if(result)return result->path;
+    font0Error_=result.error();return {};
   }
+  qreal font0Advance(quint32 glyph,int width) {
+    if(glyph<Font0AdvanceData::advances2048.size()) {
+      const auto advance=Font0AdvanceData::advances2048[glyph];
+      if(advance>=0)return qreal(advance)*width/Font0AdvanceData::unitsPerEm;
+    }
+    const auto result=font0().advance(glyph);
+    if(result)return *result*width/1000;
+    font0Error_=result.error();return 0;
+  }
+  QString takeFont0Error() {return std::exchange(font0Error_,{});}
   PrinterFontRaster& fontARaster() {
     if(!fontARaster_){
       static const QByteArray bytes=[] {
@@ -228,11 +250,9 @@ private:
     }();
     return bytes;
   }
-  std::optional<QRawFont> font0_;
+  std::optional<Font0Face> font0_;
   std::optional<PrinterFontRaster> fontARaster_;
-  // Keys come only from the embedded face, bounding this cache by its glyph
-  // count. Store design-space paths so all requested sizes share exact data.
-  QHash<quint32,QPainterPath> font0Glyphs_;
+  QString font0Error_;
 };
 
 // Use the font's design grid rather than QFont::setStretch. On Windows the
@@ -243,27 +263,32 @@ class Font0Metrics {
 public:
   Font0Metrics(int height,int width,RenderFonts& fontContext,FieldParameter parameter={})
     : font(fontContext.font0()),fonts(fontContext),
-      scaleX(static_cast<qreal>(width>0?width:height)/1000.0),
-      scaleY(static_cast<qreal>(height)/1000.0),fontHeight(height),parameter(parameter) {}
+      fontWidth(std::max(10,width>0?width:height)),scaleX(qreal(fontWidth)/1000),
+      scaleY(static_cast<qreal>(std::max(10,height))/1000.0),fontHeight(std::max(10,height)),parameter(parameter) {}
 
   [[nodiscard]] int ascent() const {return qFloor(font.capHeight()*scaleY);}
   [[nodiscard]] int height() const {return std::max(1,fontHeight);}
+  [[nodiscard]] int cellWidth() const {
+    return qRound(qreal(Font0AdvanceData::nominalCellAdvance2048)*fontWidth/Font0AdvanceData::unitsPerEm);
+  }
   [[nodiscard]] qreal designAdvance(const QString& text) const {
     const auto glyphs=font.glyphIndexesForString(text);
-    const auto advances=font.advancesForGlyphIndexes(glyphs,QRawFont::UseDesignMetrics);
-    qreal width=0;for(const auto& advance:advances)width+=advance.x()*scaleX;
+    qreal width=0;for(const auto glyph:glyphs)width+=fonts.font0Advance(glyph,fontWidth);
     return width+std::max<qsizetype>(0,glyphs.size()-1)*parameter.spacing;
   }
   [[nodiscard]] int horizontalAdvance(const QString& text) const {return qRound(designAdvance(text));}
   [[nodiscard]] QPainterPath outline(const QString& text) const {
     const auto glyphs=font.glyphIndexesForString(text);
-    const auto advances=font.advancesForGlyphIndexes(glyphs,QRawFont::UseDesignMetrics);
-    QPainterPath result;qreal x=parameter.direction==u'R'?-parameter.spacing:0,y=0;
+    QPainterPath result;qreal x=parameter.direction==u'R'?cellWidth():0,y=0;
     for(qsizetype i=0;i<glyphs.size();++i){
+      const qreal advance=fonts.font0Advance(glyphs[i],fontWidth)+parameter.spacing;
+      // Reverse fields start at the nominal M-cell edge. Each character's
+      // own width is subtracted before painting, including proportional text.
+      if(parameter.direction==u'R')x-=advance;
       QTransform transform;transform.translate(x,y);transform.scale(scaleX,scaleY);
       result.addPath(transform.map(fonts.font0Glyph(glyphs[i])));
       if(parameter.direction==u'V')y+=fontHeight;
-      else x+=(parameter.direction==u'R'?-1:1)*(advances[i].x()*scaleX+parameter.spacing);
+      else if(parameter.direction!=u'R')x+=advance;
     }
     return result;
   }
@@ -272,8 +297,9 @@ public:
     painter.fillPath(path,color);
   }
 private:
-  const QRawFont& font;
+  const Font0Face& font;
   RenderFonts& fonts;
+  int fontWidth;
   qreal scaleX;
   qreal scaleY;
   int fontHeight;
@@ -352,14 +378,27 @@ QPoint rotatedAnchor(QPoint anchor,QSize source,Orientation orientation) {
   }
 }
 
-// Barcode/graphic anchors lie on cell edges; glyph baseline coordinates above
-// instead refer to individual raster dots.
+// Baselines and barcode/graphic anchors lie on cell edges. Rotating an edge
+// uses the full extent, unlike rotating the centre of an individual dot.
 QPoint rotatedEdge(QPoint anchor,QSize source,Orientation orientation) {
   switch(orientation){
     case Orientation::Rotated90:return {source.height()-anchor.y(),anchor.x()};
     case Orientation::Inverted:return {source.width()-anchor.x(),source.height()-anchor.y()};
     case Orientation::BottomUp:return {anchor.y(),source.width()-anchor.x()};
     default:return anchor;
+  }
+}
+
+QPoint font0OriginBaseline(int height,int ascent,int cellWidth,int count,qreal fieldAdvance,
+                          QChar direction,Orientation orientation) {
+  // FO rotates the nominal text cell, whereas FT names the baseline directly.
+  // Vertical and reverse fields have a one-character cell across the baseline.
+  const int span=direction==u'H'?qFloor(fieldAdvance):cellWidth;
+  switch(orientation){
+    case Orientation::Rotated90:return {direction==u'V'?(count-1)*height:height-ascent,0};
+    case Orientation::Inverted:return {span,(direction==u'V'?count*height:height)-ascent};
+    case Orientation::BottomUp:return {ascent,span};
+    default:return {0,ascent};
   }
 }
 
@@ -404,7 +443,9 @@ void drawBlockTextLayout(QImage& image,State& state,const QString& text,const Re
   const QSize layoutSize(field.width(),layoutHeight);
   // ^FO positions the top-left of the rotated block. Only ^FT names a
   // baseline that must itself be rotated around the logical field origin.
-  const QPoint anchor=state.baseline?rotatedAnchor(logicalAnchor,layoutSize,orientation):QPoint{};
+  const QPoint anchor=!state.baseline?QPoint{}:
+    std::is_same_v<Metrics,Font0Metrics>?rotatedEdge(logicalAnchor,layoutSize,orientation):
+      rotatedAnchor(logicalAnchor,layoutSize,orientation);
   QPoint rasterOffset;
   if(orientation==Orientation::Rotated90)rasterOffset.rx()=layoutHeight-actualHeight;
   else if(orientation==Orientation::Inverted)rasterOffset.ry()=layoutHeight-actualHeight;
@@ -436,30 +477,40 @@ void drawFont0Text(QImage& image,State& state,const QString& text,const RenderOp
     return;
   }
 
-  QPainterPath outline=metrics.outline(text);
-  if(!state.baseline)outline.translate(0,metrics.ascent());
+  const QPainterPath outline=metrics.outline(text);
+  QPoint baselinePosition=state.position;
+  if(!state.baseline){
+    const qreal span=orientation==Orientation::Inverted||orientation==Orientation::BottomUp
+      ?metrics.designAdvance(text)+state.parameter.spacing:0;
+    const int count=state.parameter.direction==u'V'?int(text.toUcs4().size()):0;
+    baselinePosition+=font0OriginBaseline(height,metrics.ascent(),metrics.cellWidth(),count,span,
+                                          state.parameter.direction,orientation);
+  }
   const QRect bounds=outline.boundingRect().toAlignedRect();
   if(bounds.isEmpty()){state.reverse=false;state.block.reset();return;}
+  // An opaque, unrotated field wholly on the canvas can use the same aliased
+  // path directly, avoiding a temporary image, its clear, and its composition.
+  // Preserve the cropped path's local coordinates and integer placement.
+  // Keep the image path for clipping, alpha, reverse, and pixel-bound observers;
+  // direct raster-engine coordinates also stay inside Qt's +/- 2^15 range.
+  const qint64 left=qint64(baselinePosition.x())+bounds.left();
+  const qint64 top=qint64(baselinePosition.y())+bounds.top();
+  constexpr int maximumPainterCoordinate=32767;
+  if(orientation==Orientation::Normal&&!state.reverse&&!state.observation
+     &&color.rgba64().alpha()==65535&&left>=0&&top>=0
+     &&left+bounds.width()<=std::min(image.width(),maximumPainterCoordinate)
+     &&top+bounds.height()<=std::min(image.height(),maximumPainterCoordinate)){
+    QPainter painter(&image);painter.setRenderHint(QPainter::Antialiasing,false);
+    painter.translate(int(left),int(top));
+    painter.fillPath(outline.translated(-bounds.left(),-bounds.top()),color);
+    state.reverse=false;state.block.reset();return;
+  }
   QImage field(bounds.size(),QImage::Format_ARGB32_Premultiplied);
   field.fill(Qt::transparent);
   QPainter raster(&field);raster.setRenderHint(QPainter::Antialiasing,false);
   raster.fillPath(outline.translated(-bounds.left(),-bounds.top()),color);raster.end();
 
-  QPoint position=state.position;
-  if(state.baseline){
-    const QPoint baseline(-bounds.left(),-bounds.top());
-    position-=rotatedAnchor(baseline,field.size(),orientation);
-  }else{
-    // ^FO rotates the nominal character cell, retaining side bearings and
-    // descenders. It is not the top-left of the cropped ink. Glyphs may extend
-    // beyond that cell, so the raster bounds must remain independent of it.
-    switch(orientation){
-      case Orientation::Normal:position+=bounds.topLeft();break;
-      case Orientation::Rotated90:position+=QPoint(height-bounds.bottom()-1,bounds.left());break;
-      case Orientation::Inverted:position+=QPoint(qFloor(metrics.designAdvance(text))-bounds.right()-1,height-bounds.bottom()-1);break;
-      case Orientation::BottomUp:position+=QPoint(bounds.top(),qFloor(metrics.designAdvance(text))-bounds.right()-1);break;
-    }
-  }
+  const QPoint position=baselinePosition-rotatedEdge(-bounds.topLeft(),field.size(),orientation);
   field=rotateImage(field,orientation);
   observeRaster(state,position,field,false);
   QPainter painter(&image);
@@ -474,6 +525,17 @@ QPoint orientedVector(QPoint vector,Orientation orientation) {
     case Orientation::Inverted:return {-vector.x(),-vector.y()};
     case Orientation::BottomUp:return {vector.y(),-vector.x()};
     default:return vector;
+  }
+}
+
+QPoint orientedTextAdvance(qreal advance,Orientation orientation) {
+  // Quantize after orientation: negative advances need floor, not truncation
+  // or the negation of an already rounded positive width.
+  switch(orientation){
+    case Orientation::Rotated90:return {0,qFloor(advance)};
+    case Orientation::Inverted:return {qFloor(-advance),0};
+    case Orientation::BottomUp:return {0,qFloor(-advance)};
+    default:return {qFloor(advance),0};
   }
 }
 
@@ -547,10 +609,8 @@ void drawFontAText(QImage& image,State& state,const QString& text,const RenderOp
 void drawTextField(QImage& image, State& state, const QString& text, const RenderOptions& options,RenderFonts& fonts,
                    QList<Diagnostic>& diagnostics,qsizetype offset) {
   if (text.isEmpty()) { state.reverse=false; state.block.reset(); return; }
-  const QSize defaults=builtInFontDefaults(state.font.font);
-  const int height = state.font.height>0?state.font.height:defaults.height();
-  const int width = state.font.width>0?state.font.width:
-    state.font.font.toUpper()==u'A'?std::max(1,qRound(height/9.0))*5:defaults.width();
+  const QSize size=resolvedFontSize(state.font);
+  const int height=size.height(),width=size.width();
   const auto orientation=state.font.orientation==Orientation::Normal?state.fieldDirection:state.font.orientation;
   if(state.font.font==u'0'){
     drawFont0Text(image,state,text,options,height,width,orientation,fonts);
@@ -632,10 +692,8 @@ void drawTextField(QImage& image, State& state, const QString& text, const Rende
 
 void drawText(QImage& image,State& state,const QString& text,const RenderOptions& options,RenderFonts& fonts,
               QList<Diagnostic>& diagnostics,qsizetype offset) {
-  const auto defaults=builtInFontDefaults(state.font.font);
-  const int height=state.font.height>0?state.font.height:defaults.height();
-  const int width=state.font.width>0?state.font.width:
-    state.font.font.toUpper()==u'A'?std::max(1,qRound(height/9.0))*5:defaults.width();
+  const QSize size=resolvedFontSize(state.font);
+  const int height=size.height(),width=size.width();
   const qint64 nominalAdvance=2*qint64(std::max({std::min(height,32000),std::min(width,32000),1}))+std::abs(state.parameter.spacing);
   const qint64 maximumArea=nominalAdvance*std::clamp(height,1,32000)*std::min<qsizetype>(text.size(),64*1024*1024);
   bool unsafeBlock=false;
@@ -650,9 +708,16 @@ void drawText(QImage& image,State& state,const QString& text,const RenderOptions
     diagnostics.append({Severity::Error,u"text-size"_s,u"Text field exceeds the safe raster allocation limit."_s,offset,u"^FD"_s});return;
   }
   const auto orientation=state.font.orientation==Orientation::Normal?state.fieldDirection:state.font.orientation;
-  int advance=0,ascent=height;
-  if(state.font.font==u'0'){
-    Font0Metrics metrics(height,width,fonts,state.parameter);advance=metrics.horizontalAdvance(text);ascent=metrics.ascent();
+  const bool font0=state.font.font==u'0';
+  int advance=0,ascent=height,font0CellWidth=0;
+  qreal font0FieldAdvance=0;
+  if(font0){
+    Font0Metrics metrics(height,width,fonts,state.parameter);
+    const qreal designAdvance=metrics.designAdvance(text);
+    advance=qRound(designAdvance);ascent=metrics.ascent();font0CellWidth=text.isEmpty()?0:metrics.cellWidth();
+    // Continuation and field justification include the trailing FP gap;
+    // line wrapping keeps the separate inter-character-only advance.
+    font0FieldAdvance=designAdvance+(text.isEmpty()?0:state.parameter.spacing);
   }else if(state.font.font.toUpper()==u'A'){
     advance=std::max(1,qRound(width/5.0))*6*int(text.size())+state.parameter.spacing*std::max(0,int(text.size())-1);
     if(orientation==Orientation::Inverted||orientation==Orientation::BottomUp)
@@ -664,7 +729,15 @@ void drawText(QImage& image,State& state,const QString& text,const RenderOptions
   State placed=state;
   const bool right=state.justification==Justification::Right||(state.justification==Justification::Auto&&text.isRightToLeft());
   if(right){
-    if(state.baseline)placed.position-=orientedVector(QPoint(advance,0),orientation);
+    if(font0&&!state.baseline&&state.parameter.direction==u'H'&&orientation!=Orientation::Normal){
+      placed.position.rx()-=(orientation==Orientation::Rotated90||orientation==Orientation::BottomUp
+                              ?height:qFloor(font0FieldAdvance));
+    }else if(font0){
+      const bool reverseOrigin=!state.baseline&&(orientation==Orientation::Inverted||orientation==Orientation::BottomUp);
+      const qreal offset=text.isEmpty()?0:state.parameter.direction==u'V'?-height:
+        state.parameter.direction==u'R'?font0FieldAdvance-(reverseOrigin?1:2)*font0CellWidth:-font0FieldAdvance;
+      placed.position+=orientedTextAdvance(offset,orientation);
+    }else if(state.baseline)placed.position-=orientedVector(QPoint(advance,0),orientation);
     else placed.position.rx()-=(orientation==Orientation::Rotated90||orientation==Orientation::BottomUp?height:advance);
   }
   const int cursorAdvance=state.font.font.toUpper()==u'A'
@@ -672,7 +745,24 @@ void drawText(QImage& image,State& state,const QString& text,const RenderOptions
     :advance;
   const QPoint end=state.parameter.direction==u'V'?QPoint(0,height*int(text.size()))
     :QPoint(state.parameter.direction==u'R'?-cursorAdvance:cursorAdvance,0);
-  state.nextTypeset=placed.position+orientedVector(end+QPoint(0,state.baseline?0:ascent),orientation);
+  if(font0){
+    if(text.isEmpty())state.nextTypeset=state.position+orientedVector(QPoint(0,state.baseline?0:ascent),orientation);
+    else if(state.baseline){
+      const qreal cursor=font0FieldAdvance-(state.parameter.direction==u'R'?font0CellWidth:0);
+      state.nextTypeset=placed.position+(right?QPoint{}:orientedTextAdvance(cursor,orientation));
+    }else{
+      const int count=state.parameter.direction==u'V'?int(text.toUcs4().size()):0;
+      QPoint baseline=font0OriginBaseline(height,ascent,font0CellWidth,count,font0FieldAdvance,
+                                          state.parameter.direction,orientation);
+      if(state.parameter.direction==u'R'){
+        const bool inverted=orientation==Orientation::Inverted||orientation==Orientation::BottomUp;
+        if(orientation==Orientation::Inverted)baseline.rx()-=font0CellWidth;
+        if(orientation==Orientation::BottomUp)baseline.ry()-=font0CellWidth;
+        const qreal cursor=font0FieldAdvance-(inverted?(right?1:0):(right?2:1))*font0CellWidth;
+        state.nextTypeset=state.position+baseline+orientedTextAdvance(cursor,orientation);
+      }else state.nextTypeset=placed.position+baseline+(right?QPoint{}:orientedTextAdvance(font0FieldAdvance,orientation));
+    }
+  }else state.nextTypeset=placed.position+orientedVector(end+QPoint(0,state.baseline?0:ascent),orientation);
   if(state.observation&&(!state.block||state.block->width<=0)){
     const int logicalWidth=state.parameter.direction==u'V'?(width>0?width:height):std::abs(advance);
     const int logicalHeight=state.parameter.direction==u'V'?height*int(text.toUcs4().size()):height;
@@ -1655,6 +1745,8 @@ std::expected<QImage, RenderError> interpretLabel(const Label& label, int index,
         }else drawGraphicField(image,position,*decoded,options,state);
       }
     },command.payload);
+    if(const auto fontError=fonts.takeFont0Error();!fontError.isEmpty())
+      diagnostics.append({Severity::Error,u"font0-outline"_s,fontError,command.offset,command.source});
     if(options.stopToken.stop_requested())return std::unexpected(RenderError{u"operation-cancelled"_s,u"The operation was cancelled."_s,index});
     bool error=false,unsupported=kind==FieldKind::Unknown;
     for(qsizetype i=firstDiagnostic;i<diagnostics.size();++i){

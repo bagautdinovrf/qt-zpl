@@ -1,0 +1,33 @@
+{
+  "source": "Labelary API",
+  "url": "https://api.labelary.com/v1/printers/8dpmm/labels/2.838669951x9.932266010/0/",
+  "method": "POST",
+  "requestHeaders": {
+    "Accept": "image/png",
+    "Content-Type": "application/x-www-form-urlencoded",
+    "X-Quality": "Bitonal"
+  },
+  "size": [
+    576,
+    2016
+  ],
+  "validation": "PNG signature, dimensions, bit depth 1, grayscale color type 0, all chunk CRCs. Original response bytes.",
+  "responses": [
+    {
+      "name": "anchors-h17-w17",
+      "zplSha256": "a30bd6db07d2d12f9669ab8c367a8ec601af19e628d3e12b8223c63efe14c47d",
+      "pngSha256": "d1044328fc265624cc842009914caeca7382aa85d863fb7ee425f69d02caf1d6",
+      "retrievedUtc": "2026-10-09T15:59:15.350091+00:00",
+      "responseDate": "Fri, 09 Oct 2026 15:59:15 GMT",
+      "warnings": ""
+    },
+    {
+      "name": "anchors-h64-w23",
+      "zplSha256": "f38305539317a18e4560beb278e1e8db2dd30dd9f3c91aad012bf6dacc15a350",
+      "pngSha256": "91d484cfb68c7ca8aa0e1c62e93a5cf9c6dfbddae04527100597ba3a948476f7",
+      "retrievedUtc": "2026-10-09T15:59:16.986003+00:00",
+      "responseDate": "Fri, 09 Oct 2026 15:59:17 GMT",
+      "warnings": ""
+    }
+  ]
+}

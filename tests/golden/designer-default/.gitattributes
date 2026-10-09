@@ -1,0 +1,2 @@
+# Preserve the request bytes and provenance hashes across Windows checkouts.
+*.zpl -text

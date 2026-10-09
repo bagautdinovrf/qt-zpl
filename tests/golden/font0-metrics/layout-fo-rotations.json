@@ -1,0 +1,342 @@
+{
+  "cases": [
+    {
+      "anchor": "FO",
+      "orientation": "R",
+      "direction": "H",
+      "justification": 0,
+      "cell": [
+        0,
+        0,
+        800,
+        350
+      ],
+      "anchorX": 400,
+      "anchorY": 170,
+      "text": "Ёжик",
+      "fontHeight": 26,
+      "fontWidth": 17,
+      "spacing": 3
+    },
+    {
+      "anchor": "FO",
+      "orientation": "R",
+      "direction": "H",
+      "justification": 1,
+      "cell": [
+        800,
+        0,
+        800,
+        350
+      ],
+      "anchorX": 1200,
+      "anchorY": 170,
+      "text": "Балтк",
+      "fontHeight": 26,
+      "fontWidth": 17,
+      "spacing": 3
+    },
+    {
+      "anchor": "FO",
+      "orientation": "R",
+      "direction": "V",
+      "justification": 0,
+      "cell": [
+        1600,
+        0,
+        800,
+        350
+      ],
+      "anchorX": 2000,
+      "anchorY": 170,
+      "text": "Milk",
+      "fontHeight": 26,
+      "fontWidth": 17,
+      "spacing": 3
+    },
+    {
+      "anchor": "FO",
+      "orientation": "R",
+      "direction": "V",
+      "justification": 1,
+      "cell": [
+        0,
+        350,
+        800,
+        350
+      ],
+      "anchorX": 400,
+      "anchorY": 520,
+      "text": "Тест",
+      "fontHeight": 26,
+      "fontWidth": 17,
+      "spacing": 3
+    },
+    {
+      "anchor": "FO",
+      "orientation": "R",
+      "direction": "R",
+      "justification": 0,
+      "cell": [
+        800,
+        350,
+        800,
+        350
+      ],
+      "anchorX": 1200,
+      "anchorY": 520,
+      "text": "Ёжик",
+      "fontHeight": 26,
+      "fontWidth": 17,
+      "spacing": 3
+    },
+    {
+      "anchor": "FO",
+      "orientation": "R",
+      "direction": "R",
+      "justification": 1,
+      "cell": [
+        1600,
+        350,
+        800,
+        350
+      ],
+      "anchorX": 2000,
+      "anchorY": 520,
+      "text": "Балтк",
+      "fontHeight": 26,
+      "fontWidth": 17,
+      "spacing": 3
+    },
+    {
+      "anchor": "FO",
+      "orientation": "I",
+      "direction": "H",
+      "justification": 0,
+      "cell": [
+        0,
+        700,
+        800,
+        350
+      ],
+      "anchorX": 400,
+      "anchorY": 870,
+      "text": "Milk",
+      "fontHeight": 26,
+      "fontWidth": 17,
+      "spacing": 3
+    },
+    {
+      "anchor": "FO",
+      "orientation": "I",
+      "direction": "H",
+      "justification": 1,
+      "cell": [
+        800,
+        700,
+        800,
+        350
+      ],
+      "anchorX": 1200,
+      "anchorY": 870,
+      "text": "Тест",
+      "fontHeight": 26,
+      "fontWidth": 17,
+      "spacing": 3
+    },
+    {
+      "anchor": "FO",
+      "orientation": "I",
+      "direction": "V",
+      "justification": 0,
+      "cell": [
+        1600,
+        700,
+        800,
+        350
+      ],
+      "anchorX": 2000,
+      "anchorY": 870,
+      "text": "Ёжик",
+      "fontHeight": 26,
+      "fontWidth": 17,
+      "spacing": 3
+    },
+    {
+      "anchor": "FO",
+      "orientation": "I",
+      "direction": "V",
+      "justification": 1,
+      "cell": [
+        0,
+        1050,
+        800,
+        350
+      ],
+      "anchorX": 400,
+      "anchorY": 1220,
+      "text": "Балтк",
+      "fontHeight": 26,
+      "fontWidth": 17,
+      "spacing": 3
+    },
+    {
+      "anchor": "FO",
+      "orientation": "I",
+      "direction": "R",
+      "justification": 0,
+      "cell": [
+        800,
+        1050,
+        800,
+        350
+      ],
+      "anchorX": 1200,
+      "anchorY": 1220,
+      "text": "Milk",
+      "fontHeight": 26,
+      "fontWidth": 17,
+      "spacing": 3
+    },
+    {
+      "anchor": "FO",
+      "orientation": "I",
+      "direction": "R",
+      "justification": 1,
+      "cell": [
+        1600,
+        1050,
+        800,
+        350
+      ],
+      "anchorX": 2000,
+      "anchorY": 1220,
+      "text": "Тест",
+      "fontHeight": 26,
+      "fontWidth": 17,
+      "spacing": 3
+    },
+    {
+      "anchor": "FO",
+      "orientation": "B",
+      "direction": "H",
+      "justification": 0,
+      "cell": [
+        0,
+        1400,
+        800,
+        350
+      ],
+      "anchorX": 400,
+      "anchorY": 1570,
+      "text": "Ёжик",
+      "fontHeight": 26,
+      "fontWidth": 17,
+      "spacing": 3
+    },
+    {
+      "anchor": "FO",
+      "orientation": "B",
+      "direction": "H",
+      "justification": 1,
+      "cell": [
+        800,
+        1400,
+        800,
+        350
+      ],
+      "anchorX": 1200,
+      "anchorY": 1570,
+      "text": "Балтк",
+      "fontHeight": 26,
+      "fontWidth": 17,
+      "spacing": 3
+    },
+    {
+      "anchor": "FO",
+      "orientation": "B",
+      "direction": "V",
+      "justification": 0,
+      "cell": [
+        1600,
+        1400,
+        800,
+        350
+      ],
+      "anchorX": 2000,
+      "anchorY": 1570,
+      "text": "Milk",
+      "fontHeight": 26,
+      "fontWidth": 17,
+      "spacing": 3
+    },
+    {
+      "anchor": "FO",
+      "orientation": "B",
+      "direction": "V",
+      "justification": 1,
+      "cell": [
+        0,
+        1750,
+        800,
+        350
+      ],
+      "anchorX": 400,
+      "anchorY": 1920,
+      "text": "Тест",
+      "fontHeight": 26,
+      "fontWidth": 17,
+      "spacing": 3
+    },
+    {
+      "anchor": "FO",
+      "orientation": "B",
+      "direction": "R",
+      "justification": 0,
+      "cell": [
+        800,
+        1750,
+        800,
+        350
+      ],
+      "anchorX": 1200,
+      "anchorY": 1920,
+      "text": "Ёжик",
+      "fontHeight": 26,
+      "fontWidth": 17,
+      "spacing": 3
+    },
+    {
+      "anchor": "FO",
+      "orientation": "B",
+      "direction": "R",
+      "justification": 1,
+      "cell": [
+        1600,
+        1750,
+        800,
+        350
+      ],
+      "anchorX": 2000,
+      "anchorY": 1920,
+      "text": "Балтк",
+      "fontHeight": 26,
+      "fontWidth": 17,
+      "spacing": 3
+    }
+  ],
+  "response": {
+    "url": "https://api.labelary.com/v1/printers/8dpmm/labels/11.823891626x10.346059113/0/",
+    "headers": {
+      "Accept": "image/png",
+      "Content-Type": "application/x-www-form-urlencoded",
+      "X-Quality": "Bitonal",
+      "X-Linter": "On"
+    },
+    "retrievedUtc": "2026-10-09T16:12:31.967790+00:00",
+    "responseDate": "Fri, 09 Oct 2026 16:12:32 GMT",
+    "warnings": "",
+    "pngSha256": "df0ce80c0cedb1bea6ae703f84e1f3b9babf9fe5bbeccb75c78a01ce26cd0078",
+    "zplSha256": "eedbab727812bf80d49157fa07845b3786315325096b87e30022f27968e9a9a9"
+  }
+}

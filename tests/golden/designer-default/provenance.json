@@ -1,0 +1,57 @@
+{
+  "fixtureSource": {
+    "repository": "qt-zpl-designer",
+    "commit": "5eb2b5dd7ae83f7ddd18e51a8876069641aaa60f",
+    "constructor": "src/core/design_document.cpp:sampleDocument()",
+    "export": "toZpl(sampleDocument())",
+    "exportedFile": "sample-default.zpl",
+    "exportedSha256": "3361514d69bc200bfb794291c562a0cc4ce3b272ff846abea7418e8822f8b4c4",
+    "modification": "Removed only the leading ^FXQTZPL_EDITOR_V2 metadata comment through its ^FS; all other bytes unchanged."
+  },
+  "source": "Labelary API",
+  "url": "https://api.labelary.com/v1/printers/8dpmm/labels/3.937192118x3.937192118/0/",
+  "method": "POST",
+  "requestHeaders": {
+    "Accept": "image/png",
+    "Content-Type": "application/x-www-form-urlencoded",
+    "X-Quality": "Bitonal",
+    "X-Linter": "On"
+  },
+  "renderOptions": {
+    "width": 799,
+    "height": 799,
+    "dpi": 203
+  },
+  "imageValidation": "PNG signature, 799x799 IHDR, bit depth 1, grayscale color type 0, every chunk CRC. Stored unmodified response bytes.",
+  "textDerivative": "The 26 complete ^FO...^A0...^FD...^FS lines in their original order, plus unchanged ^XA/^CI28/^PW/^LL/^LH/^XZ. Other fields, including the black backing for reverse B1, are omitted; its ^FR remains unchanged.",
+  "responses": [
+    {
+      "name": "northline",
+      "retrievedUtc": "2026-10-09T15:30:44.192863+00:00",
+      "zplSha256": "b4031f19658911ab36dc9c90b4e412c454c7564f9d9f241721846a54e28698d1",
+      "pngSha256": "38c2ef0e4c7f0b99770562facb51ea59418f0f3647343e365a5d1adf9bf67221",
+      "pngBytes": 14456,
+      "warnings": "75|1|^A|3|Value 0 is less than minimum value 1 and was ignored|113|1|^A|3|Value 0 is less than minimum value 1 and was ignored|169|1|^A|3|Value 0 is less than minimum value 1 and was ignored|253|1|^A|3|Value 0 is less than minimum value 1 and was ignored|285|1|^A|3|Value 0 is less than minimum value 1 and was ignored|6628|1|^A|3|Value 0 is less than minimum value 1 and was ignored|6688|1|^A|3|Value 0 is less than minimum value 1 and was ignored|6734|1|^A|3|Value 0 is less than minimum value 1 and was ignored|6805|1|^A|3|Value 0 is less than minimum value 1 and was ignored|6897|1|^A|3|Value 0 is less than minimum value 1 and was ignored|6955|1|^A|3|Value 0 is less than minimum value 1 and was ignored|7000|1|^A|3|Value 0 is less than minimum value 1 and was ignored|7081|1|^A|3|Value 0 is less than minimum value 1 and was ignored|7170|1|^A|3|Value 0 is less than minimum value 1 and was ignored|7230|1|^A|3|Value 0 is less than minimum value 1 and was ignored|7281|1|^A|3|Value 0 is less than minimum value 1 and was ignored|7348|1|^A|3|Value 0 is less than minimum value 1 and was ignored|27917|1|^A|3|Value 0 is less than minimum value 1 and was ignored|27954|1|^A|3|Value 0 is less than minimum value 1 and was ignored|27991|1|^A|3|Value 0 is less than minimum value 1 and was ignored",
+      "labelaryResponseDate": "Fri, 09 Oct 2026 15:30:44 GMT"
+    },
+    {
+      "name": "northline-text",
+      "retrievedUtc": "2026-10-09T15:30:45.812281+00:00",
+      "zplSha256": "1712e852b77ad55618c4ae15eecd97b07448d190e26f6c258d049d64024f5e2b",
+      "pngSha256": "b1602d9e9570bc29585aa2c34b3dfff8c5890e1f0b91a0de5ef3757c74a94d06",
+      "pngBytes": 8446,
+      "warnings": "47|1|^A|3|Value 0 is less than minimum value 1 and was ignored|85|1|^A|3|Value 0 is less than minimum value 1 and was ignored|141|1|^A|3|Value 0 is less than minimum value 1 and was ignored|197|1|^A|3|Value 0 is less than minimum value 1 and was ignored|229|1|^A|3|Value 0 is less than minimum value 1 and was ignored|274|1|^A|3|Value 0 is less than minimum value 1 and was ignored|334|1|^A|3|Value 0 is less than minimum value 1 and was ignored|380|1|^A|3|Value 0 is less than minimum value 1 and was ignored|451|1|^A|3|Value 0 is less than minimum value 1 and was ignored|488|1|^A|3|Value 0 is less than minimum value 1 and was ignored|546|1|^A|3|Value 0 is less than minimum value 1 and was ignored|591|1|^A|3|Value 0 is less than minimum value 1 and was ignored|672|1|^A|3|Value 0 is less than minimum value 1 and was ignored|734|1|^A|3|Value 0 is less than minimum value 1 and was ignored|794|1|^A|3|Value 0 is less than minimum value 1 and was ignored|845|1|^A|3|Value 0 is less than minimum value 1 and was ignored|912|1|^A|3|Value 0 is less than minimum value 1 and was ignored|972|1|^A|3|Value 0 is less than minimum value 1 and was ignored|1009|1|^A|3|Value 0 is less than minimum value 1 and was ignored|1046|1|^A|3|Value 0 is less than minimum value 1 and was ignored",
+      "labelaryResponseDate": "Fri, 09 Oct 2026 15:30:45 GMT"
+    },
+    {
+      "name": "northline-graphics",
+      "retrievedUtc": "2026-10-09T15:32:09.493362+00:00",
+      "zplSha256": "3ca4764f3dab9127f06d0bdcc530b2d28706434a110add5f2ef626d5c7b8f9f2",
+      "pngSha256": "c85cab0b5ca9bcda1e218be53df279e460bbe5ff903dc154634c69ea0858521f",
+      "pngBytes": 7311,
+      "warnings": "",
+      "labelaryResponseDate": "Fri, 09 Oct 2026 15:32:09 GMT"
+    }
+  ],
+  "graphicsDerivative": "Complete ^FO...^GB...^FS and ^FO...^GFA...^FS lines in their original order, plus unchanged ^XA/^CI28/^PW/^LL/^LH/^XZ. Text and all three barcodes are omitted."
+}

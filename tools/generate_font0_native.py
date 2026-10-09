@@ -260,7 +260,7 @@ def main():
     sub = parser.add_subparsers(dest="command", required=True)
     p = sub.add_parser("prepare", help="Normalize licensed donors into a common, unhinted design grid")
     p.add_argument("--manifest", type=Path, default=ATLAS_MANIFEST)
-    p.add_argument("--output", type=Path, default=ROOT / "build_font0_research/donors")
+    p.add_argument("--output", type=Path, default=ROOT / "build_agent/build_font0_research/donors")
     p.add_argument("--weights", type=float, nargs="+", default=[600, 700, 800])
     p.add_argument("--semantic-mappings", type=Path, default=SEMANTIC_MAPPINGS)
     p.set_defaults(run=prepare)

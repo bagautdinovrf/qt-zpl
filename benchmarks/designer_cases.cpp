@@ -3,6 +3,7 @@
 #include <QtZpl/qtzpl.hpp>
 #include <QtCore/QCryptographicHash>
 #include <QtCore/QDataStream>
+#include <QtCore/QFile>
 #include <QtCore/QIODevice>
 #include <memory>
 #include <stdexcept>
@@ -83,9 +84,48 @@ QString renderFingerprint(qsizetype outputCount, const QImage& selected,
     }
   });
 }
+
+void addNorthlineCases(Cases& cases) {
+  for (const auto& name : {u"northline"_s, u"northline-text"_s, u"northline-graphics"_s}) {
+    QFile file(u":/qtzpl/benchmarks/designer-default/" + name + u".zpl");
+    if (!file.open(QIODevice::ReadOnly)) fail(file.errorString());
+    const auto bytes = file.readAll();
+    const auto source = QString::fromUtf8(bytes);
+    if (source.toUtf8() != bytes) fail(u"Default Designer fixture is not valid UTF-8"_s);
+    const auto parsed = QtZpl::parse(source);
+    noDiagnostics(checked(parsed).diagnostics());
+    const auto document = std::make_shared<const QtZpl::Document>(*parsed);
+    const QtZpl::RenderOptions options{.dpi = 203, .width = 799, .height = 799};
+    const auto rendered = QtZpl::renderLabel(*document, 0, options);
+    noDiagnostics(checked(rendered).diagnostics);
+    const auto pipeline = QtZpl::render(source, {}, options);
+    noDiagnostics(checked(pipeline).diagnostics);
+    if (document->labels().size() != 1 || rendered->image.size() != QSize(799, 799)
+        || pipeline->labels.size() != 1 || pipeline->labels.front() != rendered->image)
+      fail(u"Default Designer fixture render validation failed: " + name);
+    const auto pixels = renderFingerprint(1, rendered->image);
+    cases.push_back({.name = u"designer/" + name + u"-render", .category = u"designer"_s,
+      .description = u"Render the 799x799 Designer NORTHLINE fixture from a parsed snapshot; full pixel fingerprint outside timing"_s,
+      .inputBytes = bytes.size(), .unit = u"label"_s,
+      .run = [document, options] {
+        const auto result = QtZpl::renderLabel(*document, 0, options);
+        return imageChecksum(checked(result).image);
+      },
+      .outputFingerprint = pixels});
+    cases.push_back({.name = u"designer/" + name + u"-end-to-end", .category = u"designer"_s,
+      .description = u"Parse and render the 799x799 Designer NORTHLINE fixture; full pixel fingerprint outside timing"_s,
+      .inputBytes = bytes.size(), .unit = u"label"_s,
+      .run = [source, options] {
+        const auto result = QtZpl::render(source, {}, options);
+        return imageChecksum(checked(result).labels.front());
+      },
+      .outputFingerprint = pixels});
+  }
+}
 }
 
 void addDesignerCases(Cases& cases) {
+  addNorthlineCases(cases);
   constexpr int pageCount = 8;
   constexpr int selectedPage = 5;
   QString source;

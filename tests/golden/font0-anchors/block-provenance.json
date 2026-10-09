@@ -1,0 +1,245 @@
+{
+  "source": "Labelary API",
+  "url": "https://api.labelary.com/v1/printers/8dpmm/labels/7.567733990x5.676108374/0/",
+  "method": "POST",
+  "requestHeaders": {
+    "Accept": "image/png",
+    "Content-Type": "application/x-www-form-urlencoded",
+    "X-Quality": "Bitonal"
+  },
+  "retrievedUtc": "2026-10-09T16:03:14.826010+00:00",
+  "responseDate": "Fri, 09 Oct 2026 16:03:14 GMT",
+  "zplSha256": "eb855ce339b72b8982756b1c7609aa7266103e4a4e6a9826269b432d24f553d0",
+  "pngSha256": "1a3de8f0a58baf8c5d77836ec99644985110062752ff88a9203b1ab94f4f3f9b",
+  "validation": "PNG signature, exact dimensions, grayscale bit depth 1, every chunk CRC; unmodified response.",
+  "cases": [
+    {
+      "row": 0,
+      "orientation": "N",
+      "height": 17,
+      "width": 17,
+      "maxLines": 1,
+      "lineSpacing": 0,
+      "text": "HIETgЖя",
+      "cell": [
+        0,
+        0,
+        384,
+        384
+      ],
+      "origin": [
+        192,
+        192
+      ]
+    },
+    {
+      "row": 0,
+      "orientation": "R",
+      "height": 17,
+      "width": 17,
+      "maxLines": 1,
+      "lineSpacing": 0,
+      "text": "HIETgЖя",
+      "cell": [
+        384,
+        0,
+        384,
+        384
+      ],
+      "origin": [
+        576,
+        192
+      ]
+    },
+    {
+      "row": 0,
+      "orientation": "I",
+      "height": 17,
+      "width": 17,
+      "maxLines": 1,
+      "lineSpacing": 0,
+      "text": "HIETgЖя",
+      "cell": [
+        768,
+        0,
+        384,
+        384
+      ],
+      "origin": [
+        960,
+        192
+      ]
+    },
+    {
+      "row": 0,
+      "orientation": "B",
+      "height": 17,
+      "width": 17,
+      "maxLines": 1,
+      "lineSpacing": 0,
+      "text": "HIETgЖя",
+      "cell": [
+        1152,
+        0,
+        384,
+        384
+      ],
+      "origin": [
+        1344,
+        192
+      ]
+    },
+    {
+      "row": 1,
+      "orientation": "N",
+      "height": 17,
+      "width": 17,
+      "maxLines": 3,
+      "lineSpacing": 2,
+      "text": "HIET\\&gЖя",
+      "cell": [
+        0,
+        384,
+        384,
+        384
+      ],
+      "origin": [
+        192,
+        576
+      ]
+    },
+    {
+      "row": 1,
+      "orientation": "R",
+      "height": 17,
+      "width": 17,
+      "maxLines": 3,
+      "lineSpacing": 2,
+      "text": "HIET\\&gЖя",
+      "cell": [
+        384,
+        384,
+        384,
+        384
+      ],
+      "origin": [
+        576,
+        576
+      ]
+    },
+    {
+      "row": 1,
+      "orientation": "I",
+      "height": 17,
+      "width": 17,
+      "maxLines": 3,
+      "lineSpacing": 2,
+      "text": "HIET\\&gЖя",
+      "cell": [
+        768,
+        384,
+        384,
+        384
+      ],
+      "origin": [
+        960,
+        576
+      ]
+    },
+    {
+      "row": 1,
+      "orientation": "B",
+      "height": 17,
+      "width": 17,
+      "maxLines": 3,
+      "lineSpacing": 2,
+      "text": "HIET\\&gЖя",
+      "cell": [
+        1152,
+        384,
+        384,
+        384
+      ],
+      "origin": [
+        1344,
+        576
+      ]
+    },
+    {
+      "row": 2,
+      "orientation": "N",
+      "height": 64,
+      "width": 23,
+      "maxLines": 3,
+      "lineSpacing": 3,
+      "text": "HIET\\&gЖя",
+      "cell": [
+        0,
+        768,
+        384,
+        384
+      ],
+      "origin": [
+        192,
+        960
+      ]
+    },
+    {
+      "row": 2,
+      "orientation": "R",
+      "height": 64,
+      "width": 23,
+      "maxLines": 3,
+      "lineSpacing": 3,
+      "text": "HIET\\&gЖя",
+      "cell": [
+        384,
+        768,
+        384,
+        384
+      ],
+      "origin": [
+        576,
+        960
+      ]
+    },
+    {
+      "row": 2,
+      "orientation": "I",
+      "height": 64,
+      "width": 23,
+      "maxLines": 3,
+      "lineSpacing": 3,
+      "text": "HIET\\&gЖя",
+      "cell": [
+        768,
+        768,
+        384,
+        384
+      ],
+      "origin": [
+        960,
+        960
+      ]
+    },
+    {
+      "row": 2,
+      "orientation": "B",
+      "height": 64,
+      "width": 23,
+      "maxLines": 3,
+      "lineSpacing": 3,
+      "text": "HIET\\&gЖя",
+      "cell": [
+        1152,
+        768,
+        384,
+        384
+      ],
+      "origin": [
+        1344,
+        960
+      ]
+    }
+  ]
+}
