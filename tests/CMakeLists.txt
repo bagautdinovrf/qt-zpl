@@ -182,3 +182,8 @@ if(QTZPL_BUILD_FONT0_SWEEP_TESTS)
       -o "${CMAKE_CURRENT_BINARY_DIR}/font0_sweep_references_results.txt,txt")
   set_tests_properties(qtzpl_font0_sweep_references_tests PROPERTIES LABELS "font0-sweep;reference-integrity")
 endif()
+
+add_executable(qtzpl_field_data_tests test_field_data.cpp)
+target_link_libraries(qtzpl_field_data_tests PRIVATE QtZpl::QtZpl Qt6::Test)
+add_test(NAME qtzpl_field_data_tests COMMAND qtzpl_field_data_tests
+  -o "${CMAKE_CURRENT_BINARY_DIR}/field_data_results.txt,txt")

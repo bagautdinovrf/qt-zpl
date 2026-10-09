@@ -31,7 +31,17 @@ struct FieldSeparator {};
 struct FieldReverse {};
 struct FieldOrigin { int x = 0; int y = 0; Justification justification = Justification::Left; bool useDefaultJustification = false; };
 struct FieldTypeset { int x = 0; int y = 0; Justification justification = Justification::Left; bool usePreviousX = false; bool usePreviousY = false; bool useDefaultJustification = false; };
-struct FieldData { QString data; };
+struct FieldData {
+  // Text after ^FH decoding (Unicode for ^CI28). Invalid UTF-8 keeps the
+  // original field spelling and produces invalid-field-encoding.
+  QString data;
+  // Exact bytes after ^FH, before barcode-specific control sequences.
+  // ^CI28 encodes literal text as UTF-8; other character sets retain the
+  // existing one-byte convention. nullopt means the text cannot be represented
+  // without loss. An engaged empty array is a valid empty field. Invalid UTF-8
+  // can still have exact bytes for a binary barcode; never re-encode data.
+  std::optional<QByteArray> bytes;
+};
 struct FieldDirection { Orientation orientation = Orientation::Normal; Justification justification = Justification::Left; };
 struct FieldBlock { int width = 0; int maxLines = 1; int lineSpacing = 0; Justification justification = Justification::Left; int hangingIndent = 0; };
 struct FieldEncoding { QString parameters; };

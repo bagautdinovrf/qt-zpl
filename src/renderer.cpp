@@ -883,10 +883,9 @@ void drawCode39(QImage& image, State& state, const Barcode& barcode, const QStri
   QPainter target(&image);target.drawImage(position,symbol);
 }
 
-QByteArray decodeDataMatrixData(const QString& text, QChar escape, bool gs1) {
+QByteArray decodeDataMatrixData(const QByteArray& input, char marker, bool gs1) {
   QByteArray output;
-  const auto input=text.toLatin1(); const char marker=escape.toLatin1();
-  for(int i=0;i<input.size();++i) {
+  for(qsizetype i=0;i<input.size();++i) {
     if(input[i]!=marker||i+1>=input.size()){output.append(input[i]);continue;}
     const char next=input[i+1];
     if(next==marker){output.append(marker);++i;}
@@ -908,7 +907,7 @@ bool validateBarcodeNumbers(const Barcode& barcode,std::initializer_list<int> in
   return true;
 }
 
-void drawDataMatrix(QImage& image,State& state,const Barcode& barcode,const QString& text,const RenderOptions& options,QList<Diagnostic>& diagnostics) {
+void drawDataMatrix(QImage& image,State& state,const Barcode& barcode,const QByteArray& text,const RenderOptions& options,QList<Diagnostic>& diagnostics) {
   if(!validateBarcodeNumbers(barcode,{1,2,3,4,5,7},diagnostics))return;
   if(barcode.parameters.size()>2&&!barcode.parameters[2].isEmpty()&&barcode.parameters[2].toInt()!=200){
     diagnostics.append({Severity::Error,u"datamatrix-quality"_s,u"Only DataMatrix ECC 200 is implemented; no symbol was rendered."_s,-1,u"^BX"_s});return;
@@ -922,11 +921,12 @@ void drawDataMatrix(QImage& image,State& state,const Barcode& barcode,const QStr
   if(ratio!=1&&ratio!=2){diagnostics.append({Severity::Error,u"datamatrix-ratio"_s,u"DataMatrix aspect ratio must be 1 (square) or 2 (rectangular)."_s,-1,u"^BX"_s});return;}
   const bool rectangular=ratio==2;
   if(text.size()>16384){diagnostics.append({Severity::Error,u"datamatrix-encode"_s,u"DataMatrix field exceeds the maximum capacity, including control escapes."_s,-1,u"^BX"_s});return;}
-  if(std::ranges::any_of(text,[](QChar c){return c.unicode()>255;})||escape.unicode()>255){
-    diagnostics.append({Severity::Error,u"datamatrix-encoding"_s,u"DataMatrix requires explicit byte data; use ^FH for binary fields."_s,-1,u"^BX"_s});return;
+  if(escape.unicode()>255){
+    diagnostics.append({Severity::Error,u"datamatrix-encoding"_s,u"DataMatrix requires a single-byte escape character."_s,-1,u"^BX"_s});return;
   }
-  const auto decoded=decodeDataMatrixData(text,escape,gs1);
-  if(gs1&&!decoded.contains(char(0x1d))&&(text.contains(u"\\u001D"_s,Qt::CaseInsensitive)||text.contains(u"\\x1D"_s,Qt::CaseInsensitive)))
+  const auto decoded=decodeDataMatrixData(text,static_cast<char>(escape.unicode()),gs1);
+  const auto lowercase=gs1&&!decoded.contains(char(0x1d))?text.toLower():QByteArray{};
+  if(lowercase.contains("\\u001d")||lowercase.contains("\\x1d"))
     diagnostics.append({Severity::Warning,u"gs1-datamatrix-separator"_s,
       u"GS1 DataMatrix field data contains a literal \\\\u001D or \\\\x1D text sequence; use byte 0x1D, |d029, or ^FH hex instead of an escape spelling."_s,-1,u"^BX"_s});
   auto matrix=BarcodeEncoders::dataMatrix(decoded,gs1,rows,columns,rectangular);
@@ -947,7 +947,7 @@ int qrMagnification(const Barcode& barcode) {
   return valid&&requested>0?std::min(requested,100):2;
 }
 
-void drawQrCode(QImage& image,State& state,const Barcode& barcode,const QString& fieldData,const RenderOptions& options,QList<Diagnostic>& diagnostics) {
+void drawQrCode(QImage& image,State& state,const Barcode& barcode,const QByteArray& fieldData,const RenderOptions& options,QList<Diagnostic>& diagnostics) {
   const int model=barcode.parameters.size()>1&&!barcode.parameters[1].isEmpty()
     ? barcode.parameters[1].toInt() : 2;
   if(model!=2){
@@ -956,21 +956,21 @@ void drawQrCode(QImage& image,State& state,const Barcode& barcode,const QString&
     return;
   }
   QChar errorCorrection=u'M';
-  QString data=fieldData;
-  if(data.size()>=3&&data[2]==u','){
-    errorCorrection=data[0].toUpper();
-    const QChar inputMode=data[1].toUpper();
+  QByteArray data=fieldData;
+  if(data.size()>=3&&data[2]==','){
+    errorCorrection=QChar::fromLatin1(data[0]).toUpper();
+    const QChar inputMode=QChar::fromLatin1(data[1]).toUpper();
     data.remove(0,3);
     if(inputMode==u'M'&&!data.isEmpty()){
-      const QChar characterMode=data.front().toUpper();
+      const QChar characterMode=QChar::fromLatin1(data.front()).toUpper();
       if(characterMode==u'N'||characterMode==u'A'||characterMode==u'K'){
         data.remove(0,1);
         // Zebra manual alphanumeric mode uses the QR alphanumeric alphabet;
         // lower-case input is normalized to upper case by the printer.
         if(characterMode==u'A'){
           data=data.toUpper();
-          data.removeIf([](QChar value){
-            return !QStringView{u"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:"}.contains(value);
+          data.removeIf([](char value){
+            return !QStringView{u"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:"}.contains(QChar::fromLatin1(value));
           });
         }
       }
@@ -981,7 +981,7 @@ void drawQrCode(QImage& image,State& state,const Barcode& barcode,const QString&
     }
   }
   const int module=qrMagnification(barcode);
-  auto matrix=BarcodeEncoders::qrCode(data.toUtf8(),errorCorrection);
+  auto matrix=BarcodeEncoders::qrCode(data,errorCorrection);
   if(!matrix){diagnostics.append({Severity::Error,u"qrcode-encode"_s,matrix.error(),-1,u"^BQ"_s});return;}
   QImage symbol(matrix->width*module,matrix->height*module,QImage::Format_ARGB32_Premultiplied);symbol.fill(options.background);
   QPainter painter(&symbol);painter.setPen(Qt::NoPen);painter.setBrush(options.foreground);
@@ -1202,7 +1202,7 @@ void drawCodabar(QImage& image,State& state,const Barcode& barcode,const QString
   painter.end();placeNewSymbol(image,symbol,state,barcode.orientation);
 }
 
-void drawPdf417(QImage& image,State& state,const Barcode& barcode,const QString& text,const RenderOptions& options,QList<Diagnostic>& diagnostics) {
+void drawPdf417(QImage& image,State& state,const Barcode& barcode,const QByteArray& text,const RenderOptions& options,QList<Diagnostic>& diagnostics) {
   if(!validateBarcodeNumbers(barcode,{1,2,3,4},diagnostics))return;
   const int module=std::clamp(state.barcodeDefaults.moduleWidth,1,100);
   const int rowHeight=barcode.parameters.size()>1&&!barcode.parameters[1].isEmpty()?barcode.parameters[1].toInt():module*3;
@@ -1214,10 +1214,7 @@ void drawPdf417(QImage& image,State& state,const Barcode& barcode,const QString&
     diagnostics.append({Severity::Error,u"barcode-parameter"_s,u"PDF417 truncation must be Y or N."_s,-1,u"^B7"_s});return;
   }
   if(text.size()>2710){diagnostics.append({Severity::Error,u"pdf417-encode"_s,u"PDF417 data exceeds the maximum capacity."_s,-1,u"^B7"_s});return;}
-  if(std::ranges::any_of(text,[](QChar c){return c.unicode()>255;})){
-    diagnostics.append({Severity::Error,u"pdf417-encoding"_s,u"PDF417 requires explicit byte data; use ^FH for binary fields."_s,-1,u"^B7"_s});return;
-  }
-  auto symbolData=BarcodeEncoders::Pdf417::encode(text.toLatin1(),security,columns,rows,truncated);
+  auto symbolData=BarcodeEncoders::Pdf417::encode(text,security,columns,rows,truncated);
   if(!symbolData){diagnostics.append({Severity::Error,u"pdf417-encode"_s,symbolData.error(),-1,u"^B7"_s});return;}
   const auto& matrix=symbolData->matrix;
   if(rowHeight<1||qint64(matrix.width)*module*matrix.height*rowHeight>64*1024*1024){
@@ -1299,12 +1296,11 @@ QImage rasterizeMaxiCode(const BarcodeEncoders::Matrix& grid,const RenderOptions
   return symbol;
 }
 
-void drawMaxiCode(QImage& image,State& state,const Barcode& barcode,const QString& text,const RenderOptions& options,QList<Diagnostic>& diagnostics) {
+void drawMaxiCode(QImage& image,State& state,const Barcode& barcode,const QByteArray& text,const RenderOptions& options,QList<Diagnostic>& diagnostics) {
   const int mode=barcode.parameters.isEmpty()||barcode.parameters[0].isEmpty()?2:barcode.parameters[0].toInt();
   const int positionIndex=barcode.parameters.size()>1&&!barcode.parameters[1].isEmpty()?barcode.parameters[1].toInt():1;
   const int total=barcode.parameters.size()>2&&!barcode.parameters[2].isEmpty()?barcode.parameters[2].toInt():1;
-  if(std::ranges::any_of(text,[](QChar c){return c.unicode()>255;})){diagnostics.append({Severity::Error,u"maxicode-encode"_s,u"MaxiCode requires byte data; use ^FH for binary fields."_s,-1,u"^BD"_s});return;}
-  auto encoded=BarcodeEncoders::MaxiCode::encode(text.toLatin1(),mode,positionIndex,total);
+  auto encoded=BarcodeEncoders::MaxiCode::encode(text,mode,positionIndex,total);
   if(!encoded){diagnostics.append({Severity::Error,u"maxicode-encode"_s,encoded.error(),-1,u"^BD"_s});return;}
   QImage symbol=rotateImage(rasterizeMaxiCode(encoded->grid,options),barcode.orientation);
   QPoint position=state.position;if(state.baseline)position.ry()-=symbol.height();
@@ -1426,16 +1422,17 @@ void drawExtendedLinear(QImage& image,State& state,const Barcode& barcode,const 
   placeNewSymbol(image,symbol,placed,barcode.orientation);
 }
 
-void drawExtendedMatrix(QImage& image,State& state,const Barcode& barcode,const QString& data,const RenderOptions& options,QList<Diagnostic>& diagnostics) {
+void drawExtendedMatrix(QImage& image,State& state,const Barcode& barcode,const FieldData& field,const RenderOptions& options,QList<Diagnostic>& diagnostics) {
   using BarcodeEncoders::Matrix;
   std::expected<Matrix,QString> matrix=std::unexpected(u"Unsupported matrix barcode options"_s);
   int module=std::clamp(state.barcodeDefaults.moduleWidth,1,10),rowHeight=module;
-  if(std::ranges::any_of(data,[](QChar c){return c.unicode()>255;})){
+  const auto& data=field.data;
+  if(barcode.symbology==u"BR"&&std::ranges::any_of(data,[](QChar c){return c.unicode()>255;})){
     diagnostics.append({Severity::Error,u"barcode-encoding"_s,u"This barcode requires explicit byte data; use ^FH for binary fields."_s,-1,u'^'+barcode.symbology});return;
   }
   if(barcode.symbology==u"BF"){
     if(!validateBarcodeNumbers(barcode,{1,2},diagnostics))return;
-    matrix=BarcodeEncoders::MicroPdf417::encode(data.toLatin1(),barcodeParameter(barcode,2,0));
+    matrix=BarcodeEncoders::MicroPdf417::encode(*field.bytes,barcodeParameter(barcode,2,0));
     rowHeight=barcodeParameter(barcode,1,matrix?std::max(1,state.barcodeDefaults.height/matrix->height):1);
   }else if(barcode.symbology==u"BR"){
     if(!validateBarcodeNumbers(barcode,{1,2,3,4,5},diagnostics))return;
@@ -1454,7 +1451,7 @@ void drawExtendedMatrix(QImage& image,State& state,const Barcode& barcode,const 
     module=barcodeParameter(barcode,1,2);rowHeight=module;
     const bool eci=barcode.parameters.size()>2&&barcode.parameters[2]==u"Y";
     if(eci||barcodeParameter(barcode,5,1)!=1){matrix=std::unexpected(u"Aztec embedded ECI and structured append are not supported."_s);}
-    else matrix=BarcodeEncoders::Aztec::encode(data.toLatin1(),barcodeParameter(barcode,3,23),barcode.parameters.size()>4&&barcode.parameters[4]==u"Y");
+    else matrix=BarcodeEncoders::Aztec::encode(*field.bytes,barcodeParameter(barcode,3,23),barcode.parameters.size()>4&&barcode.parameters[4]==u"Y");
   }
   if(!matrix){diagnostics.append({Severity::Error,u"barcode-encode"_s,matrix.error(),-1,u'^'+barcode.symbology});return;}
   if(module<1||module>10||rowHeight<1||rowHeight>9999||qint64(matrix->width)*module*matrix->height*rowHeight>64*1024*1024){diagnostics.append({Severity::Error,u"barcode-size"_s,u"Invalid or unsafe barcode module size."_s,-1,u'^'+barcode.symbology});return;}
@@ -1464,23 +1461,35 @@ void drawExtendedMatrix(QImage& image,State& state,const Barcode& barcode,const 
   painter.end();placeNewSymbol(image,symbol,state,barcode.orientation);
 }
 
-void drawBarcode(QImage& image, State& state, const Barcode& barcode, const QString& data, const RenderOptions& options, QList<Diagnostic>& diagnostics,RenderFonts& fonts) {
+void drawBarcode(QImage& image, State& state, const Barcode& barcode, const FieldData& field, const RenderOptions& options, QList<Diagnostic>& diagnostics,RenderFonts& fonts) {
   if(state.reverse){
     QImage mask(image.size(),QImage::Format_ARGB32_Premultiplied);mask.fill(Qt::transparent);
     RenderOptions ink=options;ink.foreground=Qt::white;ink.background=Qt::transparent;
-    state.reverse=false;drawBarcode(mask,state,barcode,data,ink,diagnostics,fonts);
+    state.reverse=false;drawBarcode(mask,state,barcode,field,ink,diagnostics,fonts);
     QPainter painter(&image);painter.setCompositionMode(QPainter::CompositionMode_Difference);painter.drawImage(0,0,mask);return;
   }
-  if (barcode.symbology == u"B3") drawCode39(image,state,barcode,data,options);
-  else if(barcode.symbology==u"BQ")drawQrCode(image,state,barcode,data,options,diagnostics);
-  else if(barcode.symbology==u"BX")drawDataMatrix(image,state,barcode,data,options,diagnostics);
+  const auto& data=field.data;
+  const bool requiresBytes=barcode.symbology==u"BQ"||barcode.symbology==u"BX"||barcode.symbology==u"B7"
+    ||barcode.symbology==u"BD"||barcode.symbology==u"BF"||barcode.symbology==u"BO"||barcode.symbology==u"B0";
+  if(requiresBytes&&!field.bytes){
+    const QString code=barcode.symbology==u"BQ"?u"qrcode-encoding"_s
+      :barcode.symbology==u"BX"?u"datamatrix-encoding"_s
+      :barcode.symbology==u"B7"?u"pdf417-encoding"_s
+      :barcode.symbology==u"BD"?u"maxicode-encode"_s:u"barcode-encoding"_s;
+    diagnostics.append({Severity::Error,code,
+      u"The field cannot be represented as bytes in the selected character set; use ^CI28 for Unicode or ^FH for binary bytes."_s,
+      -1,u'^'+barcode.symbology});
+  }
+  else if (barcode.symbology == u"B3") drawCode39(image,state,barcode,data,options);
+  else if(barcode.symbology==u"BQ")drawQrCode(image,state,barcode,*field.bytes,options,diagnostics);
+  else if(barcode.symbology==u"BX")drawDataMatrix(image,state,barcode,*field.bytes,options,diagnostics);
   else if(barcode.symbology==u"BE")drawEan13(image,state,barcode,data,options,diagnostics);
   else if(barcode.symbology==u"BC")drawCode128(image,state,barcode,data,options,diagnostics,fonts);
   else if(barcode.symbology==u"BK")drawCodabar(image,state,barcode,data,options,diagnostics);
-  else if(barcode.symbology==u"B7")drawPdf417(image,state,barcode,data,options,diagnostics);
-  else if(barcode.symbology==u"BD")drawMaxiCode(image,state,barcode,data,options,diagnostics);
+  else if(barcode.symbology==u"B7")drawPdf417(image,state,barcode,*field.bytes,options,diagnostics);
+  else if(barcode.symbology==u"BD")drawMaxiCode(image,state,barcode,*field.bytes,options,diagnostics);
   else if(QStringList{u"B8"_s,u"B9"_s,u"BU"_s,u"BA"_s,u"B2"_s,u"BI"_s}.contains(barcode.symbology))drawExtendedLinear(image,state,barcode,data,options,diagnostics,fonts);
-  else if(QStringList{u"BF"_s,u"BR"_s,u"BO"_s,u"B0"_s}.contains(barcode.symbology))drawExtendedMatrix(image,state,barcode,data,options,diagnostics);
+  else if(QStringList{u"BF"_s,u"BR"_s,u"BO"_s,u"B0"_s}.contains(barcode.symbology))drawExtendedMatrix(image,state,barcode,field,options,diagnostics);
   else diagnostics.append({Severity::Warning,u"barcode-render-pending"_s,
     u"This barcode parser is available, but its native encoder is not implemented yet."_s,-1,u'^'+barcode.symbology});
   state.pendingBarcode.reset(); state.reverse=false; state.block.reset();
@@ -1536,7 +1545,7 @@ std::expected<QImage, RenderError> renderLabel(const Label& label, int index, co
       else if constexpr(std::is_same_v<T,FieldData>){
         if(state.pendingBarcode){
           const auto firstDiagnostic=diagnostics.size();
-          drawBarcode(image,state,*state.pendingBarcode,value.data,options,diagnostics,fonts);
+          drawBarcode(image,state,*state.pendingBarcode,value,options,diagnostics,fonts);
           for(qsizetype i=firstDiagnostic;i<diagnostics.size();++i){
             if(diagnostics[i].offset<0)diagnostics[i].offset=state.barcodeOffset;
             diagnostics[i].command=state.barcodeSource;

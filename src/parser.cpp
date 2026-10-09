@@ -150,8 +150,19 @@ private:
     current_->commands_.append(Command{std::move(payload), offset, QString{prefix} + opcode + params});
   }
 
-  QString decodeHex(QString value,qsizetype offset,const QString& source) {
-    if (hexIndicator_.isNull()) return value;
+  std::optional<QByteArray> fieldBytes(QStringView value) const {
+    if(characterSet_==28){
+      QStringEncoder encoder(QStringEncoder::Utf8,QStringConverter::Flag::Stateless);
+      QByteArray bytes=encoder(value);
+      if(encoder.hasError())return std::nullopt;
+      return bytes;
+    }
+    if(std::ranges::any_of(value,[](QChar c){return c.unicode()>255;}))return std::nullopt;
+    return value.toLatin1();
+  }
+
+  FieldData decodeField(QString value,qsizetype offset,const QString& source) {
+    if (hexIndicator_.isNull()) return {value,fieldBytes(value)};
     const QStringView encoded{value};
     const auto hexDigit=[](QChar c)->int {
       const auto code=c.unicode();
@@ -162,6 +173,9 @@ private:
     };
     if(characterSet_==28){
       QString decoded;decoded.reserve(value.size());
+      std::optional<QByteArray> payload{std::in_place};
+      payload->reserve(value.size());
+      bool invalidText=false;
       for(qsizetype i=0;i<encoded.size();){
         QByteArray bytes;
         while(i+2<encoded.size()&&encoded[i]==hexIndicator_){
@@ -170,17 +184,30 @@ private:
           bytes.append(static_cast<char>((high<<4)|low));i+=3;
         }
         if(!bytes.isEmpty()){
+          if(payload)payload->append(bytes);
           QStringDecoder decoder(QStringDecoder::Utf8,QStringConverter::Flag::Stateless);
           const QString text=decoder(bytes);
-          if(decoder.hasError()){
-            diagnostics_.append({Severity::Warning,u"invalid-field-encoding"_s,
-              u"The ^FH field contains invalid UTF-8 bytes for ^CI28; its source was preserved."_s,offset,source});
-            hexIndicator_={};return value;
-          }
+          invalidText|=decoder.hasError();
           decoded+=text;
-        }else decoded+=encoded[i++];
+        }else{
+          // Encode literal runs together so UTF-16 surrogate pairs remain
+          // intact. Hex escapes always contribute their original bytes.
+          const auto start=i++;
+          while(i<encoded.size()&&encoded[i]!=hexIndicator_)++i;
+          const auto literal=encoded.mid(start,i-start);
+          decoded+=literal;
+          if(payload){
+            const auto bytes=fieldBytes(literal);
+            if(bytes)payload->append(*bytes);
+            else payload.reset();
+          }
+        }
       }
-      hexIndicator_={};return decoded;
+      if(invalidText){
+        diagnostics_.append({Severity::Warning,u"invalid-field-encoding"_s,
+          u"The ^FH field contains invalid UTF-8 bytes for ^CI28; its source was preserved."_s,offset,source});
+      }
+      hexIndicator_={};return {invalidText?value:decoded,std::move(payload)};
     }
     QString decoded;
     decoded.reserve(value.size());
@@ -201,7 +228,7 @@ private:
       decoded.append(encoded[i]);
     }
     hexIndicator_ = {};
-    return decoded;
+    return {decoded,fieldBytes(decoded)};
   }
 
   void finishLabel() {
@@ -230,7 +257,7 @@ private:
     // Field text and raw compatibility commands are not comma-separated
     // parameters. Splitting a large ^FD needlessly allocates one QString per
     // comma; keep the original payload and source intact instead.
-    if(op==u"FD"||op==u"FV"){add(FieldData{decodeHex(raw,offset,QString{prefix}+op+raw)},offset,prefix,op,raw);return true;}
+    if(op==u"FD"||op==u"FV"){add(decodeField(raw,offset,QString{prefix}+op+raw),offset,prefix,op,raw);return true;}
     if(op==u"FS"){hexIndicator_={};add(FieldSeparator{},offset,prefix,op,raw);return true;}
     if(op==u"FR"){add(FieldReverse{},offset,prefix,op,raw);return true;}
     if(op==u"FH"){hexIndicator_=raw.isEmpty()?u'_':raw.front();return true;}
