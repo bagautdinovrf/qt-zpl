@@ -65,30 +65,71 @@ public:
   Parser(QStringView input, ParseOptions options) : input_(input), options_(options) {}
 
   std::expected<Document, ParseError> run() {
+    if (options_.maxSourceLength < 0 || options_.maxCommands < 0
+        || options_.maxLabels < 0 || options_.maxDiagnostics < 0)
+      return std::unexpected(ParseError{u"invalid-parse-options"_s,
+        u"Parser resource limits must be non-negative."_s, -1});
+    if (cancelled(0)) return std::unexpected(*error_);
+    if (input_.size() > options_.maxSourceLength)
+      return std::unexpected(ParseError{u"parse-source-limit"_s,
+        u"The source exceeds the configured UTF-16 length limit."_s, -1});
+    document_.source_ = input_.toString();
     while (position_ < input_.size()) {
+      if (cancelled(position_)) return std::unexpected(*error_);
       const auto marker = input_[position_];
       if (marker != caret_ && marker != tilde_) { ++position_; continue; }
       const auto offset = position_++;
       if (position_ >= input_.size()) break;
+      if (commandCount_ >= options_.maxCommands)
+        return std::unexpected(ParseError{u"parse-command-limit"_s,
+          u"The source exceeds the configured command limit."_s, offset});
+      ++commandCount_;
       auto opcode = readOpcode();
       if (opcode.isEmpty()) continue;
+      payloadStart_ = position_;
       auto paramsText = readParameters(opcode);
+      if (error_) return std::unexpected(*error_);
+      // ^XZ has no parameters. Its legacy normalized source may still contain
+      // ignored trailing text; that text does not belong to the label span.
+      commandSpan_ = {offset, (opcode == u"XZ" && marker == caret_ ? payloadStart_ : position_) - offset};
       if (!consume(marker, opcode, paramsText, offset)) {
         return std::unexpected(ParseError{u"malformed-command"_s,
           u"Cannot parse command "_s + marker + opcode, offset});
       }
+      if (error_) return std::unexpected(*error_);
     }
 
     if (current_) {
-      diagnostics_.append({Severity::Warning, u"unterminated-format"_s,
-        u"The final ^XA block has no ^XZ; it was preserved."_s, input_.size(), u"^XZ"_s});
-      finishLabel();
+      diagnose({Severity::Warning, u"unterminated-format"_s,
+        u"The final ^XA block has no ^XZ; it was preserved."_s, input_.size(), u"^XZ"_s},
+        {input_.size(), 0});
+      if (error_) return std::unexpected(*error_);
+      finishLabel(input_.size());
     }
+    if (cancelled(position_)) return std::unexpected(*error_);
     document_.diagnostics_ = diagnostics_;
     return document_;
   }
 
 private:
+  bool cancelled(qsizetype offset) {
+    if (!options_.stopToken.stop_requested()) return false;
+    error_ = ParseError{u"operation-cancelled"_s, u"Parsing was cancelled."_s, offset};
+    return true;
+  }
+
+  void diagnose(Diagnostic diagnostic, SourceSpan span) {
+    if (error_) return;
+    if (diagnostics_.size() >= options_.maxDiagnostics) {
+      error_ = ParseError{u"parse-diagnostic-limit"_s,
+        u"Parsing exceeded the configured diagnostic limit."_s, diagnostic.offset};
+      return;
+    }
+    if (current_) diagnostic.labelIndex = static_cast<int>(document_.labels_.size());
+    diagnostic.sourceSpan = span;
+    diagnostics_.append(std::move(diagnostic));
+  }
+
   QString readOpcode() {
     if (position_ >= input_.size()) return {};
     const auto first = input_[position_++].toUpper();
@@ -103,9 +144,16 @@ private:
   }
 
   QString readParameters(const QString& opcode) {
+    // These syntax commands consume exactly the next character, even when it
+    // is the old prefix or delimiter. They also work between label formats.
+    if (opcode == u"CC" || opcode == u"CT" || opcode == u"CD") {
+      if (position_ == input_.size()) return {};
+      return QString{input_[position_++]};
+    }
     if (opcode == u"FD" || opcode == u"FV") {
       const auto start = position_;
       while (position_ < input_.size()) {
+        if ((position_ & 4095) == 0 && cancelled(position_)) return {};
         if (input_[position_] == caret_ && input_.mid(position_ + 1, 2).compare(u"FS", Qt::CaseInsensitive) == 0) break;
         ++position_;
       }
@@ -115,7 +163,7 @@ private:
       const auto start = position_;
       qsizetype dataStart = -1;
       for (int comma = 0; comma < 4; ++comma) {
-        dataStart = input_.indexOf(u',', dataStart < 0 ? start : dataStart + 1);
+        dataStart = input_.indexOf(delimiter_, dataStart < 0 ? start : dataStart + 1);
         if (dataStart < 0) break;
       }
       if (dataStart >= 0) {
@@ -126,28 +174,34 @@ private:
           const int dataBytes = std::max(0, intValue(parameters, 2));
           const auto available = std::min<qsizetype>(dataBytes, input_.size() - dataStart - 1);
           position_ = dataStart + 1 + available;
-          return header + u',' + input_.mid(dataStart + 1, available).toString();
+          return header + delimiter_ + input_.mid(dataStart + 1, available).toString();
         }
       }
     }
     const auto start = position_;
     int parameterIndex=0;
     while(position_<input_.size()&&input_[position_]!=caret_){
+      if ((position_ & 4095) == 0 && cancelled(position_)) return {};
       if(input_[position_]==tilde_){
         // ^BX's escape character is a literal parameter; the default is '~'.
-        if(opcode!=u"BX"||parameterIndex!=6||position_==start||input_[position_-1]!=u',')break;
+        if(opcode!=u"BX"||parameterIndex!=6||position_==start||input_[position_-1]!=delimiter_)break;
       }
-      if(input_[position_]==u',')++parameterIndex;
+      if(input_[position_]==delimiter_)++parameterIndex;
       ++position_;
     }
-    return input_.mid(start, position_ - start).toString().remove(u'\r').remove(u'\n');
+    auto parameters = input_.mid(start, position_ - start).toString();
+    // CR/LF are normally formatting whitespace, but ^CD may make either one
+    // the actual parameter delimiter. Removing it would merge parameters.
+    if (delimiter_ != u'\r') parameters.remove(u'\r');
+    if (delimiter_ != u'\n') parameters.remove(u'\n');
+    return parameters;
   }
 
-  QList<QString> split(const QString& text) const { return text.split(u',', Qt::KeepEmptyParts); }
+  QList<QString> split(const QString& text) const { return text.split(delimiter_, Qt::KeepEmptyParts); }
 
   void add(CommandPayload payload, qsizetype offset, QChar prefix, const QString& opcode, const QString& params) {
     if (!current_) return;
-    current_->commands_.append(Command{std::move(payload), offset, QString{prefix} + opcode + params});
+    current_->commands_.append(Command{std::move(payload), offset, QString{prefix} + opcode + params, commandSpan_});
   }
 
   std::optional<QByteArray> fieldBytes(QStringView value) const {
@@ -177,8 +231,10 @@ private:
       payload->reserve(value.size());
       bool invalidText=false;
       for(qsizetype i=0;i<encoded.size();){
+        if ((i & 4095) == 0 && cancelled(offset + i)) return {};
         QByteArray bytes;
         while(i+2<encoded.size()&&encoded[i]==hexIndicator_){
+          if ((i & 4095) == 0 && cancelled(offset + i)) return {};
           const int high=hexDigit(encoded[i+1]),low=hexDigit(encoded[i+2]);
           if(high<0||low<0)break;
           bytes.append(static_cast<char>((high<<4)|low));i+=3;
@@ -193,7 +249,10 @@ private:
           // Encode literal runs together so UTF-16 surrogate pairs remain
           // intact. Hex escapes always contribute their original bytes.
           const auto start=i++;
-          while(i<encoded.size()&&encoded[i]!=hexIndicator_)++i;
+          while(i<encoded.size()&&encoded[i]!=hexIndicator_){
+            if ((i & 4095) == 0 && cancelled(offset + i)) return {};
+            ++i;
+          }
           const auto literal=encoded.mid(start,i-start);
           decoded+=literal;
           if(payload){
@@ -204,14 +263,15 @@ private:
         }
       }
       if(invalidText){
-        diagnostics_.append({Severity::Warning,u"invalid-field-encoding"_s,
-          u"The ^FH field contains invalid UTF-8 bytes for ^CI28; its source was preserved."_s,offset,source});
+        diagnose({Severity::Warning,u"invalid-field-encoding"_s,
+          u"The ^FH field contains invalid UTF-8 bytes for ^CI28; its source was preserved."_s,offset,source}, commandSpan_);
       }
       hexIndicator_={};return {invalidText?value:decoded,std::move(payload)};
     }
     QString decoded;
     decoded.reserve(value.size());
     for (qsizetype i = 0; i < encoded.size(); ++i) {
+      if ((i & 4095) == 0 && cancelled(offset + i)) return {};
       if (encoded[i] == hexIndicator_ && i + 2 < encoded.size()) {
         const int high=hexDigit(encoded[i+1]),low=hexDigit(encoded[i+2]);
         if(high>=0&&low>=0){
@@ -231,7 +291,8 @@ private:
     return {decoded,fieldBytes(decoded)};
   }
 
-  void finishLabel() {
+  void finishLabel(qsizetype end) {
+    current_->sourceSpan_.length = end - current_->sourceSpan_.start;
     document_.labels_.append(std::move(*current_));
     current_.reset();
     inFormat_ = false;
@@ -239,28 +300,61 @@ private:
   }
 
   bool consume(QChar prefix, const QString& op, const QString& raw, qsizetype offset) {
-    if (prefix == tilde_) return unknown(prefix, op, raw, offset);
+    if (op == u"CC" || op == u"CT" || op == u"CD") {
+      if (raw.isEmpty() || raw.front().unicode() > 127) {
+        diagnose({Severity::Warning, u"invalid-syntax-character"_s,
+          u"Changing a ZPL prefix or delimiter requires one ASCII character; the setting was preserved."_s,
+          offset, QString{prefix} + op + raw}, commandSpan_);
+        if (options_.preserveUnknownCommands)
+          add(UnknownCommand{prefix, op, raw, offset}, offset, prefix, op, raw);
+        return true;
+      }
+      const auto character = raw.front();
+      add(SyntaxCommand{op, character}, offset, prefix, op, raw);
+      if (op == u"CC") caret_ = character;
+      else if (op == u"CT") tilde_ = character;
+      else delimiter_ = character;
+      return true;
+    }
+    if (prefix == tilde_ && prefix != caret_) return unknown(prefix, op, raw, offset);
     if (op == u"XA") {
       if (current_) {
-        diagnostics_.append({Severity::Warning, u"nested-format"_s, u"A new ^XA closed the previous format."_s, offset, u"^XA"_s});
-        finishLabel();
+        diagnose({Severity::Warning, u"nested-format"_s, u"A new ^XA closed the previous format."_s, offset, u"^XA"_s}, commandSpan_);
+        if (error_) return true;
+        finishLabel(offset);
+      }
+      if (document_.labels_.size() >= options_.maxLabels) {
+        error_ = ParseError{u"parse-label-limit"_s,
+          u"The source exceeds the configured label limit."_s, offset};
+        return true;
       }
       current_.emplace(); inFormat_ = true;
+      current_->sourceSpan_ = {offset, 0};
       add(FormatStart{}, offset, prefix, op, raw); return true;
     }
     if (op == u"XZ") {
       if (!current_) return unknown(prefix, op, raw, offset);
-      add(FormatEnd{}, offset, prefix, op, raw); finishLabel(); return true;
+      add(FormatEnd{}, offset, prefix, op, raw);
+      finishLabel(commandSpan_.start + commandSpan_.length); return true;
     }
     if (!inFormat_ || !current_) return true;
 
     // Field text and raw compatibility commands are not comma-separated
     // parameters. Splitting a large ^FD needlessly allocates one QString per
     // comma; keep the original payload and source intact instead.
-    if(op==u"FD"||op==u"FV"){add(decodeField(raw,offset,QString{prefix}+op+raw),offset,prefix,op,raw);return true;}
+    if(op==u"FD"||op==u"FV"){
+      const auto indicator = hexIndicator_;
+      auto field = decodeField(raw,offset,QString{prefix}+op+raw);
+      if (error_) return true;
+      field.rawData = raw;
+      field.sourceSpan = {payloadStart_, position_ - payloadStart_};
+      field.characterSet = characterSet_;
+      field.hexIndicator = indicator;
+      add(std::move(field),offset,prefix,op,raw);return true;
+    }
     if(op==u"FS"){hexIndicator_={};add(FieldSeparator{},offset,prefix,op,raw);return true;}
     if(op==u"FR"){add(FieldReverse{},offset,prefix,op,raw);return true;}
-    if(op==u"FH"){hexIndicator_=raw.isEmpty()?u'_':raw.front();return true;}
+    if(op==u"FH"){hexIndicator_=raw.isEmpty()?u'_':raw.front();add(FieldHex{hexIndicator_},offset,prefix,op,raw);return true;}
     if(op==u"FX"){add(Comment{raw},offset,prefix,op,raw);return true;}
     if(op==u"F8"){add(FieldEncoding{raw},offset,prefix,op,raw);return true;}
     if(op==u"PR"){add(PrintRate{raw},offset,prefix,op,raw);return true;}
@@ -323,7 +417,7 @@ private:
     bool completeHeader=true;
     const auto dataStart = [&] {
       qsizetype pos=-1;
-      for(int i=0;i<4;++i){pos=raw.indexOf(u',',pos+1);if(pos<0)completeHeader=false;}
+      for(int i=0;i<4;++i){pos=raw.indexOf(delimiter_,pos+1);if(pos<0)completeHeader=false;}
       return pos;
     }();
     // Preserve the existing recovery of malformed/incomplete headers. Only a
@@ -350,7 +444,8 @@ private:
   }
 
   bool unknown(QChar prefix, const QString& op, const QString& raw, qsizetype offset) {
-    diagnostics_.append({Severity::Warning,u"unsupported-command"_s,u"Unsupported command was skipped."_s,offset,QString{prefix}+op});
+    diagnose({Severity::Warning,u"unsupported-command"_s,u"Unsupported command was skipped."_s,offset,QString{prefix}+op}, commandSpan_);
+    if (error_) return true;
     if (current_ && options_.preserveUnknownCommands) add(UnknownCommand{prefix,op,raw,offset},offset,prefix,op,raw);
     return true;
   }
@@ -360,10 +455,15 @@ private:
   Document document_;
   QList<Diagnostic> diagnostics_;
   std::optional<Label> current_;
+  std::optional<ParseError> error_;
+  SourceSpan commandSpan_;
   qsizetype position_ = 0;
+  qsizetype payloadStart_ = 0;
+  qsizetype commandCount_ = 0;
   bool inFormat_ = false;
   QChar caret_ = u'^';
   QChar tilde_ = u'~';
+  QChar delimiter_ = u',';
   QChar hexIndicator_;
   int characterSet_=0;
 };

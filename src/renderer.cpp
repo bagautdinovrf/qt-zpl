@@ -15,13 +15,13 @@
 #include <QtCore/QFile>
 #include <QtCore/QHash>
 #include <QtCore/QtMath>
-#include <QtCore/QtEndian>
 #include <QtGui/QPainter>
 #include <QtGui/QPainterPath>
 #include <QtGui/QFontDatabase>
 #include <QtGui/QTransform>
 #include <QtGui/QRawFont>
 #include <algorithm>
+#include <bit>
 #include <cmath>
 #include <initializer_list>
 #include <limits>
@@ -44,6 +44,11 @@ QPoint printerPosition(qint64 x,qint64 y) {
 }
 
 struct State {
+  // Optional per-field observer. It records the field's own operations before
+  // composition, so white/reverse fields and later overpainting retain bounds.
+  struct Observation { QRect logicalBounds; QRect paintBounds; };
+  Observation* observation = nullptr;
+  bool rasterize = true;
   QPoint position;
   QPoint nextTypeset;
   int labelShift = 0;
@@ -64,7 +69,17 @@ struct State {
   qsizetype barcodeOffset = -1;
   QString barcodeSource;
   Orientation printOrientation = Orientation::Normal;
+  int characterSet = 0;
+  QChar hexIndicator;
 };
+
+void observeLogical(const State& state,const QRect& bounds) {
+  if(state.observation&&!bounds.isEmpty())state.observation->logicalBounds|=bounds;
+}
+
+void observePaint(const State& state,const QRect& bounds) {
+  if(state.observation&&!bounds.isEmpty())state.observation->paintBounds|=bounds;
+}
 
 QColor commandColor(LineColor color, const RenderOptions& options) {
   return color == LineColor::White ? options.background : options.foreground;
@@ -165,6 +180,13 @@ QRect alphaBounds(const QImage& image) {
       if(qAlpha(pixels[x])!=0)bounds|=QRect(x,y,1,1);
   }
   return bounds;
+}
+
+void observeRaster(const State& state,QPoint position,const QImage& raster,bool logical=true) {
+  if(!state.observation)return;
+  if(logical)observeLogical(state,QRect(position,raster.size()));
+  const auto bounds=alphaBounds(raster);
+  if(!bounds.isEmpty())observePaint(state,bounds.translated(position));
 }
 
 struct BlockLine {
@@ -387,9 +409,14 @@ void drawBlockTextLayout(QImage& image,State& state,const QString& text,const Re
   if(orientation==Orientation::Rotated90)rasterOffset.rx()=layoutHeight-actualHeight;
   else if(orientation==Orientation::Inverted)rasterOffset.ry()=layoutHeight-actualHeight;
   field=rotateImage(field,orientation);
+  const auto position=state.position-anchor+rasterOffset;
+  const QSize logicalSize=(orientation==Orientation::Rotated90||orientation==Orientation::BottomUp)
+    ?QSize(layoutSize.height(),layoutSize.width()):layoutSize;
+  observeLogical(state,QRect(state.position-anchor,logicalSize));
+  observeRaster(state,position,field,false);
   QPainter painter(&image);
   painter.setCompositionMode(state.reverse?QPainter::CompositionMode_Difference:QPainter::CompositionMode_SourceOver);
-  painter.drawImage(state.position-anchor+rasterOffset,field);
+  painter.drawImage(position,field);
   state.reverse=false;state.block.reset();
 }
 
@@ -434,6 +461,7 @@ void drawFont0Text(QImage& image,State& state,const QString& text,const RenderOp
     }
   }
   field=rotateImage(field,orientation);
+  observeRaster(state,position,field,false);
   QPainter painter(&image);
   painter.setCompositionMode(state.reverse?QPainter::CompositionMode_Difference:QPainter::CompositionMode_SourceOver);
   painter.drawImage(position,field);
@@ -486,6 +514,7 @@ void drawFontAText(QImage& image,State& state,const QString& text,const RenderOp
     const auto glyph=fonts.fontARaster().glyph(PrinterFontMetrics::fontACharacter(character),fontWidth,fontHeight,turns);
     if(!glyph){
       diagnostics.append({Severity::Warning,u"font-glyph-missing"_s,glyph.error(),offset,u"^FD"_s});
+      if(diagnostics.size()>options.maxDiagnostics)return;
       continue;
     }
     const QPoint baseline(qRound(x),qRound(y)+(state.baseline?0:ascent));
@@ -509,8 +538,10 @@ void drawFontAText(QImage& image,State& state,const QString& text,const RenderOp
     case Orientation::Inverted:position+=QPoint(span-bounds.right()-1,height-bounds.bottom()-1);break;
     case Orientation::BottomUp:position+=QPoint(bounds.top(),span-bounds.right()-1);break;
   }
+  const auto rotated=rotateImage(field,orientation);
+  observeRaster(state,position,rotated,false);
   QPainter target(&image);if(state.reverse)target.setCompositionMode(QPainter::CompositionMode_Difference);
-  target.drawImage(position,rotateImage(field,orientation));
+  target.drawImage(position,rotated);
 }
 
 void drawTextField(QImage& image, State& state, const QString& text, const RenderOptions& options,RenderFonts& fonts,
@@ -593,6 +624,7 @@ void drawTextField(QImage& image, State& state, const QString& text, const Rende
     }
   }
   QPainter painter(&image);
+  observeRaster(state,pos,field,false);
   painter.setCompositionMode(state.reverse ? QPainter::CompositionMode_Difference : QPainter::CompositionMode_SourceOver);
   painter.drawImage(pos, field);
   state.reverse=false; state.block.reset();
@@ -641,169 +673,48 @@ void drawText(QImage& image,State& state,const QString& text,const RenderOptions
   const QPoint end=state.parameter.direction==u'V'?QPoint(0,height*int(text.size()))
     :QPoint(state.parameter.direction==u'R'?-cursorAdvance:cursorAdvance,0);
   state.nextTypeset=placed.position+orientedVector(end+QPoint(0,state.baseline?0:ascent),orientation);
+  if(state.observation&&(!state.block||state.block->width<=0)){
+    const int logicalWidth=state.parameter.direction==u'V'?(width>0?width:height):std::abs(advance);
+    const int logicalHeight=state.parameter.direction==u'V'?height*int(text.toUcs4().size()):height;
+    QPoint origin=placed.position;
+    if(state.baseline)origin-=orientedVector(QPoint(0,ascent),orientation);
+    if(state.parameter.direction==u'R')origin+=orientedVector(QPoint(-logicalWidth,0),orientation);
+    if(state.baseline){
+      const QPoint opposite=origin+orientedVector(QPoint(logicalWidth,logicalHeight),orientation);
+      observeLogical(state,QRect(QPoint(std::min(origin.x(),opposite.x()),std::min(origin.y(),opposite.y())),
+        QSize(std::abs(opposite.x()-origin.x()),std::abs(opposite.y()-origin.y()))));
+    }else observeLogical(state,QRect(origin,(orientation==Orientation::Rotated90||orientation==Orientation::BottomUp)
+      ?QSize(logicalHeight,logicalWidth):QSize(logicalWidth,logicalHeight)));
+  }
+  if(!state.rasterize){state.reverse=false;state.block.reset();return;}
   drawTextField(image,placed,text,options,fonts,diagnostics,offset);
   state.reverse=false;state.block.reset();
 }
 
-quint16 z64Crc(QByteArrayView encoded) {
-  quint16 crc=0;
-  for(const unsigned char byte:encoded){
-    crc^=static_cast<quint16>(byte)<<8;
-    for(int bit=0;bit<8;++bit)crc=crc&0x8000U?static_cast<quint16>((crc<<1)^0x1021U):static_cast<quint16>(crc<<1);
-  }
-  return crc;
-}
-
-std::optional<QByteArray> decodeZ64(const GraphicField& gf,qsizetype offset,QList<Diagnostic>& diagnostics) {
-  constexpr int maximumGraphicBytes=64*1024*1024;
-  const auto fail=[&](QString code,QString message)->std::optional<QByteArray>{
-    diagnostics.append({Severity::Error,std::move(code),std::move(message),offset,u"^GF"_s});
-    return std::nullopt;
-  };
-  if(gf.totalBytes<=0||gf.totalBytes>maximumGraphicBytes)
-    return fail(u"graphic-field-z64-size"_s,u"The Z64 graphic declares an invalid or unsafe decompressed size."_s);
-
-  const auto data=QByteArrayView{gf.data}.trimmed();
-  constexpr QByteArrayView prefix{":Z64:"};
-  const auto checksumSeparator=data.lastIndexOf(':');
-  if(!data.startsWith(prefix)||checksumSeparator<=prefix.size()||data.size()-checksumSeparator-1!=4)
-    return fail(u"graphic-field-z64-format"_s,u"The Z64 graphic must use :Z64:<Base64>:<CRC16>."_s);
-
-  const auto encoded=data.sliced(prefix.size(),checksumSeparator-prefix.size());
-  bool checksumOk=false;
-  const auto expectedCrc=QString::fromLatin1(data.sliced(checksumSeparator+1)).toUShort(&checksumOk,16);
-  if(!checksumOk)
-    return fail(u"graphic-field-z64-format"_s,u"The Z64 graphic CRC must contain four hexadecimal digits."_s);
-  if(z64Crc(encoded)!=expectedCrc)
-    return fail(u"graphic-field-z64-crc"_s,u"The Z64 graphic CRC does not match its Base64-encoded data."_s);
-
-  const auto decoded=QByteArray::fromBase64Encoding(encoded.toByteArray(),
-    QByteArray::Base64Encoding|QByteArray::AbortOnBase64DecodingErrors);
-  if(!decoded)
-    return fail(u"graphic-field-z64-base64"_s,u"The Z64 graphic contains invalid Base64 data."_s);
-
-  QByteArray compressedWithSize(4,Qt::Uninitialized);
-  qToBigEndian<quint32>(static_cast<quint32>(gf.totalBytes),compressedWithSize.data());
-  compressedWithSize.append(decoded.decoded);
-  auto uncompressed=qUncompress(compressedWithSize);
-  if(uncompressed.size()!=gf.totalBytes)
-    return fail(u"graphic-field-z64-zlib"_s,u"The Z64 graphic could not be decompressed to its declared size."_s);
-  return uncompressed;
-}
-
-int asciiCompressionRepeatCount(char code) {
-  if(code>='G'&&code<='Y')return code-'G'+1;
-  if(code>='g'&&code<='z')return (code-'g'+1)*20;
-  return 0;
-}
-
-std::optional<QByteArray> decodeAsciiGraphic(const GraphicField& gf,qsizetype offset,
-                                             QList<Diagnostic>& diagnostics) {
-  const auto fail=[&](QString message)->std::optional<QByteArray>{
-    diagnostics.append({Severity::Error,u"graphic-field-ascii-compression"_s,
-      std::move(message),offset,u"^GFA"_s});
-    return std::nullopt;
-  };
-  constexpr qsizetype maximumGraphicBytes=64*1024*1024;
-  if(gf.totalBytes<=0||gf.bytesPerRow<=0)
-    return fail(u"The graphic byte count and bytes-per-row must be positive."_s);
-  if(gf.totalBytes%gf.bytesPerRow!=0)
-    return fail(u"The graphic byte count is not an exact number of rows."_s);
-  if(gf.totalBytes>maximumGraphicBytes)
-    return fail(u"The expanded graphic exceeds the safe 64 MiB limit."_s);
-
-  const qsizetype rowNibbles=static_cast<qsizetype>(gf.bytesPerRow)*2;
-  const qsizetype expectedBytes=gf.totalBytes;
-  QByteArray decoded;decoded.reserve(gf.totalBytes);
-  QByteArray row;row.reserve(rowNibbles);
-  QByteArray previousRow;
-  const auto finishRow=[&]()->bool{
-    if(row.size()!=rowNibbles)return false;
-    const auto bytes=QByteArray::fromHex(row);
-    if(bytes.size()!=gf.bytesPerRow||decoded.size()+bytes.size()>expectedBytes)return false;
-    decoded.append(bytes);previousRow=bytes;row.clear();return true;
-  };
-  const auto appendNibbles=[&](char nibble,qsizetype count)->bool{
-    if(count<=0||count>rowNibbles-row.size())return false;
-    row.append(count,nibble);
-    return row.size()!=rowNibbles||finishRow();
-  };
-
-  for(qsizetype i=0;i<gf.data.size();){
-    const char code=gf.data[i];
-    if(code==' '||code=='\t'||code=='\r'||code=='\n'){++i;continue;}
-    if(code==',') { // Fill the remainder of this row with zero nibbles.
-      const auto remaining=rowNibbles-row.size();++i;
-      if(remaining<=0||!appendNibbles('0',remaining))
-        return fail(u"A zero-fill marker overflowed its row."_s);
-      continue;
-    }
-    if(code=='!') {
-      const auto remaining=rowNibbles-row.size();++i;
-      if(remaining<=0||!appendNibbles('F',remaining))
-        return fail(u"A one-fill marker overflowed its row."_s);
-      continue;
-    }
-    if(code==':') {
-      ++i;
-      if(!row.isEmpty()||previousRow.size()!=gf.bytesPerRow
-         ||decoded.size()+previousRow.size()>expectedBytes)
-        return fail(u"A repeat-row marker has no complete preceding row or overflows the graphic."_s);
-      decoded.append(previousRow);
-      continue;
-    }
-    if(const int firstCount=asciiCompressionRepeatCount(code);firstCount>0){
-      qsizetype count=0;
-      while(i<gf.data.size()){
-        const int part=asciiCompressionRepeatCount(gf.data[i]);
-        if(part==0)break;
-        count+=part;++i;
+void drawGraphicField(QImage& image,const QPoint& pos,const DecodedGraphic& decoded,const RenderOptions& options,
+                      const State& state) {
+  {
+    const QByteArrayView bytes{decoded.bytes};
+    observeLogical(state,QRect(pos,decoded.size));
+    if(state.observation&&options.foreground.alpha()>0){
+      QRect paint;
+      for(int y=0;y<decoded.size.height();++y){
+        int first=-1,last=-1;
+        for(int x=0;x<decoded.bytesPerRow;++x){
+          const auto byte=static_cast<unsigned char>(bytes[qsizetype(y)*decoded.bytesPerRow+x]);
+          if(byte){if(first<0)first=x*8+std::countl_zero(byte);last=x*8+7-std::countr_zero(byte);}
+        }
+        if(first>=0)paint|=QRect(pos+QPoint(first,y),QSize(last-first+1,1));
       }
-      if(i>=gf.data.size())return fail(u"A repeat count has no following hexadecimal nibble."_s);
-      const char nibble=gf.data[i++];
-      const bool hexadecimal=(nibble>='0'&&nibble<='9')||(nibble>='A'&&nibble<='F')
-        ||(nibble>='a'&&nibble<='f');
-      if(!hexadecimal)return fail(u"A repeat count is not followed by a hexadecimal nibble."_s);
-      if(!appendNibbles(nibble,count))return fail(u"Repeated hexadecimal data overflowed its row."_s);
-      continue;
+      observePaint(state,paint);
     }
-    const bool hexadecimal=(code>='0'&&code<='9')||(code>='A'&&code<='F')
-      ||(code>='a'&&code<='f');
-    if(!hexadecimal)return fail(u"The compressed graphic contains an invalid character."_s);
-    ++i;
-    if(!appendNibbles(code,1))return fail(u"Hexadecimal data overflowed its row."_s);
-  }
-  if(!row.isEmpty()){
-    if(row.size()%2!=0)return fail(u"The compressed graphic ends with an unmatched hexadecimal nibble."_s);
-    return fail(u"The final graphic row contains fewer bytes than declared."_s);
-  }
-  // Zebra and Labelary treat omitted complete trailing rows as blank. Materialize
-  // those rows so the validated buffer still has exactly the declared size.
-  if(decoded.size()<expectedBytes)decoded.append(expectedBytes-decoded.size(),char{0});
-  if(decoded.size()!=expectedBytes)
-    return fail(u"The expanded graphic size exceeds the declared total byte count."_s);
-  return decoded;
-}
-
-void drawGraphicField(QImage& image,const QPoint& pos,const GraphicField& gf,const RenderOptions& options,
-                      qsizetype offset,QList<Diagnostic>& diagnostics) {
-  if (gf.bytesPerRow <= 0) return;
-  const bool z64=gf.compression==u'A'&&QByteArrayView{gf.data}.trimmed().startsWith(":Z64:");
-  const auto z64Data=z64?decodeZ64(gf,offset,diagnostics):std::optional<QByteArray>{};
-  if(z64&&!z64Data)return;
-  const auto asciiData=gf.compression==u'A'&&!z64?decodeAsciiGraphic(gf,offset,diagnostics)
-    :std::optional<QByteArray>{};
-  if(gf.compression==u'A'&&!z64&&!asciiData)return;
-  if(gf.compression==u'B'||z64||asciiData){
-    const QByteArrayView bytes=z64?QByteArrayView{*z64Data}
-      :(asciiData?QByteArrayView{*asciiData}:QByteArrayView{gf.data});
     // SourceOver with fully opaque ink replaces the destination exactly.
     // Clip in wide arithmetic before requesting scanlines; input validation
     // above still processes the entire graphic, even when it is off-label.
     // QColor::alpha() rounds 16-bit alpha, so it cannot decide opacity here.
     if(options.foreground.rgba64().alpha()==65535){
       if(bytes.isEmpty())return;
-      const qsizetype rowBytes=gf.bytesPerRow;
+      const qsizetype rowBytes=decoded.bytesPerRow;
       const qint64 firstX=std::max<qint64>(0,-static_cast<qint64>(pos.x()));
       const qint64 lastX=std::min<qint64>(static_cast<qint64>(rowBytes)*8,
         static_cast<qint64>(image.width())-pos.x());
@@ -823,7 +734,7 @@ void drawGraphicField(QImage& image,const QPoint& pos,const GraphicField& gf,con
       return;
     }
     qint64 x=0,y=0;
-    const qint64 rowWidth=static_cast<qint64>(gf.bytesPerRow)*8;
+    const qint64 rowWidth=decoded.size.width();
     QPainter painter(&image);painter.setPen(options.foreground);
     for(const unsigned char byte:bytes){
       for(int bit=7;bit>=0;--bit){
@@ -855,16 +766,27 @@ QString code39Pattern(QChar c) {
   return patterns.value(c.toUpper());
 }
 
-void drawCode39(QImage& image, State& state, const Barcode& barcode, const QString& data, const RenderOptions& options) {
+bool barcodeRasterAllowed(qint64 width,qint64 height,const Barcode& barcode,QList<Diagnostic>& diagnostics) {
+  if(width>0&&height>0&&width<=32000&&height<=32000&&width*height<=64*1024*1024)return true;
+  diagnostics.append({Severity::Error,u"barcode-size"_s,u"Barcode raster dimensions exceed the supported allocation limit."_s,-1,u'^'+barcode.symbology});
+  return false;
+}
+
+void drawCode39(QImage& image, State& state, const Barcode& barcode, const QString& data, const RenderOptions& options,QList<Diagnostic>& diagnostics) {
   const int narrow=std::max(1,state.barcodeDefaults.moduleWidth);
+  if(narrow>32000||!std::isfinite(state.barcodeDefaults.wideToNarrowRatio)
+    ||narrow*state.barcodeDefaults.wideToNarrowRatio>32000){
+    diagnostics.append({Severity::Error,u"barcode-size"_s,u"Code 39 module dimensions exceed the allocation limit."_s,-1,u"^B3"_s});return;
+  }
   const int wide=std::max(narrow+1,qRound(narrow*state.barcodeDefaults.wideToNarrowRatio));
   const int height=std::max(1,barcode.parameters.size()>2 && !barcode.parameters[2].isEmpty() ? barcode.parameters[2].toInt() : state.barcodeDefaults.height);
   const QString encoded=u'*'+data.toUpper()+u'*';
-  int width=-narrow;
+  qint64 width=-qint64(narrow);
   for(const auto c:encoded)for(const auto element:code39Pattern(c))width+=element==u'w'?wide:narrow;
-  width+=static_cast<int>(encoded.size())*narrow;
+  width+=qint64(encoded.size())*narrow;
   if(width<=0)return;
-  QImage symbol(width,height,QImage::Format_ARGB32_Premultiplied);symbol.fill(options.background);
+  if(!barcodeRasterAllowed(width,height,barcode,diagnostics))return;
+  QImage symbol(int(width),height,QImage::Format_ARGB32_Premultiplied);symbol.fill(options.background);
   int x=0;
   QPainter painter(&symbol); painter.setBrush(options.foreground); painter.setPen(Qt::NoPen);
   for(const auto c:encoded){
@@ -876,10 +798,11 @@ void drawCode39(QImage& image, State& state, const Barcode& barcode, const QStri
   if(state.baseline)switch(barcode.orientation){
     case Orientation::Normal:position.ry()-=height;break;
     case Orientation::Rotated90:break;
-    case Orientation::Inverted:position.rx()-=width;break;
-    case Orientation::BottomUp:position-=QPoint(height,width);break;
+    case Orientation::Inverted:position.rx()-=int(width);break;
+    case Orientation::BottomUp:position-=QPoint(height,int(width));break;
   }
   symbol=rotateImage(symbol,barcode.orientation);
+  observeRaster(state,position,symbol);
   QPainter target(&image);target.drawImage(position,symbol);
 }
 
@@ -983,6 +906,7 @@ void drawQrCode(QImage& image,State& state,const Barcode& barcode,const QByteArr
   const int module=qrMagnification(barcode);
   auto matrix=BarcodeEncoders::qrCode(data,errorCorrection);
   if(!matrix){diagnostics.append({Severity::Error,u"qrcode-encode"_s,matrix.error(),-1,u"^BQ"_s});return;}
+  if(!barcodeRasterAllowed(qint64(matrix->width)*module,qint64(matrix->height)*module,barcode,diagnostics))return;
   QImage symbol(matrix->width*module,matrix->height*module,QImage::Format_ARGB32_Premultiplied);symbol.fill(options.background);
   QPainter painter(&symbol);painter.setPen(Qt::NoPen);painter.setBrush(options.foreground);
   for(int y=0;y<matrix->height;++y)for(int x=0;x<matrix->width;++x)if(matrix->at(x,y))painter.drawRect(x*module,y*module,module,module);
@@ -999,6 +923,7 @@ void drawEan13(QImage& image,State& state,const Barcode& barcode,const QString& 
   QString normalized;auto modules=BarcodeEncoders::ean13(text,&normalized);
   if(!modules){diagnostics.append({Severity::Error,u"ean13-encode"_s,modules.error(),-1,u"^BE"_s});return;}
   const int module=std::max(1,state.barcodeDefaults.moduleWidth);
+  if(module>32000){diagnostics.append({Severity::Error,u"barcode-size"_s,u"EAN-13 module dimensions exceed the allocation limit."_s,-1,u"^BE"_s});return;}
   int height=state.barcodeDefaults.height>0?state.barcodeDefaults.height:100;
   if(barcode.parameters.size()>1&&!barcode.parameters[1].isEmpty())height=std::max(1,barcode.parameters[1].toInt());
   const bool interpretation=barcode.parameters.size()<=2||barcode.parameters[2].compare(u"N",Qt::CaseInsensitive)!=0;
@@ -1007,6 +932,7 @@ void drawEan13(QImage& image,State& state,const Barcode& barcode,const QString& 
   const int textHeight=interpretation?std::max(12,12*module):0;
   const int leftPad=interpretation?14*module:0;
   const int barsTop=interpretation&&interpretationAbove?textHeight:0;
+  if(!barcodeRasterAllowed(qint64(leftPad)+95LL*module,qint64(height)+guardExtra+textHeight,barcode,diagnostics))return;
   QImage symbol(leftPad+95*module,height+guardExtra+textHeight,QImage::Format_ARGB32_Premultiplied);symbol.fill(options.background);
   QPainter p(&symbol);p.setPen(Qt::NoPen);p.setBrush(options.foreground);
   for(int i=0;i<modules->size();++i)if((*modules)[i]){const bool guard=i<3||(i>=45&&i<=49)||i>=92;p.drawRect(leftPad+i*module,barsTop,module,height+(guard?guardExtra:0));}
@@ -1053,6 +979,7 @@ void drawEan13(QImage& image,State& state,const Barcode& barcode,const QString& 
     case Orientation::BottomUp:
       break;
   }
+  observeRaster(state,position,symbol);
   QPainter target(&image);target.drawImage(position,symbol);
 }
 
@@ -1124,7 +1051,9 @@ void drawCode128(QImage& image,State& state,const Barcode& barcode,const QString
       case Orientation::Inverted:position+=QPoint(barsWidth-bounds.right()-1,height-bounds.bottom()-1);break;
       case Orientation::BottomUp:position+=QPoint(bounds.top(),barsWidth-bounds.right()-1);break;
     }
-    QPainter target(&image);target.drawImage(position,rotateImage(symbol,barcode.orientation));
+    const auto rotated=rotateImage(symbol,barcode.orientation);
+    observeRaster(state,position,rotated);
+    QPainter target(&image);target.drawImage(position,rotated);
     return;
   }
   const int gap=interpretation?5:0;
@@ -1187,6 +1116,7 @@ void drawCode128(QImage& image,State& state,const Barcode& barcode,const QString
       case Orientation::BottomUp:position-=QPoint(base,sourceSize.width());break;
     }
   }else if(barcode.orientation==Orientation::Normal)position.ry()-=barsTop;
+  observeRaster(state,position,symbol);
   QPainter target(&image);target.drawImage(position,symbol);
 }
 
@@ -1196,6 +1126,7 @@ void drawCodabar(QImage& image,State& state,const Barcode& barcode,const QString
   if(!modules){diagnostics.append({Severity::Error,u"codabar-encode"_s,modules.error(),-1,u"^BK"_s});return;}
   const int module=std::clamp(state.barcodeDefaults.moduleWidth,1,10);
   const int height=barcode.parameters.size()>2&&!barcode.parameters[2].isEmpty()?std::max(1,barcode.parameters[2].toInt()):std::max(1,state.barcodeDefaults.height);
+  if(!barcodeRasterAllowed(qint64(modules->size())*module,height,barcode,diagnostics))return;
   QImage symbol(modules->size()*module,height,QImage::Format_ARGB32_Premultiplied);symbol.fill(options.background);
   QPainter painter(&symbol);painter.setPen(Qt::NoPen);painter.setBrush(options.foreground);
   for(qsizetype i=0;i<modules->size();++i)if((*modules)[i])painter.drawRect(static_cast<int>(i)*module,0,module,height);
@@ -1304,6 +1235,7 @@ void drawMaxiCode(QImage& image,State& state,const Barcode& barcode,const QByteA
   if(!encoded){diagnostics.append({Severity::Error,u"maxicode-encode"_s,encoded.error(),-1,u"^BD"_s});return;}
   QImage symbol=rotateImage(rasterizeMaxiCode(encoded->grid,options),barcode.orientation);
   QPoint position=state.position;if(state.baseline)position.ry()-=symbol.height();
+  observeRaster(state,position,symbol);
   QPainter target(&image);target.drawImage(position,symbol);
 }
 
@@ -1316,7 +1248,9 @@ void placeNewSymbol(QImage& image,const QImage& original,const State& state,Orie
   QPoint position=state.position;
   if(state.baseline)position-=rotatedEdge(QPoint(state.justification==Justification::Right?original.width():0,original.height()),original.size(),orientation);
   else if(state.justification==Justification::Right)position.rx()-=(orientation==Orientation::Rotated90||orientation==Orientation::BottomUp?original.height():original.width());
-  QPainter painter(&image);painter.drawImage(position,rotateImage(original,orientation));
+  const auto rotated=rotateImage(original,orientation);
+  observeRaster(state,position,rotated);
+  QPainter painter(&image);painter.drawImage(position,rotated);
 }
 
 void drawExtendedLinear(QImage& image,State& state,const Barcode& barcode,const QString& data,const RenderOptions& options,QList<Diagnostic>& diagnostics,RenderFonts& fonts) {
@@ -1480,7 +1414,7 @@ void drawBarcode(QImage& image, State& state, const Barcode& barcode, const Fiel
       u"The field cannot be represented as bytes in the selected character set; use ^CI28 for Unicode or ^FH for binary bytes."_s,
       -1,u'^'+barcode.symbology});
   }
-  else if (barcode.symbology == u"B3") drawCode39(image,state,barcode,data,options);
+  else if (barcode.symbology == u"B3") drawCode39(image,state,barcode,data,options,diagnostics);
   else if(barcode.symbology==u"BQ")drawQrCode(image,state,barcode,*field.bytes,options,diagnostics);
   else if(barcode.symbology==u"BX")drawDataMatrix(image,state,barcode,*field.bytes,options,diagnostics);
   else if(barcode.symbology==u"BE")drawEan13(image,state,barcode,data,options,diagnostics);
@@ -1495,16 +1429,70 @@ void drawBarcode(QImage& image, State& state, const Barcode& barcode, const Fiel
   state.pendingBarcode.reset(); state.reverse=false; state.block.reset();
 }
 
-std::expected<QImage, RenderError> renderLabel(const Label& label, int index, const RenderOptions& options, QList<Diagnostic>& diagnostics,RenderFonts& fonts) {
+std::optional<FieldKind> drawingKind(const Command& command,const State& state) {
+  return std::visit([&](const auto& value)->std::optional<FieldKind>{
+    using T=std::decay_t<decltype(value)>;
+    if constexpr(std::is_same_v<T,FieldData>)return state.pendingBarcode?FieldKind::Barcode:FieldKind::Text;
+    else if constexpr(std::is_same_v<T,GraphicBox>)return FieldKind::Box;
+    else if constexpr(std::is_same_v<T,GraphicCircle>)return FieldKind::Circle;
+    else if constexpr(std::is_same_v<T,GraphicEllipse>)return FieldKind::Ellipse;
+    else if constexpr(std::is_same_v<T,GraphicDiagonal>)return FieldKind::Diagonal;
+    else if constexpr(std::is_same_v<T,GraphicField>)return FieldKind::Graphic;
+    else if constexpr(std::is_same_v<T,UnknownCommand>)return FieldKind::Unknown;
+    else return std::nullopt;
+  },command.payload);
+}
+
+FieldSettings effectiveSettings(const State& state,const Command& command,QPoint home,int top,
+                                Orientation printOrientation,bool mirror) {
+  FieldSettings settings;
+  settings.position=state.position;settings.baseline=state.baseline;
+  settings.justification=state.justification;settings.font=state.font;settings.defaultFont=state.defaultFont;
+  settings.fieldDirection=state.fieldDirection;settings.barcodeDefaults=state.barcodeDefaults;
+  settings.barcode=state.pendingBarcode;settings.barcodeInterpretationFont=state.barcodeInterpretationFont;
+  settings.block=state.block;settings.parameter=state.parameter;settings.characterSet=state.characterSet;
+  settings.hexIndicator=state.hexIndicator;
+  if(const auto* field=std::get_if<FieldData>(&command.payload)){
+    settings.characterSet=field->characterSet;settings.hexIndicator=field->hexIndicator;
+  }
+  settings.labelHome=home;settings.labelShift=state.labelShift;settings.labelTop=top;
+  settings.reverse=state.reverse;settings.printOrientation=printOrientation;settings.mirror=mirror;
+  return settings;
+}
+
+QTransform outputTransform(QSize size,Orientation orientation,bool mirror) {
+  QTransform transform;
+  switch(orientation){
+    case Orientation::Rotated90:transform=QTransform(0,1,-1,0,size.height(),0);break;
+    case Orientation::Inverted:transform=QTransform(-1,0,0,-1,size.width(),size.height());break;
+    case Orientation::BottomUp:transform=QTransform(0,-1,1,0,0,size.width());break;
+    default:break;
+  }
+  if(mirror){
+    const int width=(orientation==Orientation::Rotated90||orientation==Orientation::BottomUp)?size.height():size.width();
+    transform=transform*QTransform(-1,0,0,1,width,0);
+  }
+  return transform;
+}
+
+std::expected<QImage, RenderError> interpretLabel(const Label& label, int index, const RenderOptions& options,
+  QList<Diagnostic>& diagnostics,RenderFonts& fonts,bool rasterize,QList<FieldInfo>* fields,
+  QList<FieldGeometry>* geometries,int initialCharacterSet) {
   const int width=options.width>0?options.width:(label.width()>0?label.width():812);
   const int height=options.height>0?options.height:(label.height()>0?label.height():1218);
-  if(width<=0||height<=0||width>100000||height>100000||qint64(width)*height>64*1024*1024) return std::unexpected(RenderError{u"invalid-size"_s,u"Label dimensions are invalid or unsafe."_s,index});
-  QImage image(width,height,QImage::Format_ARGB32_Premultiplied); image.fill(options.background);
-  State state;
-  int labelTop=0;bool mirror=false;
+  if(rasterize&&(width<=0||height<=0||width>100000||height>100000||qint64(width)*height>64*1024*1024)) return std::unexpected(RenderError{u"invalid-size"_s,u"Label dimensions are invalid or unsafe."_s,index});
+  QImage image;
+  if(rasterize){
+    image=QImage(width,height,QImage::Format_ARGB32_Premultiplied);
+    if(image.isNull())return std::unexpected(RenderError{u"raster-allocation"_s,u"The label raster could not be allocated."_s,index});
+    image.fill(options.background);
+  }
+  State state;state.rasterize=rasterize;state.characterSet=initialCharacterSet;
+  int labelTop=0;bool mirror=false;Orientation finalOrientation=Orientation::Normal;
   for(const auto& command:label.commands()){
     if(const auto* top=std::get_if<LabelTop>(&command.payload))labelTop=top->dots;
     if(const auto* value=std::get_if<PrintMirror>(&command.payload))mirror=value->enabled;
+    if(const auto* value=std::get_if<PrintOrientation>(&command.payload))finalOrientation=value->orientation;
   }
   // An explicitly requested canvas centers a narrower/wider ^PW print area.
   // Apply this before ^PO/^PM, as the Labelary canvas does.
@@ -1512,19 +1500,57 @@ std::expected<QImage, RenderError> renderLabel(const Label& label, int index, co
   const qint64 homeX=qint64(options.ignoreLabelHome?0:label.homeX())+printOffset;
   const qint64 homeY=qint64(options.ignoreLabelHome?0:label.homeY())+labelTop;
 
-  const auto prepareGraphicPainter=[&](QPainter& painter,LineColor color,int thickness){
-    if(state.reverse){painter.setCompositionMode(QPainter::CompositionMode_Difference);painter.setPen(QPen(Qt::white,thickness));painter.setBrush(Qt::white);}
-    else{const auto drawColor=commandColor(color,options);painter.setPen(QPen(drawColor,thickness));painter.setBrush(drawColor);}
-  };
-
-  for(const auto& command:label.commands()) {
+  qsizetype segmentStart=0,segmentEnd=-1;
+  SourceSpan segmentSpan;bool segmentUnknown=false;
+  const auto& commands=label.commands();
+  QList<qsizetype> unknownOffsets;
+  if(fields||geometries){
+    for(const auto& diagnostic:diagnostics)
+      if(diagnostic.code==u"unsupported-command")unknownOffsets.append(diagnostic.offset);
+    std::sort(unknownOffsets.begin(),unknownOffsets.end());
+  }
+  const QTransform transform=outputTransform(QSize(width,height),finalOrientation,mirror);
+  const QRect outputCanvas=transform.mapRect(QRect(0,0,width,height));
+  for(qsizetype commandIndex=0;commandIndex<commands.size();++commandIndex) {
+    if(options.stopToken.stop_requested())return std::unexpected(RenderError{u"operation-cancelled"_s,u"The operation was cancelled."_s,index});
+    const auto& command=commands[commandIndex];
     state.reverse=state.labelReverse||state.fieldReverse;
+    const auto kind=drawingKind(command,state);
+    std::optional<FieldInfo> field;
+    State::Observation observation;
+    state.observation=geometries&&kind?&observation:nullptr;
+    if((fields||geometries)&&kind){
+      if(segmentEnd<commandIndex){
+        segmentStart=commandIndex;
+        while(segmentStart>0&&!std::holds_alternative<FieldSeparator>(commands[segmentStart-1].payload)
+          &&!std::holds_alternative<FormatStart>(commands[segmentStart-1].payload))--segmentStart;
+        segmentEnd=commandIndex;segmentUnknown=false;
+        while(segmentEnd+1<commands.size()&&!std::holds_alternative<FieldSeparator>(commands[segmentEnd].payload)
+          &&!std::holds_alternative<FormatEnd>(commands[segmentEnd+1].payload))++segmentEnd;
+        // Omitted unknown commands still belong to this source segment. Start
+        // at the preceding field/format boundary, not the first saved command.
+        const auto boundary=segmentStart>0?commands[segmentStart-1].sourceSpan:label.sourceSpan();
+        const qsizetype sourceStart=segmentStart>0?boundary.start+boundary.length:boundary.start;
+        const auto end=commands[segmentEnd].sourceSpan;
+        segmentSpan={sourceStart,end.start+end.length-sourceStart};
+        for(qsizetype i=segmentStart;i<=segmentEnd;++i)
+          segmentUnknown|=std::holds_alternative<UnknownCommand>(commands[i].payload);
+        if(!segmentUnknown){
+          const auto unknown=std::lower_bound(unknownOffsets.cbegin(),unknownOffsets.cend(),segmentSpan.start);
+          segmentUnknown=unknown!=unknownOffsets.cend()&&*unknown<segmentSpan.start+segmentSpan.length;
+        }
+      }
+      field=FieldInfo{command.offset,index,commandIndex,segmentSpan,command.sourceSpan,*kind,
+        effectiveSettings(state,command,QPoint(label.homeX(),label.homeY()),labelTop,finalOrientation,mirror),segmentUnknown};
+      if(fields)fields->append(*field);
+    }
+    const qsizetype firstDiagnostic=diagnostics.size();
     std::visit([&](const auto& value){
       using T=std::decay_t<decltype(value)>;
       if constexpr(std::is_same_v<T,FieldOrigin>){state.position=printerPosition(qint64(value.x)+state.labelShift+homeX,qint64(value.y)+homeY);state.baseline=false;state.justification=value.useDefaultJustification?state.defaultJustification:value.justification;}
       else if constexpr(std::is_same_v<T,FieldTypeset>){state.position=printerPosition(value.usePreviousX?state.nextTypeset.x():qint64(value.x)+state.labelShift+homeX,value.usePreviousY?state.nextTypeset.y():qint64(value.y)+homeY);state.baseline=true;state.justification=value.useDefaultJustification?state.defaultJustification:value.justification;}
       else if constexpr(std::is_same_v<T,ScalableFont>) {state.font=value;state.barcodeInterpretationFont=value;}
-      else if constexpr(std::is_same_v<T,FieldSeparator>) {state.font=state.defaultFont;state.barcodeInterpretationFont.reset();state.fieldReverse=false;state.parameter={};state.pendingBarcode.reset();state.block.reset();}
+      else if constexpr(std::is_same_v<T,FieldSeparator>) {state.font=state.defaultFont;state.barcodeInterpretationFont.reset();state.fieldReverse=false;state.parameter={};state.pendingBarcode.reset();state.block.reset();state.hexIndicator={};}
       else if constexpr(std::is_same_v<T,ChangeFont>){state.defaultFont={value.font,Orientation::Normal,value.height,value.width};state.font=state.defaultFont;}
       else if constexpr(std::is_same_v<T,FieldDirection>){state.fieldDirection=value.orientation;state.defaultJustification=value.justification;}
       else if constexpr(std::is_same_v<T,FieldReverse>) state.fieldReverse=true;
@@ -1532,6 +1558,8 @@ std::expected<QImage, RenderError> renderLabel(const Label& label, int index, co
       else if constexpr(std::is_same_v<T,FieldParameter>) state.parameter=value;
       else if constexpr(std::is_same_v<T,FieldBlock>) state.block=value;
       else if constexpr(std::is_same_v<T,FieldEncoding>) { /* Accepted compatibility command; no raster state change. */ }
+      else if constexpr(std::is_same_v<T,CharacterSet>) state.characterSet=value.id;
+      else if constexpr(std::is_same_v<T,FieldHex>) state.hexIndicator=value.indicator;
       else if constexpr(std::is_same_v<T,BarcodeDefault>) state.barcodeDefaults=value;
       else if constexpr(std::is_same_v<T,LabelShift>) state.labelShift=value.dots;
       else if constexpr(std::is_same_v<T,PrintMode>) { /* Print mode does not change local raster geometry. */ }
@@ -1544,6 +1572,7 @@ std::expected<QImage, RenderError> renderLabel(const Label& label, int index, co
       }
       else if constexpr(std::is_same_v<T,FieldData>){
         if(state.pendingBarcode){
+          if(!rasterize){state.pendingBarcode.reset();state.reverse=false;state.block.reset();return;}
           const auto firstDiagnostic=diagnostics.size();
           drawBarcode(image,state,*state.pendingBarcode,value,options,diagnostics,fonts);
           for(qsizetype i=firstDiagnostic;i<diagnostics.size();++i){
@@ -1557,11 +1586,15 @@ std::expected<QImage, RenderError> renderLabel(const Label& label, int index, co
         }
       }
       else if constexpr(std::is_same_v<T,GraphicBox>){
+        if(value.width<0||value.height<0||value.width>32000||value.height>32000||value.thickness>32000){diagnostics.append({Severity::Error,u"graphic-dimensions"_s,u"Graphic dimensions must be between 0 and 32000 dots."_s,command.offset,command.source});state.reverse=false;return;}
         const int boxWidth=value.width>0?value.width:value.thickness;
         const int boxHeight=value.height>0?value.height:value.thickness;
         const QPoint origin=state.position-QPoint(state.justification==Justification::Right?boxWidth:0,state.baseline?boxHeight:0);
         const auto fillRectangle=QRect(origin,QSize(boxWidth,boxHeight));
-        const bool filled=value.thickness*2>=std::min(boxWidth,boxHeight);
+        observeLogical(state,fillRectangle);
+        if(state.reverse||commandColor(value.color,options).alpha()>0)observePaint(state,fillRectangle);
+        if(!rasterize){state.reverse=false;return;}
+        const bool filled=qint64(value.thickness)*2>=std::min(boxWidth,boxHeight);
         QPainterPath path;path.setFillRule(Qt::OddEvenFill);path.addRect(QRectF(fillRectangle));
         if(!filled){const int inset=std::min({value.thickness,boxWidth/2,boxHeight/2});path.addRect(QRectF(fillRectangle.adjusted(inset,inset,-inset,-inset)));}
         QPainter p(&image);p.setRenderHint(QPainter::Antialiasing,false);p.setPen(Qt::NoPen);p.setBrush(state.reverse?Qt::white:commandColor(value.color,options));
@@ -1573,6 +1606,17 @@ std::expected<QImage, RenderError> renderLabel(const Label& label, int index, co
         const int height=[](const auto& graphic){if constexpr(std::is_same_v<T,GraphicCircle>)return graphic.diameter;else return graphic.height;}(value);
         if(width<0||height<0||width>32000||height>32000||value.thickness>32000){diagnostics.append({Severity::Error,u"graphic-dimensions"_s,u"Graphic dimensions must be between 0 and 32000 dots."_s,command.offset,command.source});state.reverse=false;return;}
         const QPoint origin=GraphicGeometry::anchoredOrigin(state.position,width,height,state.justification==Justification::Right,state.baseline);
+        observeLogical(state,QRect(origin,QSize(width,height)));
+        if(state.observation&&width>0&&height>0&&(state.reverse||commandColor(value.color,options).alpha()>0)){
+          const auto outer=GraphicGeometry::ellipse(origin,width,height,false);
+          QRect paint;
+          for(int y=origin.y();y<qint64(origin.y())+height;++y){
+            const auto [left,right]=GraphicGeometry::span(outer,y);
+            if(right>left)paint|=QRect(left,y,right-left,1);
+          }
+          observePaint(state,paint);
+        }
+        if(!rasterize){state.reverse=false;return;}
         QPainter p(&image);p.setRenderHint(QPainter::Antialiasing,false);p.setPen(Qt::NoPen);p.setBrush(state.reverse?Qt::white:commandColor(value.color,options));
         if(state.reverse)p.setCompositionMode(QPainter::CompositionMode_Difference);
         GraphicGeometry::drawEllipse(p,origin,width,height,value.thickness,image.size());state.reverse=false;
@@ -1580,24 +1624,69 @@ std::expected<QImage, RenderError> renderLabel(const Label& label, int index, co
       else if constexpr(std::is_same_v<T,GraphicDiagonal>){
         if(value.width<0||value.height<0||value.width>32000||value.height>32000||value.thickness>32000){diagnostics.append({Severity::Error,u"graphic-dimensions"_s,u"Graphic dimensions must be between 0 and 32000 dots."_s,command.offset,command.source});state.reverse=false;return;}
         const QPoint origin=GraphicGeometry::anchoredOrigin(state.position,value.width,value.height,state.justification==Justification::Right,state.baseline);
+        observeLogical(state,QRect(origin,QSize(value.width,value.height)));
+        if(value.width>0&&value.height>0&&value.thickness>0&&(state.reverse||commandColor(value.color,options).alpha()>0)){
+          const qint64 step=qint64(value.width)*1024/value.height;
+          const qint64 last=step*(value.height-1);
+          const int firstX=value.orientation==u'L'?0:int((qint64(value.width)*1024-last+1023)/1024);
+          const int lastX=value.orientation==u'L'?int((last+1023)/1024):value.width;
+          observePaint(state,QRect(origin+QPoint(firstX,0),QSize(lastX-firstX+value.thickness,value.height)));
+        }
+        if(!rasterize){state.reverse=false;return;}
         QPainter p(&image);p.setPen(Qt::NoPen);p.setBrush(state.reverse?Qt::white:commandColor(value.color,options));
         if(state.reverse)p.setCompositionMode(QPainter::CompositionMode_Difference);
         GraphicGeometry::drawDiagonal(p,origin,value.width,value.height,value.thickness,value.orientation==u'L',image.size());
         state.reverse=false;
       }
       else if constexpr(std::is_same_v<T,GraphicField>) {
+        if(!rasterize)return;
+        const auto decoded=decodeGraphic(value,{options.maxGraphicBytes,options.stopToken});
+        if(!decoded){
+          diagnostics.append({Severity::Error,decoded.error().code,decoded.error().message,command.offset,command.source});return;
+        }
         QPoint position=state.position;
-        if(state.baseline&&value.bytesPerRow>0)position.ry()-=value.totalBytes/value.bytesPerRow;
-        if(state.justification==Justification::Right)position.rx()-=value.bytesPerRow*8;
+        if(state.baseline)position=printerPosition(position.x(),qint64(position.y())-decoded->size.height());
+        if(state.justification==Justification::Right)position=printerPosition(qint64(position.x())-decoded->size.width(),position.y());
         if(state.reverse){
           QImage mask(image.size(),QImage::Format_ARGB32_Premultiplied);mask.fill(Qt::transparent);
           auto ink=options;ink.background=Qt::transparent;ink.foreground=Qt::white;
-          drawGraphicField(mask,position,value,ink,command.offset,diagnostics);
+          drawGraphicField(mask,position,*decoded,ink,state);
           QPainter painter(&image);painter.setCompositionMode(QPainter::CompositionMode_Difference);painter.drawImage(0,0,mask);
-        }else drawGraphicField(image,position,value,options,command.offset,diagnostics);
+        }else drawGraphicField(image,position,*decoded,options,state);
       }
     },command.payload);
+    if(options.stopToken.stop_requested())return std::unexpected(RenderError{u"operation-cancelled"_s,u"The operation was cancelled."_s,index});
+    bool error=false,unsupported=kind==FieldKind::Unknown;
+    for(qsizetype i=firstDiagnostic;i<diagnostics.size();++i){
+      auto& diagnostic=diagnostics[i];diagnostic.labelIndex=index;
+      if(kind)diagnostic.fieldId=command.offset;
+      if(diagnostic.offset<0)diagnostic.offset=command.offset;
+      if(!diagnostic.sourceSpan){
+        const auto source=std::lower_bound(commands.cbegin(),commands.cend(),diagnostic.offset,
+          [](const Command& candidate,qsizetype offset){return candidate.offset<offset;});
+        if(source!=commands.cend()&&source->offset==diagnostic.offset){
+          diagnostic.sourceSpan=source->sourceSpan;diagnostic.command=source->source;
+        }
+      }
+      if(diagnostic.command.isEmpty())diagnostic.command=command.source;
+      error|=diagnostic.severity==Severity::Error;
+      unsupported|=diagnostic.code==u"barcode-render-pending";
+    }
+    if(diagnostics.size()>options.maxDiagnostics)
+      return std::unexpected(RenderError{u"render-diagnostic-limit"_s,u"The diagnostic budget was exceeded."_s,index});
+    if(geometries&&field){
+      FieldGeometry geometry;geometry.field=std::move(*field);
+      geometry.logicalBounds=transform.mapRect(observation.logicalBounds);
+      geometry.paintBounds=transform.mapRect(observation.paintBounds);
+      geometry.clippedBounds=geometry.paintBounds.intersected(outputCanvas);
+      geometry.anchor=transform.map(geometry.field.settings.position);
+      geometry.baseline=geometry.field.settings.baseline;geometry.labelTransform=transform;
+      geometry.status=error?FieldStatus::Error:unsupported?FieldStatus::Unsupported:
+        geometry.paintBounds.isEmpty()?FieldStatus::Empty:geometry.clippedBounds.isEmpty()?FieldStatus::Clipped:FieldStatus::Drawn;
+      geometries->append(std::move(geometry));
+    }
   }
+  if(!rasterize)return QImage{};
   image=rotateImage(image,state.printOrientation);
   if(mirror)image.flip(Qt::Horizontal);
   return image;
@@ -1605,11 +1694,101 @@ std::expected<QImage, RenderError> renderLabel(const Label& label, int index, co
 
 } // namespace
 
+namespace {
+int nextCharacterSet(const Label& label,int previous) {
+  for(const auto& command:label.commands())
+    if(const auto* value=std::get_if<CharacterSet>(&command.payload))previous=value->id;
+  return previous;
+}
+
+int initialCharacterSet(const Document& document,int labelIndex) {
+  int result=0;
+  for(int i=0;i<labelIndex;++i)result=nextCharacterSet(document.labels()[i],result);
+  return result;
+}
+
+std::expected<void,RenderError> validateOperation(const Document& document,const RenderOptions& options,
+  std::optional<int> selected,bool rasterize) {
+  if(options.stopToken.stop_requested())
+    return std::unexpected(RenderError{u"operation-cancelled"_s,u"The operation was cancelled."_s,selected.value_or(-1)});
+  if(options.dpi!=203&&options.dpi!=300&&options.dpi!=600)
+    return std::unexpected(RenderError{u"invalid-dpi"_s,u"DPI must be 203, 300, or 600."_s,-1});
+  if(selected&&(*selected<0||*selected>=document.labels().size()))
+    return std::unexpected(RenderError{u"invalid-label-index"_s,u"The label index is outside the document."_s,*selected});
+  if(options.width<0||options.height<0||options.maxTotalPixels<0||options.maxGraphicBytes<0||options.maxDiagnostics<0)
+    return std::unexpected(RenderError{u"invalid-render-options"_s,u"Render limits and dimensions must not be negative."_s,-1});
+  if(document.diagnostics().size()>options.maxDiagnostics)
+    return std::unexpected(RenderError{u"render-diagnostic-limit"_s,u"The diagnostic budget was exceeded."_s,-1});
+  qint64 pixels=0,graphicBytes=0;
+  const qsizetype first=selected.value_or(0),last=selected?*selected+1:document.labels().size();
+  for(qsizetype i=first;i<last;++i){
+    const auto& label=document.labels()[i];
+    if(rasterize){
+      const qint64 width=options.width>0?options.width:label.width()>0?label.width():812;
+      const qint64 height=options.height>0?options.height:label.height()>0?label.height():1218;
+      if(width>100000||height>100000||width*height>64*1024*1024)
+        return std::unexpected(RenderError{u"invalid-size"_s,u"Label dimensions are invalid or unsafe."_s,int(i)});
+      if(width*height>options.maxTotalPixels-pixels)
+        return std::unexpected(RenderError{u"render-pixel-limit"_s,u"The total output pixel budget was exceeded."_s,int(i)});
+      pixels+=width*height;
+      for(const auto& command:label.commands()){
+        if(options.stopToken.stop_requested())
+          return std::unexpected(RenderError{u"operation-cancelled"_s,u"The operation was cancelled."_s,int(i)});
+        if(const auto* graphic=std::get_if<GraphicField>(&command.payload)){
+          const qint64 bytes=graphic->bytesPerRow>0&&graphic->totalBytes>0
+            ?((qint64(graphic->totalBytes)+graphic->bytesPerRow-1)/graphic->bytesPerRow)*graphic->bytesPerRow:0;
+          if(bytes>options.maxGraphicBytes-graphicBytes)
+            return std::unexpected(RenderError{u"render-graphic-limit"_s,u"The total decoded graphic budget was exceeded."_s,int(i)});
+          graphicBytes+=bytes;
+        }
+      }
+    }
+  }
+  return {};
+}
+}
+
 std::expected<RenderResult, RenderError> render(const Document& document, const RenderOptions& options) {
-  if(options.dpi!=203&&options.dpi!=300&&options.dpi!=600) return std::unexpected(RenderError{u"invalid-dpi"_s,u"DPI must be 203, 300, or 600."_s,-1});
-  RenderResult result; result.diagnostics=document.diagnostics(); result.labels.reserve(document.labels().size());
+  if(auto valid=validateOperation(document,options,std::nullopt,true);!valid)return std::unexpected(valid.error());
+  RenderResult result;result.diagnostics=document.diagnostics();result.labels.reserve(document.labels().size());
+  RenderFonts fonts;int characterSet=0;
+  for(int i=0;i<document.labels().size();++i){
+    auto image=interpretLabel(document.labels()[i],i,options,result.diagnostics,fonts,true,nullptr,
+      options.collectFieldGeometry?&result.fields:nullptr,characterSet);
+    if(!image)return std::unexpected(image.error());
+    result.labels.append(std::move(*image));
+    characterSet=nextCharacterSet(document.labels()[i],characterSet);
+  }
+  return result;
+}
+
+std::expected<LabelRenderResult,RenderError> renderLabel(const Document& document,int labelIndex,const RenderOptions& options) {
+  if(auto valid=validateOperation(document,options,labelIndex,true);!valid)return std::unexpected(valid.error());
+  LabelRenderResult result;result.labelIndex=labelIndex;result.diagnostics=document.diagnostics();
   RenderFonts fonts;
-  for(int i=0;i<document.labels().size();++i){auto image=renderLabel(document.labels()[i],i,options,result.diagnostics,fonts);if(!image)return std::unexpected(image.error());result.labels.append(std::move(*image));}
+  auto image=interpretLabel(document.labels()[labelIndex],labelIndex,options,result.diagnostics,fonts,true,nullptr,
+    options.collectFieldGeometry?&result.fields:nullptr,initialCharacterSet(document,labelIndex));
+  if(!image)return std::unexpected(image.error());
+  result.image=std::move(*image);
+  return result;
+}
+
+std::expected<AnalysisResult,RenderError> analyze(const Document& document,const RenderOptions& options) {
+  if(auto valid=validateOperation(document,options,std::nullopt,false);!valid)return std::unexpected(valid.error());
+  AnalysisResult result;result.diagnostics=document.diagnostics();RenderFonts fonts;int characterSet=0;
+  for(int i=0;i<document.labels().size();++i){
+    auto analyzed=interpretLabel(document.labels()[i],i,options,result.diagnostics,fonts,false,&result.fields,nullptr,characterSet);
+    if(!analyzed)return std::unexpected(analyzed.error());
+    characterSet=nextCharacterSet(document.labels()[i],characterSet);
+  }
+  return result;
+}
+
+std::expected<AnalysisResult,RenderError> analyzeLabel(const Document& document,int labelIndex,const RenderOptions& options) {
+  if(auto valid=validateOperation(document,options,labelIndex,false);!valid)return std::unexpected(valid.error());
+  AnalysisResult result;result.diagnostics=document.diagnostics();RenderFonts fonts;
+  auto analyzed=interpretLabel(document.labels()[labelIndex],labelIndex,options,result.diagnostics,fonts,false,&result.fields,nullptr,initialCharacterSet(document,labelIndex));
+  if(!analyzed)return std::unexpected(analyzed.error());
   return result;
 }
 

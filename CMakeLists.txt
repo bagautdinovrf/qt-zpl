@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.25)
 
-project(QtZpl VERSION 0.1.0 LANGUAGES CXX)
+project(QtZpl VERSION 0.2.0 LANGUAGES CXX)
 
 option(QTZPL_BUILD_SHARED "Build QtZpl as a shared library" ON)
 option(QTZPL_BUILD_TESTS "Build QtZpl tests" ON)
@@ -14,6 +14,18 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
 find_package(Qt6 6.11 REQUIRED COMPONENTS Core Gui)
+
+# Bounded Z64 inflation uses the same zlib implementation as Qt Core where
+# available. System-Qt builds use the system development package instead.
+find_package(Qt6ZlibPrivate QUIET)
+if(TARGET Qt6::ZlibPrivate)
+  set(QTZPL_ZLIB_BUNDLED ON)
+  set(QTZPL_ZLIB_TARGET Qt6::ZlibPrivate)
+else()
+  find_package(ZLIB REQUIRED)
+  set(QTZPL_ZLIB_BUNDLED OFF)
+  set(QTZPL_ZLIB_TARGET ZLIB::ZLIB)
+endif()
 
 # Use Qt's own FreeType when available, keeping Windows free of another DLL.
 # Unix Qt packages may instead use their system FreeType.
@@ -43,6 +55,7 @@ add_library(QtZpl ${QTZPL_LIBRARY_TYPE}
   src/micropdf417_encoder.cpp
   src/maxicode_encoder.cpp
   src/parser.cpp
+  src/graphic_decoder.cpp
   src/pdf417_encoder.cpp
   src/renderer.cpp
 )
@@ -60,9 +73,10 @@ if(NOT QTZPL_BUILD_SHARED)
 endif()
 target_link_libraries(QtZpl PUBLIC Qt6::Core Qt6::Gui)
 target_link_libraries(QtZpl PRIVATE ${QTZPL_FREETYPE_TARGETS})
+target_link_libraries(QtZpl PRIVATE ${QTZPL_ZLIB_TARGET})
 set_target_properties(QtZpl PROPERTIES
   VERSION ${PROJECT_VERSION}
-  SOVERSION ${PROJECT_VERSION_MAJOR}
+  SOVERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
   EXPORT_NAME QtZpl
 )
 
@@ -102,7 +116,7 @@ configure_package_config_file(cmake/QtZplConfig.cmake.in
 write_basic_package_version_file(
   ${CMAKE_CURRENT_BINARY_DIR}/QtZplConfigVersion.cmake
   VERSION ${PROJECT_VERSION}
-  COMPATIBILITY SameMajorVersion
+  COMPATIBILITY SameMinorVersion
 )
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/QtZplConfig.cmake

@@ -89,6 +89,7 @@ int main(int argc, char* argv[]) {
     Bench::addPipelineCases(cases, parser.value(u"corpus"_s));
     Bench::addAlgorithmCases(cases);
     Bench::addExtensionCases(cases);
+    Bench::addDesignerCases(cases);
     Bench::addComponentCases(cases, QString::fromUtf8(QTZPL_BENCH_FONT_FILE));
     cases.push_back({u"component/harness-dispatch"_s, u"components"_s,
       u"std::function dispatch and checksum baseline, no production work"_s,

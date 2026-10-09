@@ -4,6 +4,7 @@ add_executable(qtzpl_benchmarks
   pipeline_cases.cpp
   component_cases.cpp
   extension_cases.cpp
+  designer_cases.cpp
   ../src/linear_encoders.cpp
   ../src/aztec_encoder.cpp
   ../src/databar_encoder.cpp

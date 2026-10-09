@@ -81,6 +81,10 @@ The library does not own:
   source-compatible where practical.
 - Parser implementation belongs in `src/parser.cpp`; raster composition and
   ZPL rendering state belong in `src/renderer.cpp`.
+- Field analysis and optional geometry use that same renderer interpreter;
+  do not add an independent state machine for editor consumers. Bounded graphic
+  decoding belongs in `src/graphic_decoder.cpp` and is shared by the public
+  decoder and renderer. Public consumer contracts are documented in README.md.
 - Barcode algorithms belong in isolated encoder modules. They must be testable
   independently from `QPainter` and must not depend on GUI state.
 - `Document` and `Label` are read-only to library consumers. Mutation required

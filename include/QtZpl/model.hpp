@@ -3,6 +3,7 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QList>
 #include <QtCore/QString>
+#include <QtCore/QStringView>
 #include <QtCore/QVariant>
 #include <QtCore/QtGlobal>
 #include <optional>
@@ -17,12 +18,24 @@ enum class Orientation : char { Normal = 'N', Rotated90 = 'R', Inverted = 'I', B
 enum class Justification : char { Left = 'L', Right = 'R', Center = 'C', Justified = 'J', Auto = 'A' };
 enum class LineColor : char { Black = 'B', White = 'W' };
 
+// Half-open range in UTF-16 code units of Document::source().
+// A negative start denotes an unavailable location, never a guessed offset.
+struct SourceSpan {
+  qsizetype start = -1;
+  qsizetype length = 0;
+  [[nodiscard]] bool isValid() const noexcept { return start >= 0 && length >= 0; }
+  friend bool operator==(const SourceSpan&, const SourceSpan&) = default;
+};
+
 struct Diagnostic {
   Severity severity = Severity::Warning;
   QString code;
   QString message;
   qsizetype offset = -1;
   QString command;
+  std::optional<int> labelIndex;
+  std::optional<qsizetype> fieldId;
+  std::optional<SourceSpan> sourceSpan;
 };
 
 struct FormatStart {};
@@ -41,6 +54,10 @@ struct FieldData {
   // without loss. An engaged empty array is a valid empty field. Invalid UTF-8
   // can still have exact bytes for a binary barcode; never re-encode data.
   std::optional<QByteArray> bytes;
+  QString rawData;
+  SourceSpan sourceSpan; // Payload only, excluding ^FD/^FV and ^FS.
+  int characterSet = 0;
+  QChar hexIndicator; // Null when ^FH was not active for this field.
 };
 struct FieldDirection { Orientation orientation = Orientation::Normal; Justification justification = Justification::Left; };
 struct FieldBlock { int width = 0; int maxLines = 1; int lineSpacing = 0; Justification justification = Justification::Left; int hangingIndent = 0; };
@@ -75,6 +92,8 @@ struct LabelTop { int dots = 0; };
 struct PrintMirror { bool enabled = false; };
 struct LabelReverse { bool enabled = false; };
 struct FieldParameter { QChar direction = u'H'; int spacing = 0; };
+struct FieldHex { QChar indicator = u'_'; };
+struct SyntaxCommand { QString opcode; QChar character; }; // CC, CT or CD.
 
 using CommandPayload = std::variant<
     FormatStart, FormatEnd, FieldSeparator, FieldReverse, FieldOrigin, FieldTypeset,
@@ -82,12 +101,14 @@ using CommandPayload = std::variant<
     BarcodeDefault, PrintWidth, LabelLength, LabelHome, LabelShift, PrintMode,
     PrintOrientation, PrintRate, MediaDarkness, PrintQuantity, GraphicBox,
     GraphicCircle, GraphicDiagonal, GraphicEllipse, GraphicField, Barcode, Comment,
-    UnknownCommand, LabelTop, PrintMirror, LabelReverse, FieldParameter>;
+    UnknownCommand, LabelTop, PrintMirror, LabelReverse, FieldParameter,
+    FieldHex, SyntaxCommand>;
 
 struct Command {
   CommandPayload payload;
   qsizetype offset = -1;
   QString source;
+  SourceSpan sourceSpan; // Exact spelling; source above remains normalized.
 };
 
 class QTZPL_EXPORT Label final {
@@ -97,6 +118,7 @@ public:
   [[nodiscard]] int homeX() const noexcept { return homeX_; }
   [[nodiscard]] int homeY() const noexcept { return homeY_; }
   [[nodiscard]] const QList<Command>& commands() const noexcept { return commands_; }
+  [[nodiscard]] SourceSpan sourceSpan() const noexcept { return sourceSpan_; }
 
 private:
   friend class Parser;
@@ -105,17 +127,26 @@ private:
   int homeX_ = 0;
   int homeY_ = 0;
   QList<Command> commands_;
+  SourceSpan sourceSpan_;
 };
 
 class QTZPL_EXPORT Document final {
 public:
   [[nodiscard]] const QList<Label>& labels() const noexcept { return labels_; }
   [[nodiscard]] const QList<Diagnostic>& diagnostics() const noexcept { return diagnostics_; }
+  [[nodiscard]] const QString& source() const noexcept { return source_; }
+  // Returned view is valid while this Document's source is alive.
+  [[nodiscard]] QStringView sourceText(SourceSpan span) const noexcept {
+    if (!span.isValid() || span.start > source_.size() || span.length > source_.size() - span.start)
+      return {};
+    return QStringView{source_}.sliced(span.start, span.length);
+  }
 
 private:
   friend class Parser;
   QList<Label> labels_;
   QList<Diagnostic> diagnostics_;
+  QString source_;
 };
 
 } // namespace QtZpl

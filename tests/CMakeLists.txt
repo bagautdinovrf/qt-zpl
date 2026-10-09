@@ -187,3 +187,13 @@ add_executable(qtzpl_field_data_tests test_field_data.cpp)
 target_link_libraries(qtzpl_field_data_tests PRIVATE QtZpl::QtZpl Qt6::Test)
 add_test(NAME qtzpl_field_data_tests COMMAND qtzpl_field_data_tests
   -o "${CMAKE_CURRENT_BINARY_DIR}/field_data_results.txt,txt")
+
+add_executable(qtzpl_parser_contract_tests test_parser_contract.cpp)
+target_link_libraries(qtzpl_parser_contract_tests PRIVATE QtZpl::QtZpl Qt6::Test)
+add_test(NAME qtzpl_parser_contract_tests COMMAND qtzpl_parser_contract_tests
+  -o "${CMAKE_CURRENT_BINARY_DIR}/parser_contract_results.txt,txt")
+
+add_executable(qtzpl_designer_api_tests test_designer_api.cpp)
+target_link_libraries(qtzpl_designer_api_tests PRIVATE QtZpl::QtZpl Qt6::Test)
+add_test(NAME qtzpl_designer_api_tests COMMAND qtzpl_designer_api_tests
+  -o "${CMAKE_CURRENT_BINARY_DIR}/designer_api_results.txt,txt")

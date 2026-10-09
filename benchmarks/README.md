@@ -10,6 +10,7 @@
 py -3 tools/build_helper.py benchmark
 py -3 tools/build_helper.py benchmark --benchmark-filter parse/
 py -3 tools/build_helper.py benchmark --benchmark-filter algorithm/qr/
+py -3 tools/build_helper.py benchmark --benchmark-filter designer/
 py -3 tools/build_helper.py benchmark --benchmark-samples 15 --benchmark-min-ms 100 --benchmark-output build_agent_release/after.json
 py -3 tools/compare_benchmarks.py build_agent_release/before.json build_agent_release/after.json
 ```
@@ -51,6 +52,14 @@ EXE без исходников не является переносимым д�
 - `component/*`: извлечённые пробы загрузки шрифта, построения контуров,
   выделения/заполнения изображения и накладных расходов стенда. Они объясняют
   затраты, но сами по себе не доказывают ускорение публичного API.
+- `designer/*`: один неизменяемый разобранный документ из восьми этикеток:
+  полный render, выбранная страница без/с геометрией, полный и постраничный
+  analysis. Подготовка сверяет выбранный растр с полным render и число полей;
+  fingerprints сохраняют пиксели выбранной страницы, фактическое число
+  выходных изображений и метаданные соответствующей операции. Отдельные пары
+  сравнивают декодирование compressed/Z64-графики в packed bytes с рендером
+  той же графики на холсте 812×406. Полное хеширование выполняется до таймера;
+  анализ и геометрия имеют собственные fingerprints, не заменяющие тесты.
 
 ## Методика и проверка результатов
 
