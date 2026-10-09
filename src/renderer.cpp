@@ -255,16 +255,51 @@ private:
   QString font0Error_;
 };
 
+// Authored rectangular U+002D, measured from original bitonal Labelary PNGs.
+// Glyph 16 is verified against the embedded font's SHA/cmap by the metrics
+// tests. Keep its independently measured advance separate from this shape.
+// See tests/golden/font0-dashes for phase and rotation reference pages.
+QRectF font0HyphenBounds(qreal penX,qreal penY,int width,int height,Orientation orientation) {
+  constexpr qreal left=342.0/2048,top=-720.0/2048,right=1517.0/2048,bottom=-497.0/2048;
+  if(height<=100){
+    // Small glyphs are grid-fitted before placement. Rounding pen+edge would
+    // incorrectly change the stroke's width at fractional string positions.
+    const int x=qRound(penX),y=qRound(penY);
+    const int l=x+qRound(left*width),r=x+qRound(right*width);
+    const int t=y+qRound(top*height),b=y+qRound(bottom*height);
+    return QRectF(l,t,r-l,b-t);
+  }
+  const auto snap=[](qreal value,bool down) {
+    // Nearest-even at 1/64 dot is explicit and independent of the process
+    // floating-point rounding mode, including negative half-grid values.
+    const qreal scaled=value*64;
+    auto lower=static_cast<qint64>(std::floor(scaled));
+    const qreal fraction=scaled-lower;
+    if(fraction>0.5||(fraction==0.5&&lower%2!=0))++lower;
+    const qreal grid=qreal(lower)/64;
+    return down?qFloor(grid):qCeil(grid);
+  };
+  // Large glyph edges are quantized in label coordinates after rotation.
+  // Inverting the world-space ceil uses local floor on a reversed axis.
+  const bool reverseX=orientation==Orientation::Inverted||orientation==Orientation::BottomUp;
+  const bool reverseY=orientation==Orientation::Rotated90||orientation==Orientation::Inverted;
+  const int l=snap(penX+left*width,reverseX),r=snap(penX+right*width,reverseX);
+  const int t=snap(penY+top*height,reverseY),b=snap(penY+bottom*height,reverseY);
+  return QRectF(l,t,r-l,b-t);
+}
+
 // Use the font's design grid rather than QFont::setStretch. On Windows the
 // latter quantizes widths through GDI's integer average-character width, while
 // other Qt backends use a different scale. Font 0 has a 1000-unit em and a
 // 750-unit cap height; independent ZPL height/width scale that same design grid.
 class Font0Metrics {
 public:
-  Font0Metrics(int height,int width,RenderFonts& fontContext,FieldParameter parameter={})
+  Font0Metrics(int height,int width,RenderFonts& fontContext,FieldParameter parameter={},
+               Orientation orientation=Orientation::Normal)
     : font(fontContext.font0()),fonts(fontContext),
       fontWidth(std::max(10,width>0?width:height)),scaleX(qreal(fontWidth)/1000),
-      scaleY(static_cast<qreal>(std::max(10,height))/1000.0),fontHeight(std::max(10,height)),parameter(parameter) {}
+      scaleY(static_cast<qreal>(std::max(10,height))/1000.0),fontHeight(std::max(10,height)),
+      parameter(parameter),orientation(orientation) {}
 
   [[nodiscard]] int ascent() const {return qFloor(font.capHeight()*scaleY);}
   [[nodiscard]] int height() const {return std::max(1,fontHeight);}
@@ -285,8 +320,11 @@ public:
       // Reverse fields start at the nominal M-cell edge. Each character's
       // own width is subtracted before painting, including proportional text.
       if(parameter.direction==u'R')x-=advance;
-      QTransform transform;transform.translate(x,y);transform.scale(scaleX,scaleY);
-      result.addPath(transform.map(fonts.font0Glyph(glyphs[i])));
+      if(glyphs[i]==16)result.addRect(font0HyphenBounds(x,y,fontWidth,fontHeight,orientation));
+      else{
+        QTransform transform;transform.translate(x,y);transform.scale(scaleX,scaleY);
+        result.addPath(transform.map(fonts.font0Glyph(glyphs[i])));
+      }
       if(parameter.direction==u'V')y+=fontHeight;
       else if(parameter.direction!=u'R')x+=advance;
     }
@@ -304,6 +342,7 @@ private:
   qreal scaleY;
   int fontHeight;
   FieldParameter parameter;
+  Orientation orientation;
 };
 
 template<typename Metrics>
@@ -469,7 +508,7 @@ void drawBlockText(QImage& image,State& state,const QString& text,const RenderOp
 
 void drawFont0Text(QImage& image,State& state,const QString& text,const RenderOptions& options,
                    int height,int width,Orientation orientation,RenderFonts& fonts) {
-  const Font0Metrics metrics(height,width,fonts,state.parameter);
+  const Font0Metrics metrics(height,width,fonts,state.parameter,orientation);
   const QColor color=state.reverse?options.background:options.foreground;
   if(state.block&&state.block->width>0){
     drawBlockTextLayout(image,state,text,options,metrics,orientation,
@@ -1158,7 +1197,7 @@ void drawCode128(QImage& image,State& state,const Barcode& barcode,const QString
     if(captionFont&&(captionFont->height>32000||captionFont->width>32000)){rasterAllowed(32001,1);return;}
     QImage field;
     if(captionFont&&captionFont->font==u'0'){
-      const Font0Metrics metrics(std::max(1,captionFont->height),captionFont->width,fonts);
+      const Font0Metrics metrics(std::max(1,captionFont->height),captionFont->width,fonts,{},barcode.orientation);
       const auto outline=metrics.outline(interpretationText);
       const QRect bounds=outline.boundingRect().toAlignedRect();
       if(!rasterAllowed(std::max(1,bounds.width()),std::max(1,bounds.height())))return;

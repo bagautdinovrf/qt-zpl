@@ -8,6 +8,31 @@ using namespace Qt::StringLiterals;
 class Font0RasterTest final : public QObject {
   Q_OBJECT
 private slots:
+  void hyphenMatricesMatchLabelary_data() {
+    QTest::addColumn<QString>("name");
+    QTest::newRow("small-asymmetric-and-rotated") << u"small-matrix"_s;
+    QTest::newRow("large-and-fractional-pen-positions") << u"large-and-phases"_s;
+    QTest::newRow("quantization-boundary") << u"boundary-probe"_s;
+    QTest::newRow("fresh-holdout-after-model-freeze") << u"fresh-holdout"_s;
+  }
+
+  void hyphenMatricesMatchLabelary() {
+    QFETCH(QString,name);
+    const auto base=u":/font0-dashes/"_s+name;
+    QFile file(base+u".zpl");QVERIFY(file.open(QIODevice::ReadOnly));
+    const auto golden=QImage(base+u"-labelary-bitonal.png").convertToFormat(QImage::Format_RGB32);
+    QVERIFY(!golden.isNull());
+    const auto document=QtZpl::parse(QString::fromUtf8(file.readAll()));QVERIFY(document);
+    // Independent original bitonal pages contain only hyphens and spaces.
+    // Compare every pixel, including all margins; no similarity tolerance.
+    for(const bool collectGeometry:{false,true}) {
+      const auto result=QtZpl::render(*document,QtZpl::RenderOptions{
+        .width=golden.width(),.height=golden.height(),.collectFieldGeometry=collectGeometry});
+      QVERIFY(result);QVERIFY(result->diagnostics.isEmpty());QCOMPARE(result->labels.size(),1);
+      QCOMPARE(result->labels.front().convertToFormat(QImage::Format_RGB32),golden);
+    }
+  }
+
   void minimumDimensionsMatchLabelarySemantics() {
     const QImage golden(u":/font0-semantics/minimum-size-labelary-bitonal.png"_s);
     QVERIFY(!golden.isNull());
@@ -55,7 +80,7 @@ private slots:
     // image is an independent composition path for the direct-paint fast path.
     for (const int height : {12,18,26,48,54}) for (const auto direction : QStringView(u"HVR")) {
       const auto zpl = u"^XA^CI28^PW640^LL384^FO10,10^GB620,360,3^FS^%1^A0%2,%3,%4"
-                        u"^FP%5,2^FDNORTHLINE Балтийск 0123 Жé^FS^XZ"_s
+                        u"^FP%5,2^FDNORTHLINE-Балтийск 0123 Жé^FS^XZ"_s
                           .arg(origin).arg(orientation).arg(height).arg(height * 3 / 4).arg(direction);
       QtZpl::RenderOptions options{.foreground=ink,.background=QColor(237,224,211,190)};
       const auto direct=QtZpl::render(zpl,{},options);

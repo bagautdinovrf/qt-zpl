@@ -17,22 +17,36 @@
 #include <cmath>
 #include <limits>
 #include <stdexcept>
+#ifdef Q_OS_WIN
+#include <QtCore/qt_windows.h>
+#endif
 
 namespace {
 using namespace Qt::StringLiterals;
 using Clock = std::chrono::steady_clock;
 volatile quint64 resultSink = 0;
 
-struct Batch { qint64 iterations; double elapsedNs; quint64 checksum; };
+struct Batch { qint64 iterations; double elapsedNs; quint64 checksum; quint64 threadCycles; };
+
+quint64 threadCycles() {
+#ifdef Q_OS_WIN
+  ULONG64 cycles = 0;
+  if (QueryThreadCycleTime(GetCurrentThread(), &cycles)) return cycles;
+#endif
+  return 0;
+}
 
 Batch batch(const Bench::Case& test, qint64 count) {
   quint64 checksum = 0;
+  const auto cyclesStart = threadCycles();
   const auto start = Clock::now();
   for (qint64 i = 0; i < count; ++i)
     checksum += test.run() ^ static_cast<quint64>(i);
   const auto end = Clock::now();
+  const auto cyclesEnd = threadCycles();
   resultSink = checksum;
-  return {count, std::chrono::duration<double, std::nano>(end - start).count(), checksum};
+  return {count, std::chrono::duration<double, std::nano>(end - start).count(), checksum,
+          cyclesStart && cyclesEnd >= cyclesStart ? cyclesEnd - cyclesStart : 0};
 }
 
 qint64 calibrate(const Bench::Case& test, double targetNs) {
@@ -118,11 +132,16 @@ int main(int argc, char* argv[]) {
       for (int sample = 0; sample < samples; ++sample) {
         const auto measured = batch(test, iterations);
         perOperation.push_back(measured.elapsedNs / iterations);
-        batches.append(QJsonObject{
+        QJsonObject sampleResult{
           {u"iterations"_s, iterations}, {u"elapsed_ns"_s, measured.elapsedNs},
           {u"ns_per_operation"_s, perOperation.back()},
           {u"checksum"_s, QString::number(measured.checksum)}
-        });
+        };
+        // Optional Windows diagnostic, not elapsed time. Compare the same
+        // binary workload on the same processor; zero means unavailable.
+        if (measured.threadCycles)
+          sampleResult[u"thread_cycles_per_operation"_s] = static_cast<double>(measured.threadCycles) / iterations;
+        batches.append(sampleResult);
       }
       const double median = quantile(perOperation, 0.5);
       std::vector<double> deviations;

@@ -101,7 +101,7 @@ private slots:
     const QList<QSize> sizes{QSize(9,18),QSize(45,30),QSize(30,60),QSize(34,27)};
     for(const auto size:sizes)for(const auto orientation:QStringView{u"NRIB"})
       for(bool baseline:{false,true}) {
-        const auto label=u"^XA^PW600^LL500^%1%2,180^A0%3,%4,%5^FDAbc0123 ±Ёё^FS^XZ"_s
+        const auto label=u"^XA^PW600^LL500^%1%2,180^A0%3,%4,%5^FDAbc-0123 ±Ёё^FS^XZ"_s
           .arg(baseline?u"FT"_s:u"FO"_s).arg(baseline?300:100)
           .arg(orientation).arg(size.height()).arg(size.width());
         const auto independent=QtZpl::render(label);

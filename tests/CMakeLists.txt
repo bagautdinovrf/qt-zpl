@@ -144,6 +144,16 @@ qt_add_resources(qtzpl_font0_raster_tests "northline_raster" PREFIX "/northline"
         golden/designer-default/northline-graphics-labelary-bitonal.png)
 add_test(NAME qtzpl_font0_raster_tests COMMAND qtzpl_font0_raster_tests
   -o "${CMAKE_CURRENT_BINARY_DIR}/font0_raster_results.txt,txt")
+qt_add_resources(qtzpl_font0_raster_tests "font0_hyphen_goldens" PREFIX "/font0-dashes"
+  BASE "${CMAKE_CURRENT_SOURCE_DIR}/golden/font0-dashes"
+  FILES golden/font0-dashes/small-matrix.zpl
+        golden/font0-dashes/small-matrix-labelary-bitonal.png
+        golden/font0-dashes/large-and-phases.zpl
+        golden/font0-dashes/large-and-phases-labelary-bitonal.png
+        golden/font0-dashes/boundary-probe.zpl
+        golden/font0-dashes/boundary-probe-labelary-bitonal.png
+        golden/font0-dashes/fresh-holdout.zpl
+        golden/font0-dashes/fresh-holdout-labelary-bitonal.png)
 qt_add_resources(qtzpl_font0_raster_tests "font0_grid_semantics" PREFIX "/font0-semantics"
   BASE "${CMAKE_CURRENT_SOURCE_DIR}/golden/font0-grid-semantics"
   FILES golden/font0-grid-semantics/minimum-size.zpl

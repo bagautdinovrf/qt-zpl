@@ -487,6 +487,18 @@ private slots:
     const double similarity=inkJaccard(result->labels[0],golden,region);
     QVERIFY2(similarity>=0.80,qPrintable(u"MaxiCode demo crop similarity is %1"_s.arg(similarity,0,'f',6)));
   }
+  void font0HyphenMatchesHelloDemoGolden() {
+    const auto bytes=corpusFile(u"hello.zpl");const auto golden=corpusGolden(u"hello.zpl",0);
+    QVERIFY(!bytes.isEmpty());QVERIFY(!golden.isNull());
+    const auto result=QtZpl::render(QString::fromLatin1(bytes),{},QtZpl::RenderOptions{
+      .width=812,.height=609,.ignoreLabelHome=true});
+    QVERIFY(result);QVERIFY(result->diagnostics.isEmpty());
+    // Include the complete old and reference hyphens, plus a white margin.
+    // The unchanged "go" prefix exercises a fractional glyph-pen position.
+    const QRect hyphen(274,56,22,10);
+    QCOMPARE(result->labels.front().copy(hyphen).convertToFormat(QImage::Format_RGB32),
+             golden.copy(hyphen).convertToFormat(QImage::Format_RGB32));
+  }
   void font0TextMatchesHelloDemoGolden() {
     const auto bytes=corpusFile(u"hello.zpl");const auto golden=corpusGolden(u"hello.zpl",0);QVERIFY(!bytes.isEmpty());QVERIFY(!golden.isNull());
     const auto result=QtZpl::render(QString::fromLatin1(bytes),{},QtZpl::RenderOptions{.width=812,.height=609,.ignoreLabelHome=true});QVERIFY(result.has_value());

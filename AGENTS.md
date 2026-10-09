@@ -16,7 +16,10 @@ add a focused test, and document the remaining discrepancy.
 
 ## Toolchain and build
 
-- Use C++23 and Qt 6.11 or newer.
+- Use the latest supported C++ dialect and Qt 6.11 or newer. MSVC builds
+  explicitly use `/std:c++latest`; CMake's MSVC metadata remains CXX23 for
+  compatibility with CMake 3.30. Other compilers use the newest standard
+  supported by the compiler and known to CMake, with C++23 as the minimum.
 - Use CMake and the exported target `QtZpl::QtZpl`.
 - Keep both shared and static builds working.
 - On Windows, build through `tools/build_helper.py`. It initializes Qt, MSVC,
@@ -272,12 +275,15 @@ public demo catalog, **not** that go-zpl produces the expected raster.
 - Known open discrepancy (2026-10-09): `hello.zpl` QR (`^BQN`) matches Labelary
   pixel-perfect, but Font 0 contours still differ. With manifest options
   (812×609, `ignoreLabelHome=true`), both ink bounds are `(50,49 413×206)`,
-  with 805 different pixels and ink Jaccard 0.941877. Font 0 advances and
+  with 764 different pixels and ink Jaccard 0.944774. The ASCII hyphen now
+  matches pixel-for-pixel, guarded by `font0HyphenMatchesHelloDemoGolden` and
+  the whole-page references under `tests/golden/font0-dashes`. Font 0 advances and
   FO/FT anchors now have independent ruler, rotation and continuation fixtures
   under `tests/golden/font0-metrics`, `font0-anchors` and `font0-grid-semantics`.
   Do not compensate for remaining contour differences with a global shift.
   Keep `font0TextMatchesHelloDemoGolden` and `demoCorpusGoldenParity` strict;
-  see `benchmarks/NORTHLINE-RASTER-2026-10-09.md` for measured limitations.
+  see `benchmarks/NORTHLINE-RASTER-2026-10-09.md` and
+  `benchmarks/FONT0-HYPHEN-2026-10-09.md` for measured limitations.
 - Preserve the current EAN-13 golden matrix: module widths 1 through 5,
   interpretation above and below, and orientations N, R, I, and B. Preserve the
   DataMatrix N/R/I/B pixel-exact golden matrix.
