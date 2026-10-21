@@ -316,7 +316,11 @@ private:
       else delimiter_ = character;
       return true;
     }
-    if (prefix == tilde_ && prefix != caret_) return unknown(prefix, op, raw, offset);
+    if (prefix == tilde_ && prefix != caret_) {
+      if (!isControlSetting(op)) return unknown(prefix, op, raw, offset);
+      add(PrinterSetting{u'~', op, raw}, offset, prefix, op, raw);
+      return true;
+    }
     if (op == u"XA") {
       if (current_) {
         diagnose({Severity::Warning, u"nested-format"_s, u"A new ^XA closed the previous format."_s, offset, u"^XA"_s}, commandSpan_);
@@ -390,8 +394,27 @@ private:
     else if (op == u"GD") add(GraphicDiagonal{intValue(p,0),intValue(p,1),std::max(1,intValue(p,2,1)),colorValue(p,3),charValue(p,4,u'R')},offset,prefix,op,raw);
     else if (op == u"GE") add(GraphicEllipse{intValue(p,0),intValue(p,1),std::max(1,intValue(p,2,1)),colorValue(p,3)},offset,prefix,op,raw);
     else if (isBarcode(op)) parseBarcode(op, p, offset, raw);
+    else if (isFormatSetting(op, p)) add(PrinterSetting{u'^', op, raw}, offset, prefix, op, raw);
     else return unknown(prefix, op, raw, offset);
     return true;
+  }
+
+  // Printer configuration with no effect on the label raster. Actions such as
+  // ~JA (cancel), ~JC (calibrate) or ~JD (hex dump mode) change what prints and
+  // remain unsupported.
+  static bool isControlSetting(const QString& op) {
+    return op == u"SD" || op == u"TA" || op == u"JS";
+  }
+
+  static bool isFormatSetting(const QString& op, const QList<QString>& p) {
+    static const QList<QString> settings{u"JJ"_s,u"JS"_s,u"JT"_s,u"JU"_s,u"JZ"_s,u"KL"_s,u"KN"_s,
+      u"KP"_s,u"MF"_s,u"ML"_s,u"MN"_s,u"MP"_s,u"MT"_s,u"MW"_s,u"XB"_s};
+    if (settings.contains(op)) return true;
+    // Only the defaults qualify: ^JMB halves the dot density and ^SZ1 selects
+    // the older ZPL dialect, so both keep the unsupported-command warning.
+    if (op == u"JM") return charValue(p, 0, u'A') == u'A';
+    if (op == u"SZ") return intValue(p, 0, 2) == 2;
+    return false;
   }
 
   void parseFont(const QString& op, const QList<QString>& p, qsizetype offset, const QString& raw) {

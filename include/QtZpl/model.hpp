@@ -94,7 +94,13 @@ struct LabelReverse { bool enabled = false; };
 struct FieldParameter { QChar direction = u'H'; int spacing = 0; };
 struct FieldHex { QChar indicator = u'_'; };
 struct SyntaxCommand { QString opcode; QChar character; }; // CC, CT or CD.
+// Printer configuration that never changes the rendered label, such as ~SD
+// darkness, ^MN media tracking or ^JU configuration update. prefix is '^' for
+// format and '~' for control commands, independent of ^CC/^CT; parameters
+// keep the command's text. Settings outside ^XA...^XZ are accepted unsaved.
+struct PrinterSetting { QChar prefix = u'^'; QString opcode; QString parameters; };
 
+// New alternatives are appended so existing payload indices remain stable.
 using CommandPayload = std::variant<
     FormatStart, FormatEnd, FieldSeparator, FieldReverse, FieldOrigin, FieldTypeset,
     FieldData, FieldDirection, FieldBlock, FieldEncoding, ScalableFont, ChangeFont, CharacterSet,
@@ -102,7 +108,7 @@ using CommandPayload = std::variant<
     PrintOrientation, PrintRate, MediaDarkness, PrintQuantity, GraphicBox,
     GraphicCircle, GraphicDiagonal, GraphicEllipse, GraphicField, Barcode, Comment,
     UnknownCommand, LabelTop, PrintMirror, LabelReverse, FieldParameter,
-    FieldHex, SyntaxCommand>;
+    FieldHex, SyntaxCommand, PrinterSetting>;
 
 struct Command {
   CommandPayload payload;

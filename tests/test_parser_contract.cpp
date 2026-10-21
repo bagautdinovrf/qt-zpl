@@ -330,6 +330,66 @@ private slots:
       QCOMPARE(*field.bytes, QByteArray::fromHex("d096f09f9880"));
     }
   }
+
+  void printerSettingsAreKnownCommands() {
+    // ZebraDesigner header followed by the remaining configuration-only commands.
+    const QString input = u"~SD20\r\n^XA~TA000~JSN^LT0^MNW^MTT^PON^PMN^LH0,0^JMA^PR4,4~SD15^JUS^LRN^CI0"
+      u"^MFN,N^XB^JZY^ML1000^MPE^MWY^KL1^SZ2^JSA^JT0100^JJ0^KNPRN1,Desk^KP1234^XZ"_s;
+    const auto document = QtZpl::parse(input);
+    QVERIFY(document.has_value());
+    // ~SD20 precedes the format; it is accepted without a label to hold it.
+    QVERIFY(document->diagnostics().isEmpty());
+    QVERIFY(commandsOf<QtZpl::UnknownCommand>(*document).isEmpty());
+    QCOMPARE(document->labels().size(), 1);
+    struct Expected { QChar prefix; QString opcode; QString parameters; };
+    const QList<Expected> expected{
+      {u'~', u"TA"_s, u"000"_s}, {u'~', u"JS"_s, u"N"_s}, {u'^', u"MN"_s, u"W"_s}, {u'^', u"MT"_s, u"T"_s},
+      {u'^', u"JM"_s, u"A"_s}, {u'~', u"SD"_s, u"15"_s}, {u'^', u"JU"_s, u"S"_s}, {u'^', u"MF"_s, u"N,N"_s},
+      {u'^', u"XB"_s, {}}, {u'^', u"JZ"_s, u"Y"_s}, {u'^', u"ML"_s, u"1000"_s}, {u'^', u"MP"_s, u"E"_s},
+      {u'^', u"MW"_s, u"Y"_s}, {u'^', u"KL"_s, u"1"_s}, {u'^', u"SZ"_s, u"2"_s}, {u'^', u"JS"_s, u"A"_s},
+      {u'^', u"JT"_s, u"0100"_s}, {u'^', u"JJ"_s, u"0"_s}, {u'^', u"KN"_s, u"PRN1,Desk"_s},
+      {u'^', u"KP"_s, u"1234"_s}};
+    const auto settings = commandsOf<QtZpl::PrinterSetting>(*document);
+    QCOMPARE(settings.size(), expected.size());
+    for (qsizetype i = 0; i < settings.size(); ++i) {
+      const auto& setting = std::get<QtZpl::PrinterSetting>(settings[i]->payload);
+      QCOMPARE(setting.prefix, expected[i].prefix);
+      QCOMPARE(setting.opcode, expected[i].opcode);
+      QCOMPARE(setting.parameters, expected[i].parameters);
+      const QString spelling = QString{expected[i].prefix} + expected[i].opcode + expected[i].parameters;
+      QCOMPARE(settings[i]->source, spelling);
+      QCOMPARE(document->sourceText(settings[i]->sourceSpan), spelling);
+    }
+  }
+
+  void printerSettingsUseLogicalPrefix() {
+    const auto document = QtZpl::parse(u"^XA^CC!!CT#!MNW#SD10!CC^^CT~^XZ"_s);
+    QVERIFY(document.has_value());
+    QVERIFY(document->diagnostics().isEmpty());
+    const auto settings = commandsOf<QtZpl::PrinterSetting>(*document);
+    QCOMPARE(settings.size(), 2);
+    const auto& media = std::get<QtZpl::PrinterSetting>(settings[0]->payload);
+    QCOMPARE(media.prefix, u'^');
+    QCOMPARE(media.opcode, u"MN"_s);
+    QCOMPARE(media.parameters, u"W"_s);
+    QCOMPARE(settings[0]->source, u"!MNW"_s);
+    const auto& darkness = std::get<QtZpl::PrinterSetting>(settings[1]->payload);
+    QCOMPARE(darkness.prefix, u'~');
+    QCOMPARE(darkness.opcode, u"SD"_s);
+    QCOMPARE(darkness.parameters, u"10"_s);
+    QCOMPARE(settings[1]->source, u"#SD10"_s);
+  }
+
+  void rasterChangingSettingsStayUnsupported() {
+    // ^JMB halves the dot density, ^SZ1 selects ZPL I; ~JA and ~JC are actions.
+    const auto document = QtZpl::parse(u"^XA^JMB^SZ1~JA~JC^XZ"_s);
+    QVERIFY(document.has_value());
+    QVERIFY(commandsOf<QtZpl::PrinterSetting>(*document).isEmpty());
+    QCOMPARE(commandsOf<QtZpl::UnknownCommand>(*document).size(), 4);
+    QCOMPARE(document->diagnostics().size(), 4);
+    for (const auto& diagnostic : document->diagnostics())
+      QCOMPARE(diagnostic.code, u"unsupported-command"_s);
+  }
 };
 
 QTEST_APPLESS_MAIN(ParserContractTest)

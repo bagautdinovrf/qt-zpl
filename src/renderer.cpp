@@ -1692,6 +1692,7 @@ std::expected<QImage, RenderError> interpretLabel(const Label& label, int index,
       else if constexpr(std::is_same_v<T,BarcodeDefault>) state.barcodeDefaults=value;
       else if constexpr(std::is_same_v<T,LabelShift>) state.labelShift=value.dots;
       else if constexpr(std::is_same_v<T,PrintMode>) { /* Print mode does not change local raster geometry. */ }
+      else if constexpr(std::is_same_v<T,PrinterSetting>) { /* Printer configuration never changes the label raster. */ }
       else if constexpr(std::is_same_v<T,PrintOrientation>) state.printOrientation=value.orientation;
       else if constexpr(std::is_same_v<T,Barcode>){
         state.pendingBarcode=value;state.barcodeOffset=command.offset;state.barcodeSource=command.source;

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.25)
 
-project(QtZpl VERSION 0.2.0 LANGUAGES CXX)
+project(QtZpl VERSION 0.3.0 LANGUAGES CXX)
 
 option(QTZPL_BUILD_SHARED "Build QtZpl as a shared library" ON)
 option(QTZPL_BUILD_TESTS "Build QtZpl tests" ON)

@@ -15,6 +15,15 @@ private slots:
     QImage blank(40,40,QImage::Format_ARGB32_Premultiplied);blank.fill(Qt::white);
     QCOMPARE(result->labels.front(),blank);
   }
+  void printerSettingsDoNotChangeRaster() {
+    const QString body=u"^PW100^LL100^FO10,10^GB60,30,4^FS^FO20,50^GB20,20,20^FS^XZ"_s;
+    const auto plain=QtZpl::render(u"^XA"_s+body);
+    const auto configured=QtZpl::render(u"~SD20^XA~TA000~JSN^MNW^MTT^JMA~SD15^JUS^XB^SZ2"_s+body);
+    QVERIFY(plain);QVERIFY(configured);
+    QVERIFY(plain->diagnostics.isEmpty());QVERIFY(configured->diagnostics.isEmpty());
+    QCOMPARE(configured->labels.size(),1);
+    QCOMPARE(configured->labels.front(),plain->labels.front());
+  }
   void unicodeHexFields() {
     const auto document=QtZpl::parse(u"^XA^CI28^FH^FD_D0_81_D1_91 _E2_80_94 _E2_88_92 _E2_84_96^FS"
       u"^FH!^FV!C2!A1 Ж!E2!82!AC^FS^FH^FS^FD_41^FS^CI0^FH^FD_FF^FS^XZ");
