@@ -9,4 +9,7 @@ namespace QtZpl::BarcodeEncoders::MicroPdf417 {
 [[nodiscard]] std::expected<Matrix, QString> encode(
     const QByteArray& data, int mode = 0);
 
+// Symbol rows of a mode, equal to encode()'s matrix height; 0 if invalid.
+[[nodiscard]] int rows(int mode);
+
 } // namespace QtZpl::BarcodeEncoders::MicroPdf417

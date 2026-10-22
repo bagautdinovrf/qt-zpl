@@ -201,7 +201,11 @@ private:
 
   void add(CommandPayload payload, qsizetype offset, QChar prefix, const QString& opcode, const QString& params) {
     if (!current_) return;
+    // The parser still fills the deprecated legacy fields for consumers.
+    QT_WARNING_PUSH
+    QT_WARNING_DISABLE_DEPRECATED
     current_->commands_.append(Command{std::move(payload), offset, QString{prefix} + opcode + params, commandSpan_});
+    QT_WARNING_POP
   }
 
   std::optional<QByteArray> fieldBytes(QStringView value) const {
@@ -427,13 +431,15 @@ private:
     else if (font == u'F') { defaultHeight=26; defaultWidth=13; }
     else if (font == u'G') { defaultHeight=60; defaultWidth=40; }
     else if (font == u'H') { defaultHeight=21; defaultWidth=13; }
-    add(ScalableFont{font,orientationValue(p),intValue(p,1,defaultHeight),intValue(p,2,defaultWidth)},offset,caret_,op,raw);
+    add(ScalableFont{font,orientationValue(p),intValue(p,1,defaultHeight),intValue(p,2,defaultWidth),
+      missingParameter(p,0)},offset,caret_,op,raw);
   }
 
   void parseDownloadedFont(const QList<QString>& p,qsizetype offset,const QString& raw) {
     // External printer fonts are not available to the local deterministic renderer.
     // Preserve ^A@ as a known command and use the embedded scalable Font 0 metrics.
-    add(ScalableFont{u'0',orientationValue(p),intValue(p,1,30),intValue(p,2,0)},offset,caret_,u"A@"_s,raw);
+    add(ScalableFont{u'0',orientationValue(p),intValue(p,1,30),intValue(p,2,0),missingParameter(p,0),
+      true,p.value(3)},offset,caret_,u"A@"_s,raw);
   }
 
   void parseGraphicField(qsizetype offset, const QString& raw) {
@@ -460,7 +466,9 @@ private:
   }
 
   void parseBarcode(const QString& op, const QList<QString>& p, qsizetype offset, const QString& raw) {
-    Barcode barcode{op,orientationValue(p),p,{}};
+    // ^BD has no orientation parameter: its first parameter is the mode.
+    const bool maxiCode=op==u"BD";
+    Barcode barcode{op,maxiCode?Orientation::Normal:orientationValue(p),p,{},!maxiCode&&missingParameter(p,0)};
     // ZPL barcode data belongs to the immediately following ^FD. Keep the command
     // in the model and let the renderer consume that FieldData deterministically.
     add(std::move(barcode),offset,caret_,op,raw);

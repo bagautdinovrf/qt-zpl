@@ -2,6 +2,9 @@
 #include <QtZpl/qtzpl.hpp>
 #include "../src/barcode_encoders.hpp"
 
+// Also checks the deprecated Command::offset/source, still filled since 0.4.0.
+QT_WARNING_DISABLE_DEPRECATED
+
 namespace {
 using namespace Qt::StringLiterals;
 
@@ -245,9 +248,12 @@ private slots:
     expected.fill(Qt::white);
     // Independent dot expansion checks the encoder payload and complete image,
     // including absence of accidental text or extra modules outside the symbol.
+    // ^BY height 0 counts as one dot, which ^BQ keeps above the symbol
+    // (Labelary golden barcode-semantics/bq-by0-offset).
+    const int top = qr ? 21 : 20;
     for (int y = 0; y < matrix->height * 2; ++y)
       for (int x = 0; x < matrix->width * 2; ++x)
-        if (matrix->at(x / 2, y / 2)) expected.setPixelColor(20 + x, 20 + y, Qt::black);
+        if (matrix->at(x / 2, y / 2)) expected.setPixelColor(20 + x, top + y, Qt::black);
     QCOMPARE(result->labels.size(), 1);
     QCOMPARE(result->labels.front(), expected);
   }

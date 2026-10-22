@@ -14,6 +14,9 @@
 #include <type_traits>
 #include <utility>
 
+// Fingerprints keep hashing the deprecated Command::offset/source for stable results.
+QT_WARNING_DISABLE_DEPRECATED
+
 namespace Bench {
 namespace {
 using namespace Qt::StringLiterals;

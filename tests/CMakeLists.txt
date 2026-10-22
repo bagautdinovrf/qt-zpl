@@ -217,6 +217,13 @@ target_link_libraries(qtzpl_parser_contract_tests PRIVATE QtZpl::QtZpl Qt6::Test
 add_test(NAME qtzpl_parser_contract_tests COMMAND qtzpl_parser_contract_tests
   -o "${CMAKE_CURRENT_BINARY_DIR}/parser_contract_results.txt,txt")
 
+add_executable(qtzpl_barcode_semantics_tests test_barcode_semantics.cpp)
+target_link_libraries(qtzpl_barcode_semantics_tests PRIVATE QtZpl::QtZpl Qt6::Test)
+file(GLOB QTZPL_BARCODE_SEMANTICS_GOLDENS CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/golden/barcode-semantics/*.zpl" "${CMAKE_CURRENT_SOURCE_DIR}/golden/barcode-semantics/*.png")
+qt_add_resources(qtzpl_barcode_semantics_tests "barcode_semantics" PREFIX "/qtzpl/tests/golden" BASE "${CMAKE_CURRENT_SOURCE_DIR}/golden" FILES ${QTZPL_BARCODE_SEMANTICS_GOLDENS})
+add_test(NAME qtzpl_barcode_semantics_tests COMMAND qtzpl_barcode_semantics_tests
+  -o "${CMAKE_CURRENT_BINARY_DIR}/barcode_semantics_results.txt,txt")
+
 add_executable(qtzpl_designer_api_tests test_designer_api.cpp)
 target_link_libraries(qtzpl_designer_api_tests PRIVATE QtZpl::QtZpl Qt6::Test)
 add_test(NAME qtzpl_designer_api_tests COMMAND qtzpl_designer_api_tests

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.25)
 
-project(QtZpl VERSION 0.3.0 LANGUAGES CXX)
+project(QtZpl VERSION 0.4.0 LANGUAGES CXX)
 
 option(QTZPL_BUILD_SHARED "Build QtZpl as a shared library" ON)
 option(QTZPL_BUILD_TESTS "Build QtZpl tests" ON)
@@ -72,6 +72,11 @@ add_library(QtZpl ${QTZPL_LIBRARY_TYPE}
   src/parser.cpp
   src/graphic_decoder.cpp
   src/pdf417_encoder.cpp
+  src/render_internal.hpp
+  src/render_fonts.cpp
+  src/render_text.cpp
+  src/render_graphics.cpp
+  src/render_barcodes.cpp
   src/renderer.cpp
 )
 add_library(QtZpl::QtZpl ALIAS QtZpl)
@@ -89,10 +94,14 @@ endif()
 target_link_libraries(QtZpl PUBLIC Qt6::Core Qt6::Gui)
 target_link_libraries(QtZpl PRIVATE ${QTZPL_FREETYPE_TARGETS})
 target_link_libraries(QtZpl PRIVATE ${QTZPL_ZLIB_TARGET})
+# Only QTZPL_EXPORT symbols leave the shared library; renderer internals
+# (QtZpl::Rendering) and encoder helpers stay hidden, as on Windows.
 set_target_properties(QtZpl PROPERTIES
   VERSION ${PROJECT_VERSION}
   SOVERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
   EXPORT_NAME QtZpl
+  CXX_VISIBILITY_PRESET hidden
+  VISIBILITY_INLINES_HIDDEN ON
 )
 
 include(GNUInstallDirs)

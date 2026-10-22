@@ -38,6 +38,10 @@ void appendPattern(Matrix& matrix, int row, int& x, int pattern, int bits) {
 
 } // namespace
 
+int rows(int mode) {
+    return mode < 0 || mode > 33 ? 0 : MicroVariants[1][variantForMode(mode)];
+}
+
 std::expected<Matrix, QString> encode(const QByteArray& data, int mode) {
     if (mode < 0 || mode > 33)
         return std::unexpected(QStringLiteral("MicroPDF417 mode must be between 0 and 33"));

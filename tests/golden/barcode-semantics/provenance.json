@@ -1,0 +1,305 @@
+{
+  "source": "Labelary API",
+  "date": "2026-10-22",
+  "dpmm": 8,
+  "size": "3x2",
+  "quality": "Bitonal",
+  "responses": [
+    {
+      "name": "b2-by-height",
+      "warnings": ""
+    },
+    {
+      "name": "b2-by0-height",
+      "warnings": "28|1|^BY|3|Value 0 is less than minimum value 1; used 1 instead"
+    },
+    {
+      "name": "b2-lower-check",
+      "warnings": ""
+    },
+    {
+      "name": "b2-upper-check",
+      "warnings": ""
+    },
+    {
+      "name": "b3-by-height",
+      "warnings": ""
+    },
+    {
+      "name": "b3-by0-height",
+      "warnings": "28|1|^BY|3|Value 0 is less than minimum value 1; used 1 instead"
+    },
+    {
+      "name": "b7-lower-truncate",
+      "warnings": ""
+    },
+    {
+      "name": "b8-by-height",
+      "warnings": ""
+    },
+    {
+      "name": "b8-by0-height",
+      "warnings": "28|1|^BY|3|Value 0 is less than minimum value 1; used 1 instead"
+    },
+    {
+      "name": "b8-lower-caption",
+      "warnings": ""
+    },
+    {
+      "name": "b8-lower-no-caption",
+      "warnings": ""
+    },
+    {
+      "name": "b8-upper-caption",
+      "warnings": ""
+    },
+    {
+      "name": "b9-by-height",
+      "warnings": ""
+    },
+    {
+      "name": "b9-by0-height",
+      "warnings": "28|1|^BY|3|Value 0 is less than minimum value 1; used 1 instead"
+    },
+    {
+      "name": "b9-lower-check",
+      "warnings": ""
+    },
+    {
+      "name": "b9-upper-check",
+      "warnings": ""
+    },
+    {
+      "name": "ba-by-height",
+      "warnings": ""
+    },
+    {
+      "name": "ba-by0-height",
+      "warnings": "28|1|^BY|3|Value 0 is less than minimum value 1; used 1 instead"
+    },
+    {
+      "name": "ba-lower-check",
+      "warnings": ""
+    },
+    {
+      "name": "ba-upper-check",
+      "warnings": ""
+    },
+    {
+      "name": "bc-by-height",
+      "warnings": ""
+    },
+    {
+      "name": "bc-by0-height",
+      "warnings": "28|1|^BY|3|Value 0 is less than minimum value 1; used 1 instead"
+    },
+    {
+      "name": "bc-explicit-n-then-fw-r",
+      "warnings": ""
+    },
+    {
+      "name": "bc-lower",
+      "warnings": ""
+    },
+    {
+      "name": "bc-omitted-then-fw-r",
+      "warnings": ""
+    },
+    {
+      "name": "bd-n",
+      "warnings": ""
+    },
+    {
+      "name": "be-by-height",
+      "warnings": ""
+    },
+    {
+      "name": "be-by0-height",
+      "warnings": "28|1|^BY|3|Value 0 is less than minimum value 1; used 1 instead"
+    },
+    {
+      "name": "be-lower",
+      "warnings": ""
+    },
+    {
+      "name": "be-upper",
+      "warnings": ""
+    },
+    {
+      "name": "bf-row-height-by0",
+      "warnings": "28|1|^BY|3|Value 0 is less than minimum value 1; used 1 instead"
+    },
+    {
+      "name": "bf-row-height-by10",
+      "warnings": ""
+    },
+    {
+      "name": "bf-row-height-by100",
+      "warnings": ""
+    },
+    {
+      "name": "bf-row-height-by200",
+      "warnings": ""
+    },
+    {
+      "name": "bf-row-height-by30",
+      "warnings": ""
+    },
+    {
+      "name": "bi-by-height",
+      "warnings": ""
+    },
+    {
+      "name": "bi-by0-height",
+      "warnings": "28|1|^BY|3|Value 0 is less than minimum value 1; used 1 instead"
+    },
+    {
+      "name": "bk-by-height",
+      "warnings": "52|5|^FD|1|Value 'A123A' is not valid for this barcode; used '123' instead"
+    },
+    {
+      "name": "bk-by0-height",
+      "warnings": "28|1|^BY|3|Value 0 is less than minimum value 1; used 1 instead|51|5|^FD|1|Value 'A123A' is not valid for this barcode; used '123' instead"
+    },
+    {
+      "name": "bo-lower-flags",
+      "warnings": "38|1|^BO|4|Value 0 is not a valid Aztec Code size (1-99/101-104/201-232/300) and was ignored"
+    },
+    {
+      "name": "bo-upper-flags",
+      "warnings": "38|1|^BO|4|Value 0 is not a valid Aztec Code size (1-99/101-104/201-232/300) and was ignored"
+    },
+    {
+      "name": "bq-b",
+      "warnings": ""
+    },
+    {
+      "name": "bq-by0-offset",
+      "warnings": "28|1|^BY|3|Value 0 is less than minimum value 1; used 1 instead"
+    },
+    {
+      "name": "bq-by1-offset",
+      "warnings": ""
+    },
+    {
+      "name": "bq-bydefault-offset",
+      "warnings": ""
+    },
+    {
+      "name": "bq-i",
+      "warnings": ""
+    },
+    {
+      "name": "bq-n",
+      "warnings": ""
+    },
+    {
+      "name": "bq-r",
+      "warnings": ""
+    },
+    {
+      "name": "bu-by-height",
+      "warnings": ""
+    },
+    {
+      "name": "bu-by0-height",
+      "warnings": "28|1|^BY|3|Value 0 is less than minimum value 1; used 1 instead"
+    },
+    {
+      "name": "bu-lower-check",
+      "warnings": ""
+    },
+    {
+      "name": "bu-upper-check",
+      "warnings": ""
+    },
+    {
+      "name": "bx-explicit-n-then-fw-r",
+      "warnings": ""
+    },
+    {
+      "name": "bx-n",
+      "warnings": ""
+    },
+    {
+      "name": "bx-r",
+      "warnings": ""
+    },
+    {
+      "name": "fw-b-b8-omitted",
+      "warnings": ""
+    },
+    {
+      "name": "fw-b-bq",
+      "warnings": ""
+    },
+    {
+      "name": "fw-i-b3-omitted",
+      "warnings": ""
+    },
+    {
+      "name": "fw-i-bq",
+      "warnings": ""
+    },
+    {
+      "name": "fw-r-b7-omitted",
+      "warnings": ""
+    },
+    {
+      "name": "fw-r-bc-default",
+      "warnings": ""
+    },
+    {
+      "name": "fw-r-bc-explicit-n",
+      "warnings": ""
+    },
+    {
+      "name": "fw-r-bc-omitted",
+      "warnings": ""
+    },
+    {
+      "name": "fw-r-bd",
+      "warnings": ""
+    },
+    {
+      "name": "fw-r-bq",
+      "warnings": ""
+    },
+    {
+      "name": "fw-r-bq-explicit-n",
+      "warnings": ""
+    },
+    {
+      "name": "fw-r-bx-explicit-n",
+      "warnings": ""
+    },
+    {
+      "name": "fw-r-bx-omitted",
+      "warnings": ""
+    },
+    {
+      "name": "fw-r-text-cf",
+      "warnings": ""
+    },
+    {
+      "name": "fw-r-text-explicit-n",
+      "warnings": ""
+    },
+    {
+      "name": "fw-r-text-next-field",
+      "warnings": ""
+    },
+    {
+      "name": "fw-r-text-omitted",
+      "warnings": ""
+    },
+    {
+      "name": "text-explicit-n-then-fw-r",
+      "warnings": ""
+    },
+    {
+      "name": "text-font-then-fw-r-then-fo",
+      "warnings": ""
+    }
+  ]
+}

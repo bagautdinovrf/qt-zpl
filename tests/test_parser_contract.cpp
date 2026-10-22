@@ -6,6 +6,9 @@
 #include <stop_token>
 #include <vector>
 
+// Also checks the deprecated Command::offset/source, still filled since 0.4.0.
+QT_WARNING_DISABLE_DEPRECATED
+
 namespace {
 using namespace Qt::StringLiterals;
 

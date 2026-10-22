@@ -85,8 +85,20 @@ The library does not own:
 
 - Public headers live under `include/QtZpl`. Keep the public API minimal and
   source-compatible where practical.
-- Parser implementation belongs in `src/parser.cpp`; raster composition and
-  ZPL rendering state belong in `src/renderer.cpp`.
+- Parser implementation belongs in `src/parser.cpp`. The single ZPL
+  interpreter (`State` transitions, label composition, field analysis and
+  geometry) and the public render/analysis functions belong in
+  `src/renderer.cpp`. Its drawing primitives live beside it:
+  `src/render_fonts.cpp` (built-in fonts and metrics), `src/render_text.cpp`
+  (text fields, blocks, anchors), `src/render_graphics.cpp` (`^GF`) and
+  `src/render_barcodes.cpp` (barcode parameter resolution and symbols).
+  They share only `src/render_internal.hpp`, namespace `QtZpl::Rendering`;
+  keep file-local helpers in an anonymous namespace and never mark internals
+  `QTZPL_EXPORT`. The shared library hides non-exported symbols.
+- `resolveBarcode` in `src/render_barcodes.cpp` is the only interpretation of
+  barcode parameters, `^BY` and `^FW` for a barcode; drawing functions and
+  `FieldSettings::resolvedBarcode` both use it. Do not parse barcode
+  parameters again in a drawing function or consumer-facing helper.
 - Field analysis and optional geometry use that same renderer interpreter;
   do not add an independent state machine for editor consumers. Bounded graphic
   decoding belongs in `src/graphic_decoder.cpp` and is shared by the public

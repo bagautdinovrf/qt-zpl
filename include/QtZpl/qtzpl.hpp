@@ -48,13 +48,67 @@ struct Error {
 enum class FieldKind { Text, Barcode, Box, Circle, Ellipse, Diagonal, Graphic, Unknown };
 enum class FieldStatus { Drawn, Empty, Clipped, Unsupported, Error };
 
+// Barcode commands as the renderer interprets them (0.4.0). One resolver
+// supplies both rendering and analysis; the raw Barcode keeps the spelling.
+enum class Symbology {
+  Unknown, Code128, Code39, Code93, Codabar, Ean13, Ean8, UpcA, UpcE,
+  Interleaved2of5, Industrial2of5, DataBar, QrCode, DataMatrix, Pdf417,
+  MicroPdf417, Aztec, MaxiCode
+};
+struct Code128Options { QChar mode = u'N'; bool uccCheckDigit = false; };
+// e parameter: Code 39 Mod 43, Codabar (fixed N), Code 93 and Interleaved
+// 2 of 5 check digits; UPC-A/UPC-E print their check digit unless e is N.
+struct LinearOptions { bool checkDigit = false; };
+struct QrCodeOptions { int model = 2; };
+struct DataMatrixOptions {
+  int quality = 200; // Empty is ECC 200, the only quality QtZpl renders.
+  int columns = 0;
+  int rows = 0;
+  int format = 0;
+  QChar escape = u'~';
+  bool rectangular = false;
+  bool gs1 = false; // Format 1 selects GS1 DataMatrix in QtZpl.
+};
+struct Pdf417Options { int security = 0; int columns = 0; int rows = 0; bool truncated = false; };
+struct MicroPdf417Options { int mode = 0; };
+struct DataBarOptions { int type = 1; int separatorHeight = 1; int segments = 0; };
+struct AztecOptions { int size = 23; bool eci = false; bool readerInitialization = false; int structuredAppend = 1; };
+struct MaxiCodeOptions { int mode = 2; int position = 1; int total = 1; };
+// New alternatives are appended so existing indices remain stable.
+using BarcodeOptions = std::variant<std::monostate, Code128Options, LinearOptions, QrCodeOptions,
+  DataMatrixOptions, Pdf417Options, MicroPdf417Options, DataBarOptions, AztecOptions, MaxiCodeOptions>;
+
+struct ResolvedBarcode {
+  Symbology symbology = Symbology::Unknown;
+  // Effective rotation. When the parameter is omitted, the ^FW in effect at
+  // the barcode command supplies it; a later ^FW in the field does not. QR
+  // modules never rotate; only its ^FO margin follows this orientation.
+  Orientation orientation = Orientation::Normal;
+  bool orientationOmitted = false;
+  // Narrow bar or module width in dots after ^BY, the ^BQ side effect,
+  // symbol parameters and clamping. 0 for MaxiCode's fixed geometry.
+  int moduleWidth = 0;
+  // ^BY ratio as the symbology applies it (Codabar rounds to 2 or 3).
+  double wideToNarrowRatio = 3.0;
+  // Bar height for linear symbols and GS1 DataBar, row height for PDF417
+  // and MicroPDF417, 0 for other matrix symbols. Defaults are applied.
+  int height = 0;
+  // Requested human-readable line. Code 39 and Codabar do not draw it yet
+  // and report barcode-interpretation-pending when rendering.
+  bool interpretation = false;
+  bool interpretationAbove = false;
+  BarcodeOptions options;
+};
+
 // Effective interpretation state before final label rotation/mirroring.
 struct FieldSettings {
   QPoint position;
   bool baseline = false;
   Justification justification = Justification::Left;
-  ScalableFont font{u'A', Orientation::Normal, 9, 5};
-  ScalableFont defaultFont{u'A', Orientation::Normal, 9, 5};
+  // font.orientationOmitted: ^FW supplies the text rotation, because the
+  // parameter is omitted or a later ^FW replaced the explicit one.
+  ScalableFont font{u'A', Orientation::Normal, 9, 5, true};
+  ScalableFont defaultFont{u'A', Orientation::Normal, 9, 5, true};
   std::optional<ScalableFont> barcodeInterpretationFont;
   Orientation fieldDirection = Orientation::Normal;
   BarcodeDefault barcodeDefaults;
@@ -69,6 +123,9 @@ struct FieldSettings {
   bool reverse = false;
   Orientation printOrientation = Orientation::Normal;
   bool mirror = false;
+  // Appended in 0.4.0. Set for a barcode field whose parameters resolve;
+  // empty when rendering would report a parameter error for the command.
+  std::optional<ResolvedBarcode> resolvedBarcode;
 };
 
 struct FieldInfo {

@@ -62,7 +62,18 @@ struct FieldData {
 struct FieldDirection { Orientation orientation = Orientation::Normal; Justification justification = Justification::Left; };
 struct FieldBlock { int width = 0; int maxLines = 1; int lineSpacing = 0; Justification justification = Justification::Left; int hangingIndent = 0; };
 struct FieldEncoding { QString parameters; };
-struct ScalableFont { QChar font = u'0'; Orientation orientation = Orientation::Normal; int height = 30; int width = 0; };
+struct ScalableFont {
+  QChar font = u'0';
+  Orientation orientation = Orientation::Normal;
+  int height = 30;
+  int width = 0;
+  // Appended in 0.4.0. Without an orientation parameter ^FW supplies the
+  // rotation; orientation then stays Normal. ^A@ selects a printer font by
+  // name that QtZpl renders with the embedded Font 0 (font is '0').
+  bool orientationOmitted = false;
+  bool external = false;
+  QString externalName; // ^A@ d:o.x as written; empty when omitted.
+};
 struct ChangeFont { QChar font = u'0'; int height = 30; int width = 0; };
 struct CharacterSet { int id = 0; };
 struct BarcodeDefault { int moduleWidth = 2; double wideToNarrowRatio = 3.0; int height = 10; };
@@ -85,6 +96,9 @@ struct Barcode {
   Orientation orientation = Orientation::Normal;
   QList<QString> parameters;
   QString data;
+  // Appended in 0.4.0: the orientation parameter is empty, so ^FW applies.
+  // ^BD has no orientation parameter and is never omitted or rotated.
+  bool orientationOmitted = false;
 };
 struct Comment { QString text; };
 struct UnknownCommand { QChar prefix = u'^'; QString opcode; QString parameters; qsizetype offset = -1; };
@@ -112,9 +126,12 @@ using CommandPayload = std::variant<
 
 struct Command {
   CommandPayload payload;
-  qsizetype offset = -1;
-  QString source;
-  SourceSpan sourceSpan; // Exact spelling; source above remains normalized.
+  // Deprecated in 0.4.0: offset equals sourceSpan.start, and the normalized
+  // source cannot locate the command's end. Diagnostic::command keeps the
+  // normalized text. Both fields are still filled for existing consumers.
+  [[deprecated("Use sourceSpan.start")]] qsizetype offset = -1;
+  [[deprecated("Use Document::sourceText(sourceSpan); Diagnostic::command keeps the normalized text")]] QString source;
+  SourceSpan sourceSpan; // Exact spelling, case and line breaks.
 };
 
 class QTZPL_EXPORT Label final {
