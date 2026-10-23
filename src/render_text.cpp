@@ -154,24 +154,35 @@ void drawBlockTextLayout(QImage& image,State& state,const QString& text,const Re
   const int layoutHeight=std::max(1,metrics.height()+(layoutLineCount-1)*lineAdvance);
   QImage field(std::max(1,block.width),actualHeight,QImage::Format_ARGB32_Premultiplied);
   field.fill(Qt::transparent);
-  QPainter fp(&field);fp.setRenderHint(QPainter::TextAntialiasing,false);
-  fp.setRenderHint(QPainter::Antialiasing,false);
-  fp.setPen(state.reverse?options.background:options.foreground);
-  for(qsizetype lineIndex=0;lineIndex<lines.size();++lineIndex){
-    const auto& line=lines[lineIndex];
-    const int y=baseline+static_cast<int>(lineIndex)*lineAdvance;
-    if(block.justification==Justification::Justified&&!line.paragraphEnd){
-      const auto words=line.text.split(u' ',Qt::SkipEmptyParts);
-      if(words.size()>1){
-        int wordsWidth=0;for(const auto& word:words)wordsWidth+=metrics.horizontalAdvance(word);
-        const double gap=static_cast<double>(std::max(0,block.width-line.indent-wordsWidth))/(words.size()-1);
-        double x=line.indent;for(const auto& word:words){paintText(fp,qRound(x),y,word);x+=metrics.horizontalAdvance(word)+gap;}
-        continue;
-      }
+  {
+    // Font 0 writes its glyph images or outlines into the field itself;
+    // QFont text is drawn through one painter.
+    constexpr bool font0=std::is_same_v<Metrics,Font0Metrics>;
+    QPainter fp;
+    if constexpr(!font0){
+      fp.begin(&field);fp.setRenderHint(QPainter::TextAntialiasing,false);
+      fp.setRenderHint(QPainter::Antialiasing,false);
+      fp.setPen(state.reverse?options.background:options.foreground);
     }
-    paintText(fp,logicalAlignmentX(line,block,metrics),y,line.text);
+    const auto paintLine=[&](int x,int y,const QString& line){
+      if constexpr(font0)paintText(field,x,y,line);
+      else paintText(fp,x,y,line);
+    };
+    for(qsizetype lineIndex=0;lineIndex<lines.size();++lineIndex){
+      const auto& line=lines[lineIndex];
+      const int y=baseline+static_cast<int>(lineIndex)*lineAdvance;
+      if(block.justification==Justification::Justified&&!line.paragraphEnd){
+        const auto words=line.text.split(u' ',Qt::SkipEmptyParts);
+        if(words.size()>1){
+          int wordsWidth=0;for(const auto& word:words)wordsWidth+=metrics.horizontalAdvance(word);
+          const double gap=static_cast<double>(std::max(0,block.width-line.indent-wordsWidth))/(words.size()-1);
+          double x=line.indent;for(const auto& word:words){paintLine(qRound(x),y,word);x+=metrics.horizontalAdvance(word)+gap;}
+          continue;
+        }
+      }
+      paintLine(logicalAlignmentX(line,block,metrics),y,line.text);
+    }
   }
-  fp.end();
 
   const QPoint logicalAnchor=state.baseline
     ?QPoint(0,baseline+(layoutLineCount-1)*lineAdvance)
@@ -205,15 +216,19 @@ void drawBlockText(QImage& image,State& state,const QString& text,const RenderOp
 
 void drawFont0Text(QImage& image,State& state,const QString& text,const RenderOptions& options,
                    int height,int width,Orientation orientation,RenderFonts& fonts) {
-  const Font0Metrics metrics(height,width,fonts,state.parameter,orientation);
+  const Font0Metrics metrics(height,width,fonts,state.parameter,orientation,
+                            state.outputOrientation,state.outputMirror);
   const QColor color=state.reverse?options.background:options.foreground;
   if(state.block&&state.block->width>0){
     drawBlockTextLayout(image,state,text,options,metrics,orientation,
-      [&](QPainter& painter,int x,int y,const QString& line){metrics.draw(painter,x,y,line,color);});
+      [&](QImage& field,int x,int y,const QString& line){metrics.draw(field,x,y,line,color);});
     return;
   }
 
-  const QPainterPath outline=metrics.outline(text);
+  // Small text composes cached glyph images; taller text fills its outline.
+  const bool glyphImages=metrics.usesGlyphImages();
+  const auto glyphs=glyphImages?metrics.glyphImages(text):QList<Font0PlacedGlyph>{};
+  const QPainterPath outline=glyphImages?QPainterPath{}:metrics.outline(text);
   QPoint baselinePosition=state.position;
   if(!state.baseline){
     const qreal span=orientation==Orientation::Inverted||orientation==Orientation::BottomUp
@@ -222,10 +237,12 @@ void drawFont0Text(QImage& image,State& state,const QString& text,const RenderOp
     baselinePosition+=font0OriginBaseline(height,metrics.ascent(),metrics.cellWidth(),count,span,
                                           state.parameter.direction,orientation);
   }
-  const QRect bounds=outline.boundingRect().toAlignedRect();
+  QRect bounds;
+  if(glyphImages)for(const auto& glyph:glyphs)bounds|=QRect(glyph.pen+glyph.mask.offset,glyph.mask.image.size());
+  else bounds=outline.boundingRect().toAlignedRect();
   if(bounds.isEmpty()){state.reverse=false;state.block.reset();return;}
-  // An opaque, unrotated field wholly on the canvas can use the same aliased
-  // path directly, avoiding a temporary image, its clear, and its composition.
+  // An opaque, unrotated field wholly on the canvas can be drawn directly,
+  // avoiding a temporary image, its clear, and its composition.
   // Preserve the cropped path's local coordinates and integer placement.
   // Keep the image path for clipping, alpha, reverse, and pixel-bound observers;
   // direct raster-engine coordinates also stay inside Qt's +/- 2^15 range.
@@ -236,15 +253,21 @@ void drawFont0Text(QImage& image,State& state,const QString& text,const RenderOp
      &&color.rgba64().alpha()==65535&&left>=0&&top>=0
      &&left+bounds.width()<=std::min(image.width(),maximumPainterCoordinate)
      &&top+bounds.height()<=std::min(image.height(),maximumPainterCoordinate)){
-    QPainter painter(&image);painter.setRenderHint(QPainter::Antialiasing,false);
-    painter.translate(int(left),int(top));
-    painter.fillPath(outline.translated(-bounds.left(),-bounds.top()),color);
+    if(glyphImages)paintFont0Glyphs(image,baselinePosition,glyphs,fonts.font0InkPixel(color));
+    else{
+      QPainter painter(&image);painter.setRenderHint(QPainter::Antialiasing,false);
+      painter.translate(int(left),int(top));
+      painter.fillPath(outline.translated(-bounds.left(),-bounds.top()),color);
+    }
     state.reverse=false;state.block.reset();return;
   }
   QImage field(bounds.size(),QImage::Format_ARGB32_Premultiplied);
   field.fill(Qt::transparent);
-  QPainter raster(&field);raster.setRenderHint(QPainter::Antialiasing,false);
-  raster.fillPath(outline.translated(-bounds.left(),-bounds.top()),color);raster.end();
+  if(glyphImages)paintFont0Glyphs(field,-bounds.topLeft(),glyphs,fonts.font0InkPixel(color));
+  else{
+    QPainter raster(&field);raster.setRenderHint(QPainter::Antialiasing,false);
+    raster.fillPath(outline.translated(-bounds.left(),-bounds.top()),color);
+  }
 
   const QPoint position=baselinePosition-rotatedEdge(-bounds.topLeft(),field.size(),orientation);
   field=rotateImage(field,orientation);

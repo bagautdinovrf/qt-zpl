@@ -154,6 +154,17 @@ qt_add_resources(qtzpl_font0_raster_tests "font0_hyphen_goldens" PREFIX "/font0-
         golden/font0-dashes/boundary-probe-labelary-bitonal.png
         golden/font0-dashes/fresh-holdout.zpl
         golden/font0-dashes/fresh-holdout-labelary-bitonal.png)
+qt_add_resources(qtzpl_font0_raster_tests "font0_sweep_samples" PREFIX "/font0-sweep"
+  BASE "${CMAKE_CURRENT_SOURCE_DIR}/golden/font0-size-sweep"
+  FILES golden/font0-size-sweep/h100/manifest.json
+        golden/font0-size-sweep/h100/font0-h100-w100-ft-n-page1.zpl
+        golden/font0-size-sweep/h100/font0-h100-w100-ft-n-page1-labelary-bitonal.png
+        golden/font0-size-sweep/h101/manifest.json
+        golden/font0-size-sweep/h101/font0-h101-w101-ft-n-page1.zpl
+        golden/font0-size-sweep/h101/font0-h101-w101-ft-n-page1-labelary-bitonal.png
+        golden/font0-size-sweep/h105/manifest.json
+        golden/font0-size-sweep/h105/font0-h105-w105-ft-n-page1.zpl
+        golden/font0-size-sweep/h105/font0-h105-w105-ft-n-page1-labelary-bitonal.png)
 qt_add_resources(qtzpl_font0_raster_tests "font0_grid_semantics" PREFIX "/font0-semantics"
   BASE "${CMAKE_CURRENT_SOURCE_DIR}/golden/font0-grid-semantics"
   FILES golden/font0-grid-semantics/minimum-size.zpl

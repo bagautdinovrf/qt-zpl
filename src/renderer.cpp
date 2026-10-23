@@ -119,6 +119,7 @@ std::expected<QImage, RenderError> interpretLabel(const Label& label, int index,
   }
   const QTransform transform=outputTransform(QSize(width,height),finalOrientation,mirror);
   const QRect outputCanvas=transform.mapRect(QRect(0,0,width,height));
+  state.outputOrientation=finalOrientation;state.outputMirror=mirror;
   for(qsizetype commandIndex=0;commandIndex<commands.size();++commandIndex) {
     if(options.stopToken.stop_requested())return std::unexpected(RenderError{u"operation-cancelled"_s,u"The operation was cancelled."_s,index});
     const auto& command=commands[commandIndex];
