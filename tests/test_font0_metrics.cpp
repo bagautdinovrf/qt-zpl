@@ -8,6 +8,7 @@
 #include <QtGui/QRawFont>
 #include <QtTest/QTest>
 #include <algorithm>
+#include <cmath>
 #include <cstdlib>
 #include "../src/font0_advance_data.hpp"
 
@@ -140,6 +141,62 @@ private slots:
       ++checked;
     }
     QVERIFY(checked>0);
+  }
+
+  void trailingPipeIsIndependentOfPenPhase_data() {
+    QTest::addColumn<QJsonObject>("entry");
+    for (const auto value:json(u"manifest.json"_s)[u"cases"_s].toArray()) {
+      const auto entry=value.toObject();
+      QTest::newRow(qPrintable(entry[u"name"_s].toString())) << entry;
+    }
+  }
+  void trailingPipeIsIndependentOfPenPhase() {
+    // Labelary draws Font 0 up to 100 dots high from glyph images placed at
+    // the pen rounded half down. Each run's final pipe is therefore identical
+    // to the standalone pipe, at 53 distinct fractional pen phases. Compare
+    // each image with its own standalone pipe, independently of contours.
+    QFETCH(QJsonObject,entry);
+    const auto name=entry[u"name"_s].toString();
+    const QImage golden=QImage::fromData(resource(name+u"-labelary-bitonal.png"_s)).convertToFormat(QImage::Format_RGB32);
+    QVERIFY(!golden.isNull());
+    const auto rendered=QtZpl::render(QString::fromUtf8(resource(name+u".zpl"_s)));
+    QVERIFY(rendered); QCOMPARE(rendered->labels.size(),1);
+    const QImage actual=rendered->labels.front().convertToFormat(QImage::Format_RGB32);
+    const auto advances=json(u"measurements.json"_s)[u"glyphs"_s].toObject();
+    const auto supported=json(u"embedded-font-coverage.json"_s)[u"glyphIds"_s].toObject();
+    // Bundled contours that overhang the following pipe; not a pen effect.
+    const QSet<QString> overhanging{u"U+00B7"_s,u"U+2022"_s,u"U+2215"_s};
+    const auto cells=entry[u"cells"_s].toArray();
+    const auto standalone=cells.first().toObject();
+    const int bandTop=standalone[u"top"_s].toInt();
+    const int bandHeight=standalone[u"bottom"_s].toInt()-bandTop;
+    const int width=entry[u"fontWidth"_s].toInt();
+    const auto pipeAt=[&](const QImage& image,const QRect& pipe,int shift,int top) {
+      // Include one column after the pipe, which is blank beside the original.
+      return image.copy(QRect(pipe.left()+shift,top,pipe.width()+1,bandHeight));
+    };
+    const QRect goldenPipe=cellBounds(golden,standalone),actualPipe=cellBounds(actual,standalone);
+    QVERIFY(!goldenPipe.isEmpty()); QVERIFY(!actualPipe.isEmpty());
+    QStringList discrepancies;
+    int checked=0;
+    for (qsizetype index=1; index<cells.size(); ++index) {
+      const auto cell=cells[index].toObject();
+      const auto cp=cell[u"codepoint"_s].toString();
+      if (!supported.contains(cp) || overhanging.contains(cp)) continue;
+      QCOMPARE(cell[u"bottom"_s].toInt()-cell[u"top"_s].toInt(),bandHeight);
+      const qreal pen=cell[u"anchorX"_s].toInt()+cell[u"repeat"_s].toInt()
+        *advances[cp].toObject()[u"hmtxAdvance"_s].toInt()*qreal(width)/2048;
+      const int shift=int(std::ceil(pen-0.5))-standalone[u"anchorX"_s].toInt();
+      const int top=cell[u"top"_s].toInt();
+      // Skip runs whose oracle glyph reaches the pipe, including the two
+      // glyphs Labelary omits at width 300 and the wide Cyrillic El.
+      if (pipeAt(golden,goldenPipe,shift,top)!=pipeAt(golden,goldenPipe,0,bandTop)) continue;
+      if (pipeAt(actual,actualPipe,shift,top)!=pipeAt(actual,actualPipe,0,bandTop))
+        discrepancies.append(u"%1 pen %2"_s.arg(cp).arg(pen));
+      ++checked;
+    }
+    QVERIFY(checked>0);
+    QVERIFY2(discrepancies.isEmpty(),qPrintable(discrepancies.join(u'\n')));
   }
 
   void foFtAnchorsMatchOriginalOracle_data() {

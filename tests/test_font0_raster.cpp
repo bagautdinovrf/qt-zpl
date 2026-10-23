@@ -1,7 +1,11 @@
 #include <QtZpl/qtzpl.hpp>
 #include <QtCore/QFile>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonDocument>
+#include <QtCore/QJsonObject>
 #include <QtGui/QTransform>
 #include <QtTest/QTest>
+#include <algorithm>
 
 using namespace Qt::StringLiterals;
 
@@ -30,6 +34,69 @@ private slots:
         .width=golden.width(),.height=golden.height(),.collectFieldGeometry=collectGeometry});
       QVERIFY(result);QVERIFY(result->diagnostics.isEmpty());QCOMPARE(result->labels.size(),1);
       QCOMPARE(result->labels.front().convertToFormat(QImage::Format_RGB32),golden);
+    }
+  }
+
+  void outlineSamplingChangesAboveOneHundredDots_data() {
+    QTest::addColumn<QString>("page");
+    QTest::addColumn<QStringList>("codepoints");
+    // Straight-edged glyphs whose bundled contours match Labelary exactly.
+    // At 100 dots, glyph images sample pixel centres; above that, outlines
+    // sample output-pixel corners, which these cells did not match before.
+    QTest::newRow("h100-glyph-image") << u"h100/font0-h100-w100-ft-n-page1"_s
+      << QStringList{u"U+0049"_s,u"U+006C"_s};
+    QTest::newRow("h101-outline") << u"h101/font0-h101-w101-ft-n-page1"_s
+      << QStringList{u"U+0048"_s,u"U+0049"_s,u"U+006C"_s,u"U+0131"_s};
+    QTest::newRow("h105-outline") << u"h105/font0-h105-w105-ft-n-page1"_s
+      << QStringList{u"U+004C"_s,u"U+006C"_s,u"U+0131"_s};
+  }
+
+  void outlineSamplingChangesAboveOneHundredDots() {
+    QFETCH(QString,page);
+    QFETCH(QStringList,codepoints);
+    const auto base=u":/font0-sweep/"_s+page;
+    QFile file(base+u".zpl"_s);QVERIFY(file.open(QIODevice::ReadOnly));
+    const auto golden=QImage(base+u"-labelary-bitonal.png"_s).convertToFormat(QImage::Format_RGB32);
+    QVERIFY(!golden.isNull());
+    QFile manifestFile(u":/font0-sweep/"_s+page.section(u'/',0,0)+u"/manifest.json"_s);
+    QVERIFY(manifestFile.open(QIODevice::ReadOnly));
+    const auto cases=QJsonDocument::fromJson(manifestFile.readAll()).object()[u"cases"_s].toArray();
+    const auto name=page.section(u'/',1);
+    const auto entry=std::ranges::find_if(cases,[&](const auto& value){return value.toObject()[u"name"_s].toString()==name;});
+    QVERIFY(entry!=cases.end());
+    const auto rendered=QtZpl::render(QString::fromUtf8(file.readAll()),{},
+      QtZpl::RenderOptions{.width=golden.width(),.height=golden.height()});
+    QVERIFY(rendered);QCOMPARE(rendered->labels.size(),1);
+    const auto actual=rendered->labels.front().convertToFormat(QImage::Format_RGB32);
+    int checked=0;
+    for(const auto value:(*entry).toObject()[u"cells"_s].toArray()){
+      const auto cell=value.toObject();
+      if(!codepoints.contains(cell[u"codepoint"_s].toString()))continue;
+      const QRect area(cell[u"x"_s].toInt(),cell[u"y"_s].toInt(),cell[u"width"_s].toInt(),cell[u"height"_s].toInt());
+      QVERIFY2(actual.copy(area)==golden.copy(area),qPrintable(cell[u"codepoint"_s].toString()));
+      ++checked;
+    }
+    QCOMPARE(checked,codepoints.size());
+  }
+
+  void glyphImageCacheKeepsPixels() {
+    // One render call shares Font 0 glyph images between fields and labels.
+    // Every label must equal the same label rendered alone with a fresh
+    // cache, across widths, heights, rotation, blocks, reverse and the
+    // 100/101-dot boundary between glyph images and outlines.
+    const QStringList labels{
+      u"^XA^PW420^LL320^FO10,10^A0N,20,20^FDHello HHH^FS^FO10,40^A0N,20,40^FDHello HHH^FS"
+      "^FO10,80^A0N,40,20^FDHello-^FS^FO300,10^A0R,30,30^FDHello^FS"
+      "^FO10,130^FB200,3,0,C^A0N,24,24^FDHello world, Hello HHH^FS^XZ"_s,
+      u"^XA^PW420^LL320^FO10,10^A0N,20,40^FDHHH Hello^FS^FO10,40^A0N,20,20^FDHello HHH^FS"
+      "^FO10,70^A0N,100,100^FDHe-^FS^FO10,180^A0N,101,101^FDHe^FS"
+      "^FO250,200^GB120,60,60^FS^FO260,210^FR^A0N,30,30^FDHe^FS^XZ"_s};
+    const auto together=QtZpl::render(labels.join(QString{}));
+    QVERIFY(together);QCOMPARE(together->labels.size(),labels.size());
+    for(qsizetype i=0;i<labels.size();++i){
+      const auto alone=QtZpl::render(labels[i]);
+      QVERIFY(alone);QCOMPARE(alone->labels.size(),1);
+      QCOMPARE(together->labels[i],alone->labels.front());
     }
   }
 
