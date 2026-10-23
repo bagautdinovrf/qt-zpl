@@ -184,68 +184,6 @@ void drawQrCode(QImage& image,State& state,const Barcode& barcode,const Resolved
   placeNewSymbol(image,symbol,placed,Orientation::Normal);
 }
 
-void drawEan13(QImage& image,State& state,const Barcode& barcode,const ResolvedBarcode& code,const QString& text,const RenderOptions& options,QList<Diagnostic>& diagnostics) {
-  QString normalized;auto modules=BarcodeEncoders::ean13(text,&normalized);
-  if(!modules){diagnostics.append({Severity::Error,u"ean13-encode"_s,modules.error(),-1,u"^BE"_s});return;}
-  const int module=code.moduleWidth;
-  const int height=code.height;
-  const bool interpretation=code.interpretation;
-  const bool interpretationAbove=code.interpretationAbove;
-  const int guardExtra=interpretation?std::max(1,5*module-2):13;
-  const int textHeight=interpretation?std::max(12,12*module):0;
-  const int leftPad=interpretation?14*module:0;
-  const int barsTop=interpretation&&interpretationAbove?textHeight:0;
-  if(!barcodeRasterAllowed(qint64(leftPad)+95LL*module,qint64(height)+guardExtra+textHeight,barcode,diagnostics))return;
-  QImage symbol(leftPad+95*module,height+guardExtra+textHeight,QImage::Format_ARGB32_Premultiplied);symbol.fill(options.background);
-  QPainter p(&symbol);p.setPen(Qt::NoPen);p.setBrush(options.foreground);
-  for(int i=0;i<modules->size();++i)if((*modules)[i]){const bool guard=i<3||(i>=45&&i<=49)||i>=92;p.drawRect(leftPad+i*module,barsTop,module,height+(guard?guardExtra:0));}
-  if(interpretation){
-    // EAN/UPC human-readable interpretation uses OCR-B rather than Zebra Font 0.
-    p.setFont(eanInterpretationFont(std::max(12,12*module)));
-    p.setPen(options.foreground);
-    if(interpretationAbove){
-      const int textTop=-(3*module-1);
-      p.drawText(QRect(leftPad,textTop,95*module,textHeight),Qt::AlignCenter,normalized);
-    }else{
-      const int textTop=height-(2*module-1);
-      p.drawText(QRect(-module,textTop,leftPad,textHeight),Qt::AlignCenter,normalized.left(1));
-      p.drawText(QRect(leftPad+3*module,textTop,42*module,textHeight),Qt::AlignCenter,normalized.mid(1,6));
-      p.drawText(QRect(leftPad+50*module,textTop,42*module,textHeight),Qt::AlignCenter,normalized.mid(7,6));
-    }
-  }
-  p.end();
-  const QSize sourceSize=symbol.size();
-  symbol=rotateImage(symbol,code.orientation);
-  QPoint position=state.position;
-  if(state.baseline){
-    // ^FT fixes the first bar's lower edge, excluding guard extensions and
-    // interpretation. Rotate this geometric edge (not a pixel index).
-    const QPoint anchor(leftPad,barsTop+height);
-    switch(code.orientation){
-      case Orientation::Normal:position-=anchor;break;
-      case Orientation::Rotated90:position-=QPoint(sourceSize.height()-anchor.y(),anchor.x());break;
-      case Orientation::Inverted:position-=QPoint(sourceSize.width()-anchor.x(),sourceSize.height()-anchor.y());break;
-      case Orientation::BottomUp:position-=QPoint(anchor.y(),sourceSize.width()-anchor.x());break;
-    }
-  }else switch(code.orientation){
-    case Orientation::Normal:
-      position.rx()-=leftPad;
-      if(interpretationAbove)position.ry()-=textHeight;
-      break;
-    case Orientation::Rotated90:
-      position.rx()-=textHeight+guardExtra;
-      position.ry()-=leftPad;
-      break;
-    case Orientation::Inverted:
-      position.ry()-=textHeight+guardExtra;
-      break;
-    case Orientation::BottomUp:
-      break;
-  }
-  observeRaster(state,position,symbol);
-  QPainter target(&image);target.drawImage(position,symbol);
-}
-
 QString code128Interpretation(QStringView data) {
   QString result;result.reserve(data.size());
   for(qsizetype i=0;i<data.size();++i){
@@ -383,7 +321,16 @@ void drawCode128(QImage& image,State& state,const ResolvedBarcode& code,const QS
 }
 
 void drawCodabar(QImage& image,State& state,const Barcode& barcode,const ResolvedBarcode& code,const QString& text,const RenderOptions& options,QList<Diagnostic>& diagnostics) {
-  auto modules=BarcodeEncoders::codabar(text,int(code.wideToNarrowRatio));
+  const auto& codabar=std::get<LinearOptions>(code.options);
+  // Like Labelary, encode only the data characters; ^BK supplies start/stop.
+  QString data=text;
+  data.removeIf([](QChar c){return !QStringView{u"0123456789-$:/.+"}.contains(c);});
+  if(data.size()!=text.size())diagnostics.append({Severity::Warning,u"codabar-data-ignored"_s,
+    u"Codabar field characters other than 0-9 - $ : / . + were dropped; ^BK k and l supply the start and stop characters."_s,
+    -1,u"^BK"_s});
+  // Labelary prints no symbol when nothing is left to encode.
+  if(data.isEmpty()){diagnostics.append({Severity::Error,u"codabar-encode"_s,u"Codabar field has no data characters to encode."_s,-1,u"^BK"_s});return;}
+  auto modules=BarcodeEncoders::codabar(codabar.start+data+codabar.stop,int(code.wideToNarrowRatio));
   if(!modules){diagnostics.append({Severity::Error,u"codabar-encode"_s,modules.error(),-1,u"^BK"_s});return;}
   const int module=code.moduleWidth;
   const int height=code.height;
@@ -509,18 +456,29 @@ void drawExtendedLinear(QImage& image,State& state,const Barcode& barcode,const 
   const int module=code.moduleWidth;
   const int height=code.height;
   const bool interleaved=barcode.symbology==u"B2",industrial=barcode.symbology==u"BI";
-  const bool retail=barcode.symbology==u"B8"||barcode.symbology==u"B9"||barcode.symbology==u"BU";
+  const bool ean13=barcode.symbology==u"BE";
+  const bool retail=ean13||barcode.symbology==u"B8"||barcode.symbology==u"B9"||barcode.symbology==u"BU";
   const bool caption=code.interpretation;
   const bool above=code.interpretationAbove;
   // UPC-A/UPC-E print their check digit; Code 93 and I2of5 add one on request.
   const bool check=std::get<LinearOptions>(code.options).checkDigit;
   const int wide=std::clamp(static_cast<int>(module*code.wideToNarrowRatio),module,30);
-  auto encoded=BarcodeEncoders::Linear::encode(barcode.symbology,data,module,wide,interleaved&&check);
-  if(!encoded){diagnostics.append({Severity::Error,u"barcode-encode"_s,encoded.error(),-1,u'^'+barcode.symbology});return;}
+  auto encoded=[&]()->std::expected<BarcodeEncoders::Linear::Symbol,QString>{
+    if(!ean13)return BarcodeEncoders::Linear::encode(barcode.symbology,data,module,wide,interleaved&&check);
+    BarcodeEncoders::Linear::Symbol symbol;
+    auto modules=BarcodeEncoders::ean13(data,&symbol.text);
+    if(!modules)return std::unexpected(modules.error());
+    symbol.modules=std::move(*modules);
+    return symbol;
+  }();
+  if(!encoded){diagnostics.append({Severity::Error,ean13?u"ean13-encode"_s:u"barcode-encode"_s,encoded.error(),-1,u'^'+barcode.symbology});return;}
   const int scale=interleaved||industrial?1:module;
   const int barsWidth=static_cast<int>(encoded->modules.size())*scale;
+  // Labelary extends EAN/UPC guard bars by 13 dots at every module width.
   const int guardExtra=retail?13:0;
-  const int textHeight=caption?12*module:0;
+  // Room for the tallest interpretation glyph on either side of the bars;
+  // anchors below subtract it, so it never moves the bar body.
+  const int textHeight=caption?10*module+12:0;
   const int sidePad=caption&&retail&&barcode.symbology!=u"B8"?14*module:0;
   const int barsTop=caption&&above?textHeight:0;
   if(qint64(barsWidth+2*sidePad)*qint64(height+guardExtra+textHeight)>64*1024*1024){diagnostics.append({Severity::Error,u"barcode-size"_s,u"Barcode raster exceeds the allocation limit."_s,-1,u'^'+barcode.symbology});return;}
@@ -535,8 +493,10 @@ void drawExtendedLinear(QImage& image,State& state,const Barcode& barcode,const 
   if(caption){
     const QString text=encoded->text;
     if(retail&&!above){
+      // Font A below ^BY3, then the native OCR-B sizes, for EAN and UPC alike.
       const bool fontA=module<3;
-      const int fontScale=std::max(1,module/4);
+      // Two OCR-B sizes cover ^BY3..10; EAN-13 alone accepts wider modules.
+      const int fontScale=std::clamp(module/4,1,2);
       const int cellWidth=fontA?6*module:20*fontScale;
       const int baseline=height+(fontA?7*module+4:23*fontScale+4);
       const auto print=[&](int origin,QStringView part,bool grouped=true){
@@ -562,6 +522,9 @@ void drawExtendedLinear(QImage& image,State& state,const Barcode& barcode,const 
       };
       if(barcode.symbology==u"B8"){
         print(5*module,QStringView{text}.first(4));print(37*module,QStringView{text}.last(4));
+      }else if(ean13){
+        print(-5*module-cellWidth,QStringView{text}.first(1),false);
+        print(5*module,QStringView{text}.mid(1,6));print(51*module,QStringView{text}.mid(7,6));
       }else{
         print(-5*module-cellWidth,QStringView{text}.first(1),false);
         if(barcode.symbology==u"B9")print(5*module,QStringView{text}.mid(1,6));
@@ -573,7 +536,8 @@ void drawExtendedLinear(QImage& image,State& state,const Barcode& barcode,const 
       if(barcode.symbology==u"BA"){if(check)interpretation+=encoded->checkText;interpretation=QChar(0x25af)+interpretation+QChar(0x25af);}
       const qreal advance=qreal(9*module)*1365/2048;
       const qreal first=sidePad+(barsWidth-(retail?module:0)-advance*interpretation.size())/2.0;
-      const int baseline=above?barsTop-5*module+1:height+9*module;
+      // The Font A line sits where Code 128 puts its interpretation.
+      const int baseline=above?barsTop-(2*module+8):barsTop+height+7*module+6;
       for(qsizetype character=0;character<interpretation.size();++character){
         const qreal origin=first+character*advance;
         // A half-dot origin rounds in the direction of the transformed axis.
@@ -705,14 +669,21 @@ std::expected<ResolvedBarcode,Diagnostic> resolveBarcode(const Barcode& barcode,
       code.options=LinearOptions{flagYes(barcode,1)};
       break;
     }
-    case Symbology::Codabar:
+    case Symbology::Codabar:{
       code.wideToNarrowRatio=std::clamp(qRound(defaults.wideToNarrowRatio),2,3);
       code.moduleWidth=std::clamp(defaults.moduleWidth,1,10);
       code.height=hasParameter(barcode,2)?std::max(1,barcode.parameters[2].toInt()):defaults.height;
       code.interpretation=flagNotNo(barcode,3);
       code.interpretationAbove=flagYes(barcode,4);
-      code.options=LinearOptions{flagYes(barcode,1)};
+      // Labelary takes start/stop from k and l in any case and uses A for an
+      // invalid character.
+      const auto startStop=[&](qsizetype index){
+        const QString value=index<barcode.parameters.size()?barcode.parameters[index].toUpper():QString();
+        return value.size()==1&&QStringView{u"ABCD"}.contains(value.front())?value.front():QChar(u'A');
+      };
+      code.options=LinearOptions{flagYes(barcode,1),startStop(5),startStop(6)};
       break;
+    }
     case Symbology::Ean13:
       code.moduleWidth=std::max(1,defaults.moduleWidth);
       if(code.moduleWidth>32000)return error(u"barcode-size"_s,u"EAN-13 module dimensions exceed the allocation limit."_s);
@@ -800,7 +771,11 @@ std::expected<ResolvedBarcode,Diagnostic> resolveBarcode(const Barcode& barcode,
         return error(u"barcode-parameter"_s,u"Aztec ECI and reader initialization flags must be Y or N."_s);
       code.moduleWidth=barcodeParameter(barcode,1,2);
       if(code.moduleWidth<1||code.moduleWidth>10)return error(u"barcode-size"_s,u"Invalid or unsafe barcode module size."_s);
-      code.options=AztecOptions{barcodeParameter(barcode,3,23),flagYes(barcode,2),flagYes(barcode,4),barcodeParameter(barcode,5,1)};
+      // Labelary ignores a size outside 1-99/101-104/201-232/300, including
+      // Zebra's 0 (default error correction), and draws the default symbol.
+      int size=barcodeParameter(barcode,3,23);
+      if(!((size>=1&&size<=99)||(size>=101&&size<=104)||(size>=201&&size<=232)||size==300))size=23;
+      code.options=AztecOptions{size,flagYes(barcode,2),flagYes(barcode,4),barcodeParameter(barcode,5,1)};
       break;
     }
     case Symbology::MaxiCode:
@@ -844,11 +819,10 @@ void drawBarcode(QImage& image, State& state, const Barcode& barcode, const Fiel
   }
   else if(barcode.symbology==u"BQ")drawQrCode(image,state,barcode,*code,*field.bytes,options,diagnostics);
   else if(barcode.symbology==u"BX")drawDataMatrix(image,state,*code,*field.bytes,options,diagnostics);
-  else if(barcode.symbology==u"BE")drawEan13(image,state,barcode,*code,data,options,diagnostics);
   else if(barcode.symbology==u"BC")drawCode128(image,state,*code,data,options,diagnostics,fonts);
   else if(barcode.symbology==u"B7")drawPdf417(image,state,*code,*field.bytes,options,diagnostics);
   else if(barcode.symbology==u"BD")drawMaxiCode(image,state,*code,*field.bytes,options,diagnostics);
-  else if(QStringList{u"B8"_s,u"B9"_s,u"BU"_s,u"BA"_s,u"B2"_s,u"BI"_s}.contains(barcode.symbology))drawExtendedLinear(image,state,barcode,*code,data,options,diagnostics,fonts);
+  else if(QStringList{u"BE"_s,u"B8"_s,u"B9"_s,u"BU"_s,u"BA"_s,u"B2"_s,u"BI"_s}.contains(barcode.symbology))drawExtendedLinear(image,state,barcode,*code,data,options,diagnostics,fonts);
   else if(QStringList{u"BF"_s,u"BR"_s,u"BO"_s,u"B0"_s}.contains(barcode.symbology))drawExtendedMatrix(image,state,barcode,*code,field,options,diagnostics);
   else diagnostics.append({Severity::Warning,u"barcode-render-pending"_s,
     u"This barcode parser is available, but its native encoder is not implemented yet."_s,-1,u'^'+barcode.symbology});

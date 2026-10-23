@@ -16,8 +16,8 @@ QString fixture(const QString& name) {
   return QString::fromUtf8(input.readAll()).trimmed();
 }
 
-QImage rendered(QStringView zpl) {
-  const auto result = QtZpl::render(zpl, {}, {.width = 609, .height = 406});
+QImage rendered(QStringView zpl, QSize size = {609, 406}) {
+  const auto result = QtZpl::render(zpl, {}, {.width = size.width(), .height = size.height()});
   if (!result || result->labels.size() != 1) return {};
   return result->labels.front().convertToFormat(QImage::Format_RGB32);
 }
@@ -50,8 +50,7 @@ class BarcodeSemanticsTest final : public QObject {
   Q_OBJECT
 private slots:
   // Every fixture is an original bitonal Labelary response. The listed names
-  // are open discrepancies outside the parameter semantics (caption layout,
-  // Aztec size validation, Font 0 contours); see the directory README.
+  // are the open Font 0 contour discrepancies; see the directory README.
   void labelaryParity_data() {
     QTest::addColumn<QString>("name");
     const QDir directory(u":/qtzpl/tests/golden/barcode-semantics"_s);
@@ -65,24 +64,20 @@ private slots:
   void labelaryParity() {
     QFETCH(QString, name);
     static const QSet<QString> openDiscrepancies{
-      u"b2-lower-check"_s, u"b2-upper-check"_s, u"ba-lower-check"_s, u"ba-upper-check"_s,
-      u"b8-lower-caption"_s, u"b8-upper-caption"_s, u"be-lower"_s, u"be-upper"_s,
-      u"bo-lower-flags"_s, u"bo-upper-flags"_s,
       u"fw-r-text-cf"_s, u"fw-r-text-omitted"_s, u"fw-r-text-explicit-n"_s,
       u"text-explicit-n-then-fw-r"_s, u"text-font-then-fw-r-then-fo"_s, u"fw-r-text-next-field"_s};
     const auto source = fixture(name);
     QVERIFY(!source.isEmpty());
     const QImage expected(u":/qtzpl/tests/golden/barcode-semantics/"_s + name + u"-labelary-bitonal.png"_s);
     QVERIFY(!expected.isNull());
-    const auto actual = rendered(source);
+    const auto actual = rendered(source, expected.size());
     QVERIFY(!actual.isNull());
     if (openDiscrepancies.contains(name))
-      QEXPECT_FAIL("", "Known caption, Aztec size or Font 0 discrepancy; see README.md", Abort);
+      QEXPECT_FAIL("", "Known Font 0 contour discrepancy; see README.md", Abort);
     QCOMPARE(actual, expected.convertToFormat(QImage::Format_RGB32));
   }
 
-  // Labelary draws lower-case y/n flags exactly like upper-case ones, also
-  // where the caption layout itself is still an open discrepancy.
+  // Labelary draws lower-case y/n flags exactly like upper-case ones.
   void lowerCaseFlagsMatchUpperCase_data() {
     QTest::addColumn<QString>("lower");
     QTest::addColumn<QString>("upper");
@@ -250,13 +245,13 @@ private slots:
     QVERIFY(std::get<QtZpl::LinearOptions>(code->options).checkDigit);
     QVERIFY(code->interpretation);
     QCOMPARE(code->wideToNarrowRatio, 2.4);
-    code = resolved(u"^XA^BY2,2.4^FO10,10^BKN,N,50,N,N^FDA123A^FS^XZ");
+    code = resolved(u"^XA^BY2,2.4^FO10,10^BKN,N,50,N,N^FD123^FS^XZ");
     QVERIFY(code.has_value());
     QCOMPARE(code->symbology, QtZpl::Symbology::Codabar);
     QCOMPARE(code->wideToNarrowRatio, 2.0);
     QVERIFY(!code->interpretation);
 
-    const auto pending = QtZpl::render(u"^XA^FO10,10^B3N,N,40^FDABC^FS^FO10,80^BKN,N,40,Y^FDA1A^FS"
+    const auto pending = QtZpl::render(u"^XA^FO10,10^B3N,N,40^FDABC^FS^FO10,80^BKN,N,40,Y^FD1^FS"
                                        u"^FO10,150^B3N,N,40,N^FDABC^FS^XZ");
     QVERIFY(pending.has_value());
     QCOMPARE(diagnosticCodes(pending->diagnostics),
@@ -414,6 +409,55 @@ private slots:
     QVERIFY(field->settings.resolvedBarcode.has_value());
     QCOMPARE(field->settings.resolvedBarcode->height, 40);
     QCOMPARE(rendered(zpl), rendered(u"^XA^FO10,10^BCN,40,Y,N,N,N^FD1^FS^XZ"));
+  }
+
+  // Labelary takes Codabar start/stop from ^BK k and l in any case, uses A
+  // for an invalid one and drops start/stop characters from the field.
+  void codabarStartStopComeFromParameters() {
+    const auto options = [](QStringView command) {
+      const auto code = resolved(u"^XA^FO10,10"_s + command + u"^FD123^FS^XZ"_s);
+      return code ? std::get<QtZpl::LinearOptions>(code->options) : QtZpl::LinearOptions{};
+    };
+    QCOMPARE(options(u"^BKN,N,40,N,N").start, QChar(u'A'));
+    QCOMPARE(options(u"^BKN,N,40,N,N").stop, QChar(u'A'));
+    QCOMPARE(options(u"^BKN,N,40,N,N,B,c").start, QChar(u'B'));
+    QCOMPARE(options(u"^BKN,N,40,N,N,B,c").stop, QChar(u'C'));
+    QCOMPARE(options(u"^BKN,N,40,N,N,X,DD").start, QChar(u'A'));
+    QCOMPARE(options(u"^BKN,N,40,N,N,X,DD").stop, QChar(u'A'));
+    QVERIFY(std::get<QtZpl::LinearOptions>(resolved(u"^XA^FO10,10^BAN,40^FD123^FS^XZ")->options).start.isNull());
+
+    const auto clean = QtZpl::render(u"^XA^FO10,10^BKN,N,40,N,N,B,C^FD123^FS^XZ");
+    QVERIFY(clean.has_value());
+    QVERIFY(clean->diagnostics.isEmpty());
+    const auto zpl = u"^XA^FO10,10^BKN,N,40,N,N,B,C^FDD1x23A^FS^XZ"_s;
+    const auto stripped = QtZpl::render(zpl);
+    QVERIFY(stripped.has_value());
+    QCOMPARE(diagnosticCodes(stripped->diagnostics), QStringList{u"codabar-data-ignored"_s});
+    QCOMPARE(stripped->diagnostics.front().severity, QtZpl::Severity::Warning);
+    QCOMPARE(stripped->diagnostics.front().offset, zpl.indexOf(u"^BK"));
+    QCOMPARE(stripped->labels, clean->labels);
+    // Nothing left to encode: Labelary prints no symbol (bk-no-data).
+    const auto empty = QtZpl::render(u"^XA^FO10,10^BKN,N,40,N,N^FDAB^FS^XZ");
+    QVERIFY(empty.has_value());
+    QCOMPARE(diagnosticCodes(empty->diagnostics), QStringList({u"codabar-data-ignored"_s, u"codabar-encode"_s}));
+    QCOMPARE(empty->diagnostics.back().severity, QtZpl::Severity::Error);
+  }
+
+  // Labelary ignores an Aztec size outside 1-99/101-104/201-232/300,
+  // including Zebra's 0, and draws the default symbol.
+  void aztecIgnoresInvalidSize() {
+    const auto size = [](QStringView value) {
+      const auto code = resolved(u"^XA^FO10,10^BON,4,N,"_s + value + u",N^FDABC123^FS^XZ"_s);
+      return code ? std::get<QtZpl::AztecOptions>(code->options).size : -1;
+    };
+    for (const auto* value : {u"", u"0", u"100", u"105", u"150", u"233", u"301", u"-5"})
+      QCOMPARE(size(value), 23);
+    for (const int value : {1, 99, 101, 104, 201, 232, 300})
+      QCOMPARE(size(QString::number(value)), value);
+    const auto zero = QtZpl::render(u"^XA^FO10,10^BON,4,N,0,N^FDABC123^FS^XZ");
+    QVERIFY(zero.has_value());
+    QVERIFY(zero->diagnostics.isEmpty());
+    QCOMPARE(zero->labels, QtZpl::render(u"^XA^FO10,10^BON,4,N,,N^FDABC123^FS^XZ")->labels);
   }
 
   void renderGeometryReportsTheSameResolution() {

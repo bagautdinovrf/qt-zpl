@@ -6,6 +6,24 @@
   "quality": "Bitonal",
   "responses": [
     {
+      "name": "b2-above-by1-5",
+      "warnings": "24|1|^BY|1|Increase module width to avoid barcode scanning issues"
+    },
+    {
+      "name": "b2-above-by6-10",
+      "warnings": "",
+      "size": "6x4"
+    },
+    {
+      "name": "b2-below-by1-5",
+      "warnings": "24|1|^BY|1|Increase module width to avoid barcode scanning issues"
+    },
+    {
+      "name": "b2-below-by6-10",
+      "warnings": "",
+      "size": "6x3"
+    },
+    {
       "name": "b2-by-height",
       "warnings": ""
     },
@@ -34,6 +52,15 @@
       "warnings": ""
     },
     {
+      "name": "b8-above-by1-5",
+      "warnings": "24|1|^BY|1|Increase module width to avoid barcode scanning issues"
+    },
+    {
+      "name": "b8-above-by6-10",
+      "warnings": "",
+      "size": "6x4"
+    },
+    {
       "name": "b8-by-height",
       "warnings": ""
     },
@@ -54,6 +81,10 @@
       "warnings": ""
     },
     {
+      "name": "b9-above-by1-5",
+      "warnings": "24|1|^BY|1|Increase module width to avoid barcode scanning issues"
+    },
+    {
       "name": "b9-by-height",
       "warnings": ""
     },
@@ -68,6 +99,14 @@
     {
       "name": "b9-upper-check",
       "warnings": ""
+    },
+    {
+      "name": "ba-above-by1-5",
+      "warnings": "24|1|^BY|1|Increase module width to avoid barcode scanning issues"
+    },
+    {
+      "name": "ba-below-by1-5",
+      "warnings": "24|1|^BY|1|Increase module width to avoid barcode scanning issues"
     },
     {
       "name": "ba-by-height",
@@ -110,6 +149,48 @@
       "warnings": ""
     },
     {
+      "name": "be-above-by1-5",
+      "warnings": "24|1|^BY|1|Increase module width to avoid barcode scanning issues"
+    },
+    {
+      "name": "be-above-by6-10",
+      "warnings": "",
+      "size": "6x4"
+    },
+    {
+      "name": "be-below-by1-h110",
+      "warnings": "24|1|^BY|1|Increase module width to avoid barcode scanning issues|49|13|^FD|1|Value '5901234123457' is not valid for this barcode; used '590123412345' instead"
+    },
+    {
+      "name": "be-below-by2-h110",
+      "warnings": "49|13|^FD|1|Value '5901234123457' is not valid for this barcode; used '590123412345' instead"
+    },
+    {
+      "name": "be-below-by3-h110",
+      "warnings": "49|13|^FD|1|Value '5901234123457' is not valid for this barcode; used '590123412345' instead"
+    },
+    {
+      "name": "be-below-by4-h110",
+      "warnings": "49|13|^FD|1|Value '5901234123457' is not valid for this barcode; used '590123412345' instead"
+    },
+    {
+      "name": "be-below-by5-10",
+      "warnings": "",
+      "size": "6x3"
+    },
+    {
+      "name": "be-below-by5-h110",
+      "warnings": "49|13|^FD|1|Value '5901234123457' is not valid for this barcode; used '590123412345' instead"
+    },
+    {
+      "name": "be-below-by5-h110-12",
+      "warnings": ""
+    },
+    {
+      "name": "be-below-by5-h20",
+      "warnings": "48|13|^FD|1|Value '5901234123457' is not valid for this barcode; used '590123412345' instead"
+    },
+    {
       "name": "be-by-height",
       "warnings": ""
     },
@@ -119,6 +200,22 @@
     },
     {
       "name": "be-lower",
+      "warnings": ""
+    },
+    {
+      "name": "be-rotation-b",
+      "warnings": ""
+    },
+    {
+      "name": "be-rotation-i",
+      "warnings": ""
+    },
+    {
+      "name": "be-rotation-n",
+      "warnings": ""
+    },
+    {
+      "name": "be-rotation-r",
       "warnings": ""
     },
     {
@@ -146,6 +243,14 @@
       "warnings": ""
     },
     {
+      "name": "bi-above-by1-5",
+      "warnings": "24|1|^BY|1|Increase module width to avoid barcode scanning issues"
+    },
+    {
+      "name": "bi-below-by1-5",
+      "warnings": "24|1|^BY|1|Increase module width to avoid barcode scanning issues"
+    },
+    {
       "name": "bi-by-height",
       "warnings": ""
     },
@@ -162,8 +267,48 @@
       "warnings": "28|1|^BY|3|Value 0 is less than minimum value 1; used 1 instead|51|5|^FD|1|Value 'A123A' is not valid for this barcode; used '123' instead"
     },
     {
+      "name": "bk-no-data",
+      "warnings": "49|3|^FD|1|Value 'XYZ' is not valid for this barcode; used '' instead|49|3|^FD|1|No barcode printed because there is no data to encode|80|2|^FD|1|Value 'AB' is not valid for this barcode; used '' instead|80|2|^FD|1|No barcode printed because there is no data to encode"
+    },
+    {
+      "name": "bk-start-stop-default",
+      "warnings": ""
+    },
+    {
+      "name": "bk-start-stop-in-data",
+      "warnings": "53|5|^FD|1|Value 'D123A' is not valid for this barcode; used '123' instead"
+    },
+    {
+      "name": "bk-start-stop-inner",
+      "warnings": "49|3|^FD|1|Value '1B2' is not valid for this barcode; used '12' instead"
+    },
+    {
+      "name": "bk-start-stop-invalid",
+      "warnings": "47|1|^BK|6|Value 'X' is not a valid start character (A/B/C/D); used 'A' instead|49|1|^BK|7|Value 'Y' is not a valid stop character (A/B/C/D); used 'A' instead"
+    },
+    {
+      "name": "bk-start-stop-lower",
+      "warnings": ""
+    },
+    {
+      "name": "bk-start-stop-params",
+      "warnings": ""
+    },
+    {
+      "name": "bk-symbols",
+      "warnings": ""
+    },
+    {
       "name": "bo-lower-flags",
       "warnings": "38|1|^BO|4|Value 0 is not a valid Aztec Code size (1-99/101-104/201-232/300) and was ignored"
+    },
+    {
+      "name": "bo-size-invalid",
+      "warnings": "38|3|^BO|4|Value 150 is not a valid Aztec Code size (1-99/101-104/201-232/300) and was ignored"
+    },
+    {
+      "name": "bo-size-omitted",
+      "warnings": ""
     },
     {
       "name": "bo-upper-flags",
@@ -196,6 +341,10 @@
     {
       "name": "bq-r",
       "warnings": ""
+    },
+    {
+      "name": "bu-above-by1-5",
+      "warnings": "24|1|^BY|1|Increase module width to avoid barcode scanning issues"
     },
     {
       "name": "bu-by-height",

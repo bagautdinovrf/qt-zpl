@@ -62,17 +62,6 @@ QString fontAFamily() {
   return family;
 }
 
-namespace {
-
-QString ocrBFontFamily() {
-  static const QString family=[] {
-    initializeQtZplResources();
-    return embeddedFontFamily(u":/qtzpl/fonts/ocr_b.ttf");
-  }();
-  return family;
-}
-
-} // namespace
 
 QFont printerFont(const QString& family,int pixelHeight,int stretch) {
   QFont font(family);
@@ -99,11 +88,6 @@ QFont builtInFont(QChar name,int pixelHeight,int requestedWidth) {
     ? std::clamp(zebraFont0NaturalStretch*requestedWidth/pixelHeight,1,400)
     : zebraFont0NaturalStretch;
   return zebraFont(pixelHeight,stretch);
-}
-
-QFont eanInterpretationFont(int pixelHeight) {
-  static const QString family=ocrBFontFamily();
-  return printerFont(family,pixelHeight);
 }
 
 namespace {

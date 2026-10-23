@@ -1,8 +1,9 @@
 # Barcode parameter semantics references
 
-Downloaded 2026-10-22 from Labelary at 8 dpmm, 3×2 inches (609×406 dots),
-with `X-Quality: Bitonal`, `Accept: image/png` and `X-Linter: On` by
-`tools/fetch_barcode_semantics_goldens.py`. Every PNG is the original 1-bit
+Downloaded 2026-10-22 from Labelary at 8 dpmm, 3×2 inches (609×406 dots;
+`*-by6-10` and `be-below-by5-10` use 6×3 or 6×4 inches, see `size` in
+`provenance.json`), with `X-Quality: Bitonal`, `Accept: image/png` and
+`X-Linter: On` by `tools/fetch_barcode_semantics_goldens.py`. Every PNG is the original 1-bit
 response beside its `.zpl`; `provenance.json` keeps the linter warnings.
 `qtzpl_barcode_semantics_tests` compares all of them pixel by pixel.
 
@@ -28,19 +29,34 @@ Confirmed semantics:
   parameter. `^BQ` never rotates its modules, but the `^BY`-height anchor
   margin follows the effective orientation: top for `N`, left for `B`, none
   for `R` and `I`.
+- Font A interpretation lines (9m×5m at module width m) of Code 93,
+  Interleaved and Industrial 2 of 5, and every line above EAN/UPC bars, use
+  Code 128's baselines: `2m+8` dots above or `7m+6` below the bars, from
+  `^BY1` to `^BY10` (`*-above-by*`, `*-below-by*`, `*-check`, `*-caption`).
+  The check digit itself changes nothing in that layout.
+- EAN-13 uses the UPC layout: guard bars 13 dots longer at every module
+  width, digits below in Font A at `^BY1`-`^BY2` and in native OCR-B from
+  `^BY3` (`be-below-*`, `be-rotation-*`), above in one Font A line
+  (`be-above-*`, `be-lower`/`be-upper`). Labelary drops a 13th digit and
+  recomputes the check digit (linter warning); a valid one draws the same
+  symbol.
+- Aztec size `0`, an omitted size and an invalid `150` are identical
+  responses: Labelary ignores sizes outside 1-99/101-104/201-232/300 (linter
+  warning) and draws the default symbol (`bo-*`).
+- Codabar takes its start and stop characters from `^BK` k and l in any case
+  and uses `A` for an invalid one (`bk-start-stop-*`). Field characters
+  outside `0-9 - $ : / . +`, including A-D anywhere, are dropped with a
+  linter warning (`bk-start-stop-in-data`, `bk-start-stop-inner`, the
+  `A123A` fields of `bk-*-height`). With no data character left Labelary
+  prints no barcode (`bk-no-data`); QtZpl reports `codabar-encode`.
+
+The top-level EAN-13 references `ean-module-3`..`5`, `ocr-b` and
+`ean-rotation-*` came from an earlier Labelary release that printed the
+digits below the bars in Font A at `^BY3`+. They were re-fetched with their
+own ZPL by `fetch_barcode_semantics_goldens.py --refresh-ean13`.
 
 Open discrepancies kept as expected failures in the test (not semantics of
 the parameters themselves):
 
-- `be-*`, `b8-*-caption`: the EAN-13/EAN-8 interpretation above the bars at
-  `^BY2` is placed and sized differently from Labelary.
-- `b2-*-check`, `ba-*-check`: the interpretation line with a check digit
-  differs from Labelary.
-- `bo-*-flags`: Labelary ignores an invalid Aztec size `0` (linter warning)
-  and draws an automatic symbol; QtZpl reports an encoder error.
 - `fw-r-text-*`, `text-*`: orientation and anchors match; the remaining
   pixels are the known Font 0 contour differences described in `AGENTS.md`.
-
-Codabar fixtures carry start/stop characters in the field (`A123A`). Labelary
-warns that it takes start/stop from the `^BK` parameters instead and draws the
-same symbol; that difference is outside these references.

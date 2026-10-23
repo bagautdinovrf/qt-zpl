@@ -58,7 +58,11 @@ enum class Symbology {
 struct Code128Options { QChar mode = u'N'; bool uccCheckDigit = false; };
 // e parameter: Code 39 Mod 43, Codabar (fixed N), Code 93 and Interleaved
 // 2 of 5 check digits; UPC-A/UPC-E print their check digit unless e is N.
-struct LinearOptions { bool checkDigit = false; };
+// Codabar only: start and stop characters from ^BK k and l (upper-case A-D;
+// A when omitted or invalid). Field data supplies no start/stop characters;
+// rendering drops field characters outside 0-9 - $ : / . + with a warning
+// and draws no symbol when none is left.
+struct LinearOptions { bool checkDigit = false; QChar start; QChar stop; };
 struct QrCodeOptions { int model = 2; };
 struct DataMatrixOptions {
   int quality = 200; // Empty is ECC 200, the only quality QtZpl renders.
@@ -72,6 +76,9 @@ struct DataMatrixOptions {
 struct Pdf417Options { int security = 0; int columns = 0; int rows = 0; bool truncated = false; };
 struct MicroPdf417Options { int mode = 0; };
 struct DataBarOptions { int type = 1; int separatorHeight = 1; int segments = 0; };
+// size: 1-99 error correction percent, 101-104 compact and 201-232 full-range
+// layers, 300 rune. Omitted, 0 and other values are ignored like Labelary does
+// and resolve to the default 23.
 struct AztecOptions { int size = 23; bool eci = false; bool readerInitialization = false; int structuredAppend = 1; };
 struct MaxiCodeOptions { int mode = 2; int position = 1; int total = 1; };
 // New alternatives are appended so existing indices remain stable.

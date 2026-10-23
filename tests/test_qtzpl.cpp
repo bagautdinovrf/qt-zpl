@@ -703,7 +703,8 @@ private slots:
     QRect firstDigit;
     for(int y=120;y<155;++y)for(int x=20;x<60;++x)
       if(image.pixelColor(x,y).value()<128)firstDigit|=QRect(x,y,1,1);
-    QCOMPARE(firstDigit,QRect(29,124,12,21));
+    // Native OCR-B "5" of the re-fetched ocr-b reference (^BY3).
+    QCOMPARE(firstDigit,QRect(26,125,12,22));
   }
   void rendersGs1DataMatrix() {
     auto result=QtZpl::render(u"^XA^PW300^LL300^FO10,10^BXN,4,200,0,0,1,|^FD|10109501101530003|d02917270101|d02910ABC123^FS^XZ");
@@ -892,8 +893,7 @@ private slots:
     const auto golden=goldenImage(u"ocr-b");
     QVERIFY(!zpl.isEmpty());QVERIFY(!golden.isNull());
     const auto result=QtZpl::render(zpl);QVERIFY(result.has_value());
-    const double similarity=inkJaccard(result->labels.front(),golden,QRect(20,120,40,35));
-    QVERIFY2(similarity>=0.35,qPrintable(u"OCR-B Labelary similarity regressed to %1"_s.arg(similarity,0,'f',6)));
+    QCOMPARE(inkJaccard(result->labels.front(),golden),1.0);
   }
   void dataMatrixMatchesStoredLabelaryGolden() {
     const auto zpl=goldenZpl(u"datamatrix");
@@ -939,8 +939,7 @@ private slots:
     const auto& actual=result->labels.front();
     QCOMPARE(actual.size(),golden.size());
     QCOMPARE(inkJaccard(actual,golden,QRect(100,50,95*module,110)),1.0);
-    const double similarity=inkJaccard(actual,golden);
-    QVERIFY2(similarity>=0.85,qPrintable(u"EAN module %1 Labelary similarity is %2"_s.arg(module).arg(similarity,0,'f',6)));
+    QCOMPARE(inkJaccard(actual,golden),1.0);
   }
   void ean13InterpretationPlacement_data() {
     QTest::addColumn<QString>("fixture");
@@ -952,8 +951,7 @@ private slots:
     const auto zpl=goldenZpl(fixture);const auto golden=goldenImage(fixture);
     QVERIFY(!zpl.isEmpty());QVERIFY(!golden.isNull());
     const auto result=QtZpl::render(zpl);QVERIFY(result.has_value());
-    const double similarity=inkJaccard(result->labels.front(),golden);
-    QVERIFY2(similarity>=0.90,qPrintable(u"EAN interpretation placement similarity is %1"_s.arg(similarity,0,'f',6)));
+    QCOMPARE(inkJaccard(result->labels.front(),golden),1.0);
   }
   void ean13Orientations_data() {
     QTest::addColumn<QString>("fixture");
@@ -967,13 +965,8 @@ private slots:
     const auto result=QtZpl::render(zpl);QVERIFY(result.has_value());
     const auto& actual=result->labels.front();
     QCOMPARE(actual.size(),golden.size());
-    const QRect actualBounds=inkBounds(actual);const QRect goldenBounds=inkBounds(golden);
-    QVERIFY(std::abs(actualBounds.left()-goldenBounds.left())<=1);
-    QVERIFY(std::abs(actualBounds.top()-goldenBounds.top())<=1);
-    QVERIFY(std::abs(actualBounds.right()-goldenBounds.right())<=1);
-    QVERIFY(std::abs(actualBounds.bottom()-goldenBounds.bottom())<=1);
-    const double similarity=inkJaccard(actual,golden);
-    QVERIFY2(similarity>=0.90,qPrintable(u"EAN orientation Labelary similarity is %1"_s.arg(similarity,0,'f',6)));
+    QCOMPARE(inkBounds(actual),inkBounds(golden));
+    QCOMPARE(inkJaccard(actual,golden),1.0);
   }
   void renderingIsDotInvariantAcrossDpi() {
     const auto zpl=goldenZpl(u"dpi");QVERIFY(!zpl.isEmpty());

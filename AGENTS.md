@@ -112,7 +112,7 @@ The library does not own:
   synchronization.
 - Coordinates and dimensions are printer dots. Do not apply display DPI,
   `devicePixelRatio`, logical DPI, or platform scaling to label geometry.
-- Default label size matches the Go reference: 812 by 1218 dots when `^PW` or
+- Default label size is 812 by 1218 dots when `^PW` or
   `^LL` are absent. Default printer resolution is 203 DPI.
 
 ## Parsing rules
@@ -165,10 +165,14 @@ The library does not own:
 - EAN-13 accepts 12 digits and calculates the check digit, or accepts 13 digits
   and validates it. Non-digit formatting characters may be ignored only when
   this matches the reference behavior.
-- EAN-13 human-readable interpretation uses the embedded OCR-B font. Below-bar
-  interpretation is grouped as one leading digit and two groups of six;
-  above-bar interpretation is one centered 13-digit string. Preserve the
-  Labelary-compatible `^FO` anchor for orientations N, R, I, and B.
+- EAN-13 follows the UPC/EAN-8 retail layout in `drawExtendedLinear`: guard
+  bars extend 13 dots at every module width; below-bar digits are one leading
+  digit and two groups of six, in Font A at `^BY1`-`^BY2` and native OCR-B
+  (`RetailFont`) from `^BY3`; above-bar interpretation is one centered Font A
+  string. Code 93 and 2 of 5 interpretation lines, and every line above the
+  bars, share Code 128's Font A baselines (`2m+8` above, `7m+6` below the
+  bars); retail digits below keep their own layout. Preserve the
+  Labelary-compatible `^FO` and `^FT` anchors for orientations N, R, I, and B.
 - DataMatrix uses ECC200, including padding, Reed-Solomon correction, region
   borders, and Utah/corner placement. Keep the exact 24x24 reference-vector
   test and pixel-exact Labelary rotation tests for N, R, I, and B.
@@ -199,16 +203,18 @@ The library does not own:
 
 ## Testing and acceptance
 
-### Labelary is the pixel oracle; go-zpl is not a renderer reference
+### Labelary is the pixel oracle; go-zpl is no longer a reference
 
-When diagnosing rendering differences, comparing acceptance output, or
-recommending fixes, **always orient on Labelary**, never on go-zpl render
-output.
+QtZpl now exceeds go-zpl (2026-10-22). Do not rely on go-zpl for rendering,
+command semantics, defaults or fixes. When diagnosing rendering differences,
+comparing acceptance output, or recommending fixes, **always orient on
+Labelary** and the Zebra ZPL documentation.
 
 | Source | Role | Use for |
 |---|---|---|
 | [Labelary](https://labelary.com/) | **Pixel oracle** | Visual acceptance, golden PNGs, diff/debug |
-| go-zpl demo / `C:\GitRepos\go-zpl` | **ZPL corpus + parser semantics** | Input fixtures, command behavior while porting |
+| Zebra ZPL Programming Guide | **Command semantics** | Parameter meaning, defaults and ranges, confirmed with Labelary |
+| `tests/corpus/go-zpl-demo/` | **Frozen input fixtures** | Regression ZPL only; not a behavior or raster reference |
 | QtZpl | **Implementation under test** | Actual PNG to compare against Labelary |
 
 **Do**
@@ -222,30 +228,26 @@ output.
 
 **Do not**
 
-- Compare QtZpl output to go-zpl WASM/site render output during acceptance or
-  debugging.
+- Consult go-zpl code, WASM/site render output or its behavior during
+  acceptance, debugging or fixes.
 - Treat the string `go-zpl` in label text (for example in `hello.zpl`) as a
   signal to compare against the go-zpl project renderer.
-- Call Labelary or the go-zpl website from normal tests; use committed fixtures
-  and goldens only.
+- Call Labelary or any website from normal tests; use committed fixtures and
+  goldens only.
 
-The directory name `tests/corpus/go-zpl-demo/` means the ZPL came from the
-public demo catalog, **not** that go-zpl produces the expected raster.
+The directory name `tests/corpus/go-zpl-demo/` only records where that ZPL
+originally came from; go-zpl never defines the expected raster or semantics.
 
-- Every example published by the sibling go-zpl demo at
-  `https://stirlingmarketinggroup.github.io/go-zpl/` must parse and render
-  without `unsupported-command`, `barcode-render-pending`, or render-error
-  diagnostics. Treat both inline examples from
-  `C:\GitRepos\go-zpl\site\assets\js\app.js` and file-backed examples under
-  `C:\GitRepos\go-zpl\site\static\examples` as the required compatibility
-  corpus.
-- For every go-zpl demo example, keep a versioned ZPL fixture and a reviewed
-  bitonal Labelary reference at each size used by the demo. QtZpl output must
-  match Labelary geometry and visible content; a successful parse or a
-  plausible-looking partial label is not acceptance.
-- Keep the demo corpus synchronized when examples are added or changed in the
-  sibling repository. Normal tests must use committed fixtures and references,
-  never call either the go-zpl website or Labelary over the network.
+- Every committed fixture under `tests/corpus/go-zpl-demo/` must parse and
+  render without `unsupported-command`, `barcode-render-pending`, or
+  render-error diagnostics, and keeps its reviewed bitonal Labelary reference
+  at each size in `manifest.json`. QtZpl output must match Labelary geometry
+  and visible content; a successful parse or a plausible-looking partial
+  label is not acceptance.
+- The corpus is frozen: do not synchronize it with the go-zpl repository or
+  site. Add new coverage from Zebra documentation examples and real-printer
+  samples with Labelary references. Normal tests must use committed fixtures
+  and references and never call Labelary over the network.
 - Every supported command needs parser coverage for normal, omitted, empty, and
   invalid parameters.
 - Every rendered primitive needs pixel assertions for position, dimensions,
@@ -261,10 +263,9 @@ public demo catalog, **not** that go-zpl produces the expected raster.
   and must be embedded in the test target so normal tests never use the network.
   Do not replace bitonal references with grayscale PNGs or locally thresholded
   derivatives.
-- The go-zpl demo supplies ZPL fixtures under `tests/corpus/go-zpl-demo/` and
-  `manifest.json` render options. Labelary bitonal PNGs under
-  `tests/golden/go-zpl-demo/` are the pixel oracle. Do not compare QtZpl output
-  to go-zpl render output during acceptance work.
+- `tests/corpus/go-zpl-demo/` holds the frozen ZPL fixtures and their
+  `manifest.json` render options; the Labelary bitonal PNGs under
+  `tests/golden/go-zpl-demo/` are their pixel oracle.
 - To inspect a fixture against its Labelary golden, build and run
   `qtzpl_compare_golden`. Pass render options from `manifest.json` when the
   fixture comes from the demo corpus:
@@ -306,17 +307,17 @@ public demo catalog, **not** that go-zpl produces the expected raster.
 - Before handing off a change, run the standard clean Debug build and report the
   exact test result. For performance-sensitive changes, also run a Release or
   RelWithDebInfo build.
-- Expand visual regression coverage using the go-zpl demo **ZPL catalog** and
+- Expand visual regression coverage with Zebra documentation examples and
   selected real-printer samples; compare rendered output only against Labelary
-  goldens, not against go-zpl images.
+  goldens.
 
-## Reference implementation
+## References
 
-The sibling repository `C:\GitRepos\go-zpl` is a **behavioral** reference while
-porting parser and command semantics. It is **not** the pixel oracle for
-acceptance. For visible output, committed Labelary bitonal PNGs under
-`tests/golden/` override go-zpl render output. Port behavior deliberately; do
-not mechanically translate Go idioms into C++. If the Go implementation conflicts
-with Zebra or an authoritative Labelary golden, preserve the evidence in a
-regression test and fix the Qt implementation toward the printer-correct or
-Labelary-reviewed result.
+go-zpl (`C:\GitRepos\go-zpl`) is no longer a reference: QtZpl now exceeds it.
+Do not port, compare or justify parser, command or rendering behavior from its
+code, WASM or site output. The Zebra ZPL Programming Guide defines command
+semantics, and committed Labelary bitonal references under `tests/golden/`
+define visible output. When an unknown behavior matters, fetch a Labelary
+reference with a `tools/fetch_*` maintainer script, preserve the evidence in a
+regression test and fix QtZpl toward the printer-correct, Labelary-reviewed
+result.

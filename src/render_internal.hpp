@@ -90,7 +90,6 @@ QString fontAFamily();
 QFont printerFont(const QString& family,int pixelHeight,int stretch=100);
 QFont zebraFont(int pixelHeight, int stretch=75);
 QFont builtInFont(QChar name,int pixelHeight,int requestedWidth=0);
-QFont eanInterpretationFont(int pixelHeight);
 QSize resolvedFontSize(const ScalableFont& font);
 QImage rotateImage(const QImage& source, Orientation orientation);
 QRect alphaBounds(const QImage& image);
